@@ -15,14 +15,15 @@ import appConfig from './config/app.config';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const host = configService.getOrThrow<string>('database.host');
-        const port = configService.getOrThrow<number>('database.port');
-        const name = configService.getOrThrow<string>('database.name');
+        const host = configService.getOrThrow<string>('DB_HOST');
+        const port = configService.getOrThrow<number>('DB_PORT');
+        const name = configService.getOrThrow<string>('DB_DATABASE');
         return {
           type: 'oracle',
-          username: configService.getOrThrow<string>('database.username'),
-          password: configService.getOrThrow<string>('database.password'),
+          username: configService.getOrThrow<string>('ORACLE_USERNAME'),
+          password: configService.getOrThrow<string>('ORACLE_PASSWORD'),
           connectString: `${host}:${port}/${name}`,
+          entities: [],
           synchronize: true,
         }
       }
