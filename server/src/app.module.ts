@@ -9,6 +9,7 @@ import appConfig from './config/app.config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
       load: [databaseConfig, appConfig],
     }),
   ],
