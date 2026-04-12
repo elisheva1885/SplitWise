@@ -23,7 +23,6 @@ export class User {
     expensesToPay: Expense[];
 
     @ManyToMany(() => Group)
-    @JoinTable()
     groups: Group[];
 
     @OneToMany(() => Group, (group) => group.owner)
