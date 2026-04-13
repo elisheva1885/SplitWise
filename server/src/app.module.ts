@@ -15,21 +15,20 @@ import appConfig from './config/app.config';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const host = configService.getOrThrow<string>('DB_HOST');
-        const port = configService.getOrThrow<number>('DB_PORT');
-        const name = configService.getOrThrow<string>('DB_DATABASE');
         return {
           type: 'oracle',
+          host: configService.getOrThrow<string>('DB_HOST'),
+          port: configService.getOrThrow<number>('DB_PORT'),
           username: configService.getOrThrow<string>('ORACLE_USERNAME'),
           password: configService.getOrThrow<string>('ORACLE_PASSWORD'),
-          connectString: `${host}:${port}/${name}`,
+          serviceName: 'XEPDB1',
           entities: [],
           synchronize: true,
-        }
-      }
+        };
+      },
     }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
