@@ -5,26 +5,26 @@ import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColum
 @Entity()
 export class User {
     @PrimaryGeneratedColumn("uuid")
-    id: string;
+    id!: string;
 
     @Column({ unique: true, nullable: false })
-    username: string;
+    username!: string;
 
     @Column({ nullable: false })
-    email: string
+    email!: string
 
     @Column({ nullable: false })
-    password: string;
+    password!: string;
 
     @OneToMany(() => Expense, (expense) => expense.paidBy)
-    expensesPaid: Expense[];
+    expensesPaid!: Expense[];
 
     @OneToMany(() => Expense, (expense) => expense.paidOn)
-    expensesToPay: Expense[];
+    expensesToPay!: Expense[];
 
     @ManyToMany(() => Group)
-    groups: Group[];
+    groups!: Group[];
 
     @OneToMany(() => Group, (group) => group.owner)
-    ownedGroups: Group[];
+    ownedGroups!: Group[];
 }

@@ -5,25 +5,25 @@ import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGen
 @Entity()
 export class Group {
     @PrimaryGeneratedColumn("uuid")
-    id: string;
+    id!: string;
 
     @Column({ unique: true, nullable: false })
-    name: string;
+    name!: string;
 
     @Column({})
-    descriprion: string
+    descriprion!: string
 
     // @Column({ nullable: false })
     // owner: User;
 
     @ManyToOne(() => User, (user) => user.ownedGroups, { nullable: false })
-    owner: User;
+    owner!: User;
 
     @ManyToMany(() => User)
     @JoinTable()
-    members: User[];
+    members!: User[];
 
     @OneToMany(() => Expense, (expense) => expense.group, { cascade: true })
-    expenses: Expense[];
+    expenses!: Expense[];
 
 }

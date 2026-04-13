@@ -5,25 +5,25 @@ import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColu
 @Entity()
 export class Expense {
     @PrimaryGeneratedColumn("uuid")
-    id: string;
-
-    @Column({ unique: true, nullable: false })
-    cause: string;
-
-    @Column({})
-    value: number;
-
-    @ManyToOne(() => User, (user) => user.expensesPaid, { nullable: false })
-    paidBy: User;
-
-    @ManyToOne(() => User, (user) => user.expensesToPay, { nullable: false })
-    paidOn: User;
-
-    @ManyToOne(() => Group, (group) => group.expenses , { nullable: false })
-    group: Group;
+    id!: string;
 
     @Column({ nullable: false })
-    createDate: Date;
+    cause!: string;
+
+    @Column({})
+    value!: number;
+
+    @ManyToOne(() => User, (user) => user.expensesPaid, { nullable: false })
+    paidBy!: User;
+
+    @ManyToOne(() => User, (user) => user.expensesToPay, { nullable: false })
+    paidOn!: User;
+
+    @ManyToOne(() => Group, (group) => group.expenses , { nullable: false })
+    group!: Group;
+
+    @Column({ nullable: false })
+    createDate!: Date;
 
 
     // @ManyToOne(() => User, (user) => user.expenses)
