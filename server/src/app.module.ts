@@ -26,7 +26,7 @@ import { UserModule } from './user/user.module';
         };
       },
     }),
-    UserModule
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
