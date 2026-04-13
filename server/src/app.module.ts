@@ -28,11 +28,11 @@ import { Expense } from './expense/expense.entity';
           connectString: `${host}:${port}/${name}`,
           entities: [User, Group, Expense],
           synchronize: true,
-        }
-      }
+        };
+      },
     }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

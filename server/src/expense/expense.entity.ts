@@ -1,37 +1,33 @@
-import { Group } from "src/group/group.entity";
-import { User } from "src/user/user.entity";
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Group } from 'src/group/group.entity';
+import { User } from 'src/user/user.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Expense {
-    @PrimaryGeneratedColumn("uuid")
-    id!: string;
+  @PrimaryGeneratedColumn()
+  uuid!: number;
 
-    @Column({ nullable: false })
-    cause!: string;
+  @Column({ nullable: true, default: null })
+  cause?: string;
 
-    @Column({})
-    value!: number;
+  @Column({ nullable: false, type: 'decimal', precision: 10, scale: 2 })
+  value!: number;
 
-    @ManyToOne(() => User, (user) => user.expensesPaid, { nullable: false })
-    paidBy!: User;
+  @ManyToOne(() => User, (user) => user.expensesPaid, { nullable: false })
+  paidBy!: User;
 
-    @ManyToOne(() => User, (user) => user.expensesToPay, { nullable: false })
-    paidOn!: User;
+  @ManyToOne(() => User, (user) => user.expensesToPay, { nullable: false })
+  paidOn!: User;
 
-    @ManyToOne(() => Group, (group) => group.expenses , { nullable: false })
-    group!: Group;
+  @ManyToOne(() => Group, (group) => group.expenses, { nullable: false })
+  group!: Group;
 
-    @Column({ nullable: false })
-    createDate!: Date;
-
-
-    // @ManyToOne(() => User, (user) => user.expenses)
-    // user: User;
-
-    // @ManyToOne(() => User, (user) => user.expenses)
-    // user2: User;
-
-    // @ManyToOne(() => Group, (group) => group.expenses)
-    // group: Group;
+  @CreateDateColumn()
+  createDate!: Date;
 }
