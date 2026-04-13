@@ -3,9 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user/user.entity';
-import { Group } from './group/group.entity';
-import { Expense } from './expense/expense.entity';
 
 @Module({
   imports: [
@@ -16,15 +13,14 @@ import { Expense } from './expense/expense.entity';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const host = configService.getOrThrow<string>('DB_HOST');
-        const port = configService.getOrThrow<number>('DB_PORT');
-        const name = configService.getOrThrow<string>('DB_DATABASE');
         return {
           type: 'oracle',
+          host: configService.getOrThrow<string>('DB_HOST'),
+          port: configService.getOrThrow<number>('DB_PORT'),
           username: configService.getOrThrow<string>('ORACLE_USERNAME'),
           password: configService.getOrThrow<string>('ORACLE_PASSWORD'),
-          connectString: `${host}:${port}/${name}`,
-          entities: [User, Group, Expense],
+          serviceName: 'XEPDB1',
+          entities: [],
           synchronize: true,
         };
       },
