@@ -13,6 +13,6 @@ export class userController {
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   async signUp(@Body() user: RegisterDto): Promise<UserResponseDto> {
-    return this.authService.sipnUp(user);
+    return this.authService.signUp(user);
   }
 }
