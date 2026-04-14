@@ -18,7 +18,7 @@ export class AuthService {
     }
 
     async signUp(signUpInfo: RegisterDto): Promise<UserResponseDto> {
-            const existUser = await this.userService.findByUsernameOrEmail(signUpInfo.username, signUpInfo.password);
+            const existUser = await this.userService.findByUsernameOrEmail(signUpInfo.username, signUpInfo.email);
             if (existUser) {
                 throw new ConflictException('username or email already exist')
             }
@@ -48,14 +48,16 @@ export class AuthService {
         if (!user) {
             throw new NotFoundException('user not found')
         }
-        const isMatch = bcrypt.compare(signInInfo.password, user.password)
+        const isMatch 
+        
+        
+        = bcrypt.compare(signInInfo.password, user.password)
         if (!isMatch) {
             throw new UnauthorizedException();
         }
         const payload = {
             uuid: user.uuid,
             email: user.email,
-            password: user.password
         };
         const token = this.jwtService.sign(payload);
         return token;

@@ -11,7 +11,7 @@ interface JwtPayload {
 }
 
 @Injectable()
-export class JwtStarategy extends PassportStrategy(Strategy){
+export class JwtStrategy extends PassportStrategy(Strategy){
     constructor(private readonly configService:ConfigService){
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -20,6 +20,6 @@ export class JwtStarategy extends PassportStrategy(Strategy){
         })        
     }
     async validate(payload:JwtPayload){
-        return {}
+        return {payload}
     }
 }
