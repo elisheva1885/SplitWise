@@ -13,7 +13,7 @@ export class RegisterDto {
   @MaxLength(100)
   username!: string;
 
-  @IsEmail({}, { message: 'Invalid email' })
+  @IsEmail()
   @IsNotEmpty()
   email!: string;
 

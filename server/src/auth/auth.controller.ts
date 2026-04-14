@@ -10,8 +10,8 @@ export class AuthController {
     }
     @HttpCode(HttpStatus.CREATED)
     @Post('register')
-    async signUp(@Body() user: RegisterDto): Promise<UserResponseDto> {
-        console.log("in the function");
+    async signUp(@Body() user: RegisterDto): Promise<UserResponseDto> {        
+        console.log(user.constructor.name);
         
         return this.authService.signUp(user);
     }

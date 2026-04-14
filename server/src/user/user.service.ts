@@ -12,9 +12,15 @@ export class UserService {
     ) {
     }
 
-    async findByUsername(username: string): Promise<User | null> {
+    async findByUsernameOrEmail(username: string, email: string): Promise<User | null> {
         return await this.userRepository.findOne({
-            where: { username }
+            where: [{ username: username}, {email:email}]
+        })
+    }
+
+     async findByUsername(username: string): Promise<User | null> {
+        return await this.userRepository.findOne({
+            where:{ username: username}
         })
     }
     async createUser(userData: RegisterDto, hashPassword:string): Promise<User> {

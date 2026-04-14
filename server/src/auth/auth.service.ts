@@ -1,10 +1,11 @@
 import * as bcrypt from 'bcrypt';
-import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { UserResponseDto } from 'src/user/dto/user.dto';
 import { LoginDto } from './dto/login.dto';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import zxcvbn from 'zxcvbn';
 
 @Injectable()
 export class AuthService {
@@ -12,21 +13,31 @@ export class AuthService {
         private readonly userService: UserService,
         private readonly jwtService: JwtService
     ) { }
-
+    checkPassword(password: string): number {
+        return zxcvbn(password).score;
+    }
 
     async signUp(signUpInfo: RegisterDto): Promise<UserResponseDto> {
-        const existUser = await this.userService.findByUsername(signUpInfo.username);
-        if (existUser) {
-            throw new ConflictException('username already exist')
-        }
-        const hash = await bcrypt.hash(signUpInfo.password, 12);
-        const user = await this.userService.createUser(signUpInfo, hash);
-        const userResult: UserResponseDto = {
-            id: user.uuid,
-            email: user.email,
-            username: user.username
-        }
-        return userResult;
+            const existUser = await this.userService.findByUsernameOrEmail(signUpInfo.username, signUpInfo.password);
+            if (existUser) {
+                throw new ConflictException('username or email already exist')
+            }
+            const passwordScore = this.checkPassword(signUpInfo.password);
+            if (passwordScore < 3) {
+                throw new BadRequestException('password too weak')
+            }
+            const hash = await bcrypt.hash(signUpInfo.password, 12);
+
+            const user = await this.userService.createUser(signUpInfo, hash);
+
+            const userResult: UserResponseDto = {
+                id: user.uuid,
+                email: user.email,
+                username: user.username
+            }
+            return userResult;
+        
+    
     }
 
     async signIn(signInInfo: LoginDto): Promise<string> {
