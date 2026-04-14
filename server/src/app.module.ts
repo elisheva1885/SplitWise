@@ -4,6 +4,10 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
+import { User } from './user/user.entity';
+import { Group } from './group/group.entity';
+import { Expense } from './expense/expense.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -21,12 +25,13 @@ import { UserModule } from './user/user.module';
           username: configService.getOrThrow<string>('ORACLE_USERNAME'),
           password: configService.getOrThrow<string>('ORACLE_PASSWORD'),
           serviceName: configService.getOrThrow<string>('DB_DATABASE'),
-          entities: [],
+          entities: [User,Group, Expense],
           synchronize: true,
         };
       },
     }),
     UserModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
