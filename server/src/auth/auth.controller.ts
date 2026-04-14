@@ -11,8 +11,6 @@ export class AuthController {
     @HttpCode(HttpStatus.CREATED)
     @Post('register')
     async signUp(@Body() user: RegisterDto): Promise<UserResponseDto> {        
-        console.log(user.constructor.name);
-        
         return this.authService.signUp(user);
     }
 
@@ -20,5 +18,10 @@ export class AuthController {
     @Post('login')
     async signIn(@Body() signInInfo : LoginDto): Promise<string>{
         return this.authService.signIn(signInInfo)
+    }
+
+    @Post('forget/:email')
+    async forgetPassword(){
+        
     }
 }

@@ -48,10 +48,7 @@ export class AuthService {
         if (!user) {
             throw new NotFoundException('user not found')
         }
-        const isMatch 
-        
-        
-        = bcrypt.compare(signInInfo.password, user.password)
+        const isMatch =await bcrypt.compare(signInInfo.password, user.password)
         if (!isMatch) {
             throw new UnauthorizedException();
         }

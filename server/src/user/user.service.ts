@@ -24,7 +24,6 @@ export class UserService {
         })
     }
     async createUser(userData: RegisterDto, hashPassword:string): Promise<User> {
-        console.log(userData, hashPassword);
         return await this.userRepository.save({
             email: userData.email.toLocaleLowerCase(),
             username: userData.username,
