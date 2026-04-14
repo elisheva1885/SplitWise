@@ -20,7 +20,7 @@ import { UserModule } from './user/user.module';
           port: configService.getOrThrow<number>('DB_PORT'),
           username: configService.getOrThrow<string>('ORACLE_USERNAME'),
           password: configService.getOrThrow<string>('ORACLE_PASSWORD'),
-          serviceName: 'XEPDB1',
+          serviceName: configService.getOrThrow<string>('DB_DATABASE'),
           entities: [],
           synchronize: true,
         };
