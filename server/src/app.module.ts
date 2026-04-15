@@ -25,13 +25,13 @@ import { AuthModule } from './auth/auth.module';
           username: configService.getOrThrow<string>('ORACLE_USERNAME'),
           password: configService.getOrThrow<string>('ORACLE_PASSWORD'),
           serviceName: configService.getOrThrow<string>('DB_DATABASE'),
-          entities: [User,Group, Expense],
+          entities: [User, Group, Expense],
           synchronize: true,
         };
       },
     }),
     UserModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

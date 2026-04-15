@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
@@ -6,30 +6,30 @@ import { RegisterDto } from 'src/auth/dto/register.dto';
 
 @Injectable()
 export class UserService {
-    constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
-    ) {
-    }
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
-    async findByUsernameOrEmail(username: string, email: string): Promise<User | null> {
-        return await this.userRepository.findOne({
-            where: [{ username: username}, {email:email}]
-        })
-    }
+  async findByUsernameOrEmail(
+    username: string,
+    email: string,
+  ): Promise<User | null> {
+    return await this.userRepository.findOne({
+      where: [{ username: username }, { email: email }],
+    });
+  }
 
-     async findByUsername(username: string): Promise<User | null> {
-        return await this.userRepository.findOne({
-            where:{ username: username}
-        })
-    }
-    async createUser(userData: RegisterDto, hashPassword:string): Promise<User> {
-        return await this.userRepository.save({
-            email: userData.email.toLocaleLowerCase(),
-            username: userData.username,
-            password: hashPassword
-        })
-    }
-
-
+  async findByUsername(username: string): Promise<User | null> {
+    return await this.userRepository.findOne({
+      where: { username: username },
+    });
+  }
+  async createUser(userData: RegisterDto, hashPassword: string): Promise<User> {
+    return await this.userRepository.save({
+      email: userData.email.toLocaleLowerCase(),
+      username: userData.username,
+      password: hashPassword,
+    });
+  }
 }
