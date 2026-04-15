@@ -16,7 +16,7 @@ export class UserService {
     email: string,
   ): Promise<User | null> {
     return await this.userRepository.findOne({
-      where: [{ username: username }, { email: email }],
+      where: [{username},{email}],
     });
   }
 
@@ -27,7 +27,7 @@ export class UserService {
   }
   async createUser(userData: RegisterDto, hashPassword: string): Promise<User> {
     return await this.userRepository.save({
-      email: userData.email.toLocaleLowerCase(),
+      email: userData.email,
       username: userData.username,
       password: hashPassword,
     });
