@@ -22,9 +22,7 @@ export class AuthController {
         @Res({ passthrough: true }) res: Response,
     ): Promise<{ message: string }> {
         const { id, username, email } = await this.authService.signUp(userData);
-        const payload: JwtPayload = {
-            id,username,email,
-        };
+        const payload: JwtPayload = { id, username, email };
         const token = this.authService.generateToken(payload);
         res.cookie('access_token', token, {
             httpOnly: true,

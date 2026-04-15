@@ -16,7 +16,7 @@ export class UserService {
     email: string,
   ): Promise<User | null> {
     return await this.userRepository.findOne({
-      where: [{username},{email}],
+      where: [{ username }, { email }],
     });
   }
 
