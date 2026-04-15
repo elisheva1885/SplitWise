@@ -8,7 +8,6 @@ export interface JwtPayload {
 
 declare module 'express' {
   interface Request {
-    cookies: Record<string, string>;
     user?: JwtPayload;
   }
 }

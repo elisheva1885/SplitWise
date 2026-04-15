@@ -27,6 +27,7 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractTokenFromCookie(request: Request): string | undefined {
-    return request.cookies?.access_token;
+    const cookies = request.cookies as Record<string, string>;
+    return cookies.access_token;
   }
 }
