@@ -1,3 +1,4 @@
+
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
@@ -6,47 +7,47 @@ import { RegisterDto } from 'src/auth/dto/register.dto';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-  ) {}
+    constructor(
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
+    ) { }
 
-  async findByUsernameOrEmail(
-    username: string,
-    email: string,
-  ): Promise<User | null> {
-    return await this.userRepository.findOne({
-      where: [{ username: username }, { email: email }],
-    });
-  }
-
-  async findByUsername(username: string): Promise<User | null> {
-    return await this.userRepository.findOne({
-      where: { username: username },
-    });
-  }
-  async createUser(userData: RegisterDto, hashPassword: string): Promise<User> {
-    return await this.userRepository.save({
-      email: userData.email.toLocaleLowerCase(),
-      username: userData.username,
-      password: hashPassword,
-    });
-  }
-
-  async getUserInfoAndGroups(userInfo){
-    const user =await this.findByUsername(userInfo.username);
-    return {
-        username: user?.username,
-        email: user?.email,
-        groups: user?.groups
+    async findByUsernameOrEmail(
+        username: string,
+        email: string,
+    ): Promise<User | null> {
+        return await this.userRepository.findOne({
+            where: [{ username }, { email }],
+        });
     }
-    
-  }
 
-  async updateUser(userData :User){
+    async findByUsername(username: string): Promise<User | null> {
+        return await this.userRepository.findOne({
+            where: { username },
+        });
+    }
+    async createUser(userData: RegisterDto, hashPassword: string): Promise<User> {
+        return await this.userRepository.save({
+            email: userData.email,
+            username: userData.username,
+            password: hashPassword,
+        });
+    }
 
-  }
+    async getUserInfoAndGroups(userInfo) {
+        const user = await this.userRepository.findOne({
+            where: {username : userInfo.username},
+            relations : ['groups']
+        })
+        return {
+            username: user?.username,
+            email: user?.email,
+            groups: user?.groups
+        }
 
+    }
 
-  
+    async updateUser(userData: User) {
+
+    }
 }
