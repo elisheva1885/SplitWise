@@ -32,4 +32,21 @@ export class UserService {
       password: hashPassword,
     });
   }
+
+  async getUserInfoAndGroups(userInfo){
+    const user =await this.findByUsername(userInfo.username);
+    return {
+        username: user?.username,
+        email: user?.email,
+        groups: user?.groups
+    }
+    
+  }
+
+  async updateUser(userData :User){
+
+  }
+
+
+  
 }

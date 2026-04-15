@@ -7,7 +7,7 @@ export interface JwtPayload {
 }
 
 declare module 'express' {
-  interface Request {
-    user?: JwtPayload;
+  interface Request  {
+    user: JwtPayload;
   }
 }
