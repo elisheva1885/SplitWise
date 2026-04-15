@@ -51,6 +51,4 @@ export class AuthController {
     return { message: 'Logged in successfully' };
   }
 
-  @Post('forget/:email')
-  async forgetPassword() {}
 }
