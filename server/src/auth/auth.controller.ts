@@ -24,9 +24,10 @@ export class AuthController {
         const { id, username, email } = await this.authService.signUp(userData);
         const payload: JwtPayload = { id, username, email };
         const token = this.authService.generateToken(payload);
+        console.log(token);
         res.cookie('access_token', token, {
             httpOnly: true,
-            secure: true,
+            secure: false,
             sameSite: 'strict',
         });
         return { message: 'User Register successfully' };
@@ -39,6 +40,7 @@ export class AuthController {
         @Res({ passthrough: true }) res: Response,
     ): Promise<{ message: string }> {
         const token = await this.authService.signIn(signInInfo);
+        console.log(token);
         res.cookie('access_token', token, {
             httpOnly: true,
             secure: true,
