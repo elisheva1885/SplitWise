@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
@@ -7,38 +6,42 @@ import { RegisterDto } from 'src/auth/dto/register.dto';
 
 @Injectable()
 export class UserService {
-    constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
-    ) { }
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
-    async findByUsernameOrEmail(
-        username: string,
-        email: string,
-    ): Promise<User | null> {
-        return await this.userRepository.findOne({
-            where: [{ username }, { email }],
-        });
-    }
+  async findByUsernameOrEmail(
+    username: string,
+    email: string,
+  ): Promise<User | null> {
+    return await this.userRepository.findOne({
+      where: [{ username }, { email }],
+    });
+  }
 
-    async findByUsername(username: string): Promise<User | null> {
-        return await this.userRepository.findOne({
-            where: { username },
-        });
-    }
-    async createUser(userData: RegisterDto, hashPassword: string): Promise<User> {
-        return await this.userRepository.save({
-            email: userData.email,
-            username: userData.username,
-            password: hashPassword,
-        });
-    }
+  async findById(id: number): Promise<User | null> {
+    return await this.userRepository.findOne({
+      where: { uuid: id },
+    });
+  }
 
-    async getUserInfoAndGroups(userInfo) {
-        const user = await this.userRepository.findOne({
-            where: {username : userInfo.username},
-            relations : ['groups']
-        })
+  async findByUsername(username: string): Promise<User | null> {
+    return await this.userRepository.findOne({
+      where: { username: username },
+      relations: ['groups']
+    });
+  }
+  async createUser(userData: RegisterDto, hashPassword: string): Promise<User> {
+    return await this.userRepository.save({
+      email: userData.email,
+      username: userData.username,
+      password: hashPassword,
+    });
+  }
+
+   async getUserInfoAndGroups(username:string) {
+        const user = await this.findByUsername(username);
         return {
             username: user?.username,
             email: user?.email,
