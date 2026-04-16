@@ -1,5 +1,5 @@
-import { Expose, Type } from "class-transformer";
-import { Expense } from "src/expense/expense.entity";
+import { Expose, Type } from 'class-transformer';
+import { Expense } from 'src/expense/expense.entity';
 
 export class UserInGroupDto {
   @Expose()
@@ -7,8 +7,6 @@ export class UserInGroupDto {
   @Expose()
   username!: string;
 }
-
-
 
 export class GroupResponseDto {
   @Expose()

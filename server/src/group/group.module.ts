@@ -5,7 +5,6 @@ import { GroupService } from './group.service';
 import { Group } from './group.entity';
 import { JwtService } from '@nestjs/jwt';
 import { AuthModule } from 'src/auth/auth.module';
-import { UserService } from 'src/user/user.service';
 import { UserModule } from 'src/user/user.module';
 
 @Module({
