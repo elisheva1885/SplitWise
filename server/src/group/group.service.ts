@@ -44,7 +44,7 @@ export class GroupService {
     if (existGroup) {
       throw new ConflictException('Group name is already exist');
     }
-    const user = await this.userService.findById(userId);
+    const user = await this.userService.findByUuid(userId);
     if (!user) {
       throw new NotFoundException('user not found');
     }
@@ -100,7 +100,7 @@ export class GroupService {
       group.description = groupData.description;
     }
     if (groupData.ownerId) {
-      const user = await this.userService.findById(groupData.ownerId);
+      const user = await this.userService.findByUuid(groupData.ownerId);
       if (!user) {
         throw new NotFoundException('the owner must be exist user');
       }
