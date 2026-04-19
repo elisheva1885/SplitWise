@@ -25,10 +25,6 @@ export class CreateGroupDto {
 }
 
 export class UpdateGroupDto {
-  @ApiProperty({ example: 1, required: false })
-  @IsInt()
-  @Min(1)
-  groupId!: number;
 
   @ApiProperty({ example: 'Developers Team', required: false })
   @IsString()
