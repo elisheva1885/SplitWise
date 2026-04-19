@@ -25,7 +25,6 @@ export class CreateGroupDto {
 }
 
 export class UpdateGroupDto {
-
   @ApiProperty({ example: 'Developers Team', required: false })
   @IsString()
   @IsNotEmpty()
