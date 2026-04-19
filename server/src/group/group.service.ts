@@ -138,8 +138,10 @@ export class GroupService {
         if (!user) {
             throw new NotFoundException('user to add not found')
         }
-        console.log(group);
-
+        const isMember = group.members.some(member => member.uuid == userToAddId);
+        if (isMember) {
+            throw new ConflictException('user already in group');
+        }
         group?.members.push(user);
         const updatedGroup = await this.groupRepository.save(group);
         return this.toResponseDto(updatedGroup);
@@ -158,6 +160,13 @@ export class GroupService {
         const user = await this.userService.findById(userToRemoveId);
         if (!user) {
             throw new NotFoundException('user to remove not found')
+        }
+        const isMember = group.members.some(member => member.uuid == userToRemoveId);
+        if (!isMember) {
+            throw new NotFoundException('user is not in group');
+        }
+        if(userToRemoveId == group.owner.uuid){
+            throw new ConflictException("cannot remove own from the group");
         }
         const members = group?.members.filter(member => member.uuid !== userToRemoveId);
         group.members = members;
