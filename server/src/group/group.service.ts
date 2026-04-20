@@ -1,6 +1,8 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { Group } from './group.entity';
@@ -66,24 +68,26 @@ export class GroupService {
     const group = await this.groupRepository.findOne({
       where: {
         uuid: groupId,
-        members: {
-          uuid: userId,
-        },
       },
       relations: ['expenses', 'owner', 'members'],
     });
     if (!group) {
       throw new NotFoundException('group not found');
     }
+    const isMember = group.members.some((member) => member.uuid == userId);
+    if (!isMember) {
+      throw new NotFoundException('user is not in group');
+    }
     return this.toResponseDto(group);
   }
 
   async updateGroup(
+    groupId: number,
     groupData: UpdateGroupDto,
     userId: number,
   ): Promise<GroupResponseDto> {
     const group = await this.groupRepository.findOne({
-      where: { uuid: groupData.groupId, owner: { uuid: userId } },
+      where: { uuid: groupId, owner: { uuid: userId } },
       relations: ['owner'],
     });
     if (!group) {
@@ -115,12 +119,21 @@ export class GroupService {
     userId: number,
   ): Promise<{ message: string }> {
     const group = await this.groupRepository.findOne({
-      where: { uuid: groupId, owner: { uuid: userId } },
+      where: { uuid: groupId },
+      relations: ['owner'],
     });
 
     if (!group) throw new NotFoundException('group not found');
-
-    await this.groupRepository.remove(group);
+    if (group.owner.uuid !== userId) {
+      throw new ForbiddenException('Only the owner can delete this group');
+    }
+    try {
+      await this.groupRepository.remove(group);
+    } catch {
+      throw new InternalServerErrorException(
+        'Could not delete group. Ensure all related data is cleared or cascading is enabled',
+      );
+    }
     return { message: 'Group deleted successfully' };
   }
 }

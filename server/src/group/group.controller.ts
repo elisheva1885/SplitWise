@@ -42,13 +42,15 @@ export class GroupController {
 
   @UseGuards(AuthGuard)
   @ApiCookieAuth()
-  @Patch()
+  @Patch('gid')
   async updateGroup(
     @CurrentUser() user: JwtPayload,
+    @Param('gid', ParseIntPipe) gid: number,
     @Body() groupData: UpdateGroupDto,
   ): Promise<GroupResponseDto> {
-    return await this.groupService.updateGroup(groupData, user.id);
+    return await this.groupService.updateGroup(gid, groupData, user.id);
   }
+
   @UseGuards(AuthGuard)
   @ApiCookieAuth()
   @Delete(':gid')
