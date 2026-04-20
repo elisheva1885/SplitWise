@@ -82,18 +82,18 @@ export class UpdateExpenseDto {
     })
     @IsInt()
     @IsNotEmpty()
-    value!: number;
+    value?: number;
 
 
     @ApiProperty({ example: 1, required: false })
     @IsInt()
     @Min(1)
     @IsNotEmpty()
-    paidBy!: number;
+    paidBy?: number;
 
     @ApiProperty({ example: 1, required: false })
     @IsInt()
     @Min(1)
     @IsNotEmpty()
-    paidOn!: number;
+    paidOn?: number;
 }

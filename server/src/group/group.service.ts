@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
@@ -135,5 +136,22 @@ export class GroupService {
       );
     }
     return { message: 'Group deleted successfully' };
+  }
+
+  async checkIfUserBelogToGroup(userId:number, groupId:number):Promise<Boolean>{
+    const group = await this.groupRepository.findOne({
+        where: {uuid: groupId},
+        relations: ['members']
+    })
+    if(!group){
+        throw new NotFoundException();
+    }
+    const existMember = group.members.filter(member=> {
+        member.uuid === userId
+    })
+    if(!existMember){
+        return false;
+    }
+    return true;
   }
 }

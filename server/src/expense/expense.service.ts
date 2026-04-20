@@ -53,16 +53,55 @@ export class ExpenseService {
     }
 
 
-    async updateExpense(gid: number, expenseData: UpdateExpenseDto, userId: number): Promise<ExpenseResponseDto> {
+    async updateExpense(eid: number, expenseData: UpdateExpenseDto, userId: number): Promise<ExpenseResponseDto> {
         const expense = await this.expenseRepository.findOne({
-            where: {uuid:gid}
+            where: { uuid: eid },
+            relations: ['paidBy', 'paidOn', 'group']
         })
+        if (!expense) {
+            throw new NotFoundException('expense not found');
+        }
+        if (userId !== expense.paidBy.uuid && userId !== expense.paidOn.uuid) {
+            throw new ForbiddenException('user is not allowed to update this expense');
+        }
+        const newPaidBy = expenseData.paidBy ?? expense.paidBy.uuid;
+        const newPaidOn = expenseData.paidOn ?? expense.paidOn.uuid;
+
+        if (newPaidBy === newPaidOn) {
+            throw new BadRequestException('expense must be between two different users');
+        }
+        if (expenseData.cause) {
+            expense.cause = expenseData.cause;
+        }
+        if (expenseData.value !== undefined) {
+            expense.value = expenseData.value
+        }
+        if (expenseData.paidBy) {
+            const paidByUser = await this.userService.findById(expenseData.paidBy);
+            if (!paidByUser) {
+                throw new NotFoundException('user not found');
+            }
+            expense.paidBy = paidByUser;
+        }
+        if (expenseData.paidOn) {
+            const paidOnUser = await this.userService.findById(expenseData.paidOn);
+            if (!paidOnUser) {
+                throw new NotFoundException('user not found');
+            }
+            expense.paidOn = paidOnUser
+        }
+        const updatedExpense = await this.expenseRepository.save(expense);
+        const expenseRespone: ExpenseResponseDto = {
+            value: updatedExpense.value,
+            cause: updatedExpense.cause,
+            paidBy: updatedExpense.paidBy.uuid,
+            paidOn: updatedExpense.paidOn.uuid,
+            groupId: updatedExpense.group.uuid
+        };
+        return expenseRespone;
+    }
+
+    async deleteExpense(){
         
-        if (expenseData.paidOn === expenseData.paidBy) {
-            throw new BadRequestException('expnse must be between two diffrent users');
-        }
-        if (userId !== expenseData.paidOn && userId !== expenseData.paidBy) {
-            throw new ForbiddenException('user isnt allow th create this expense');
-        }
     }
 }

@@ -17,7 +17,7 @@ export class ExpenseController {
     @UseGuards(AuthGuard)
     @ApiCookieAuth()
     @Post()
-    async createExpense(@CurrentUser() user: JwtPayload, @Body() expenseData: CreateExpenseDto) : Promise<ExpenseResponseDto> {
+    async createExpense(@CurrentUser() user: JwtPayload, @Body() expenseData: CreateExpenseDto): Promise<ExpenseResponseDto> {
         return await this.expenseService.createExpense(user.id, expenseData);
     }
 
@@ -25,6 +25,17 @@ export class ExpenseController {
     @ApiCookieAuth()
     @Patch('gid')
     async updateExpense(
+        @CurrentUser() user: JwtPayload,
+        @Param('gid', ParseIntPipe) gid: number,
+        @Body() expenseData: UpdateExpenseDto,
+    ): Promise<ExpenseResponseDto> {
+        return await this.expenseService.updateExpense(gid, expenseData, user.id)
+    }
+
+    @UseGuards(AuthGuard)
+    @ApiCookieAuth()
+    @Patch('gid')
+    async deleteExpense(
         @CurrentUser() user: JwtPayload,
         @Param('gid', ParseIntPipe) gid: number,
         @Body() expenseData: UpdateExpenseDto,
