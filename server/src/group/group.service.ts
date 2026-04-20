@@ -183,17 +183,14 @@ export class GroupService {
     userToAddId: number,
   ): Promise<GroupResponseDto> {
     const group = await this.groupRepository.findOne({
-      where: {
-        uuid: groupId,
-        owner: { uuid: currentUserId },
-      },
+      where: { uuid: groupId },
       relations: ['owner', 'members'],
     });
     if (!group) {
       throw new NotFoundException('group not found');
     }
     if (group.owner.uuid !== currentUserId) {
-      throw new ForbiddenException(
+       throw new ForbiddenException(
         'user isnt allow to add members to the group',
       );
     }
