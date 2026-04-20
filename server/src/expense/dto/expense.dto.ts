@@ -22,7 +22,7 @@ export class CreateExpenseDto {
     })
     @IsInt()
     @IsNotEmpty()
-    value!: string;
+    value!: number;
 
 
     @ApiProperty({ example: 1, required: false })
@@ -36,6 +36,13 @@ export class CreateExpenseDto {
     @Min(1)
     @IsNotEmpty()
     paidOn!: number;
+
+    @ApiProperty({ example: 1, required: false })
+    @IsInt()
+    @Min(1)
+    @IsNotEmpty()
+    groupId!: number;
+
 }
 
 // export class UpdateGroupDto {
@@ -60,3 +67,33 @@ export class CreateExpenseDto {
 //     @IsOptional()
 //     ownerId?: number;
 // }
+
+
+export class UpdateExpenseDto {
+    @ApiProperty({ example: 'Developers Team', required: false })
+    @IsString()
+    @Optional()
+    @MinLength(3)
+    cause?: string;
+
+    @ApiProperty({
+        example: 5,
+        required: true,
+    })
+    @IsInt()
+    @IsNotEmpty()
+    value!: number;
+
+
+    @ApiProperty({ example: 1, required: false })
+    @IsInt()
+    @Min(1)
+    @IsNotEmpty()
+    paidBy!: number;
+
+    @ApiProperty({ example: 1, required: false })
+    @IsInt()
+    @Min(1)
+    @IsNotEmpty()
+    paidOn!: number;
+}
