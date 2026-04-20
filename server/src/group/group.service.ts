@@ -143,14 +143,14 @@ export class GroupService {
     userToRemoveId: number,
   ): Promise<GroupResponseDto> {
     const group = await this.groupRepository.findOne({
-      where: {
-        uuid: groupId,
-        owner: { uuid: currentUserId },
-      },
+      where: { uuid: groupId },
       relations: ['owner', 'members'],
     });
     if (!group) {
       throw new NotFoundException('group not found');
+    }
+    if (group.owner.uuid !== currentUserId) {
+      throw new ForbiddenException('only owner can remove users');
     }
     const user = await this.userService.findById(userToRemoveId);
     if (!user) {
@@ -163,8 +163,12 @@ export class GroupService {
       throw new NotFoundException('user is not in group');
     }
     if (userToRemoveId == group.owner.uuid) {
-      throw new ConflictException('cannot remove own from the group');
+      throw new ConflictException(
+        'please assign someone else to be the owner of the group and request him to remove you',
+      );
     }
+    //TODO: check if the user have any expense on this group
+    //if he has to throw BadRequestException
     const members = group?.members.filter(
       (member) => member.uuid !== userToRemoveId,
     );
@@ -187,6 +191,11 @@ export class GroupService {
     });
     if (!group) {
       throw new NotFoundException('group not found');
+    }
+    if (group.owner.uuid !== currentUserId) {
+      throw new ForbiddenException(
+        'user isnt allow to add members to the group',
+      );
     }
     const user = await this.userService.findById(userToAddId);
     if (!user) {
