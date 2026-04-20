@@ -15,7 +15,7 @@ import { CurrentUser } from 'src/user/current-user.decorator';
 import type { JwtPayload } from 'src/types/express';
 import { GroupService } from './group.service';
 import { ApiCookieAuth, ApiParam } from '@nestjs/swagger';
-import { GroupResponseDto } from './dto/group-response.dto';
+import { FullGroupResponseDto } from './dto/group-response.dto';
 
 @Controller('group')
 export class GroupController {
@@ -26,7 +26,7 @@ export class GroupController {
   async createGroup(
     @Body() groupData: CreateGroupDto,
     @CurrentUser() user: JwtPayload,
-  ): Promise<GroupResponseDto> {
+  ): Promise<FullGroupResponseDto> {
     return await this.groupService.createGroup(groupData, user.id);
   }
   @UseGuards(AuthGuard)
@@ -36,7 +36,7 @@ export class GroupController {
   async getGroupdetails(
     @CurrentUser() user: JwtPayload,
     @Param('gid', ParseIntPipe) gid: number,
-  ): Promise<GroupResponseDto> {
+  ): Promise<FullGroupResponseDto> {
     return await this.groupService.getGroupDetails(gid, user.id);
   }
 
@@ -47,7 +47,7 @@ export class GroupController {
     @CurrentUser() user: JwtPayload,
     @Param('gid', ParseIntPipe) gid: number,
     @Body() groupData: UpdateGroupDto,
-  ): Promise<GroupResponseDto> {
+  ): Promise<FullGroupResponseDto> {
     return await this.groupService.updateGroup(gid, groupData, user.id);
   }
 

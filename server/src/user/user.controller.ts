@@ -17,10 +17,10 @@ import { CurrentUser } from './current-user.decorator';
 import type { JwtPayload } from 'src/types/express';
 import { ApiCookieAuth } from '@nestjs/swagger';
 @ApiCookieAuth()
+@UseGuards(AuthGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  @UseGuards(AuthGuard)
   @Get()
   async getUserProfile(
     @CurrentUser() user: JwtPayload,
@@ -28,8 +28,7 @@ export class UserController {
     return await this.userService.getUserInfoAndGroups(user.id);
   }
 
-  @UseGuards(AuthGuard)
-  @Patch('')
+  @Patch()
   async updateUser(
     @CurrentUser() user: JwtPayload,
     @Body() userData: UpdateUserDto,
@@ -37,7 +36,6 @@ export class UserController {
     return await this.userService.updateUser(user.id, userData);
   }
 
-  @UseGuards(AuthGuard)
   @Delete()
   async deleteUser(
     @CurrentUser() user: JwtPayload,

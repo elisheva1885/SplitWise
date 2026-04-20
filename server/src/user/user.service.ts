@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -13,15 +12,12 @@ import {
   UpdateUserDto,
   UpdateUserResponseDto,
 } from './dto/user.dto';
-import { Expense } from 'src/expense/expense.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(Expense)
-    private readonly expenseRepository: Repository<Expense>,
   ) {}
 
   async findByUsernameOrEmail(
@@ -61,8 +57,9 @@ export class UserService {
   async getUserInfoAndGroups(userId: number): Promise<GetUserResponseDto> {
     const user = await this.userRepository.findOne({
       where: { uuid: userId },
-      relations: ['groups'],
+      relations: ['groups', 'groups.owner'],
     });
+
     if (!user) {
       throw new NotFoundException();
     }
@@ -75,6 +72,7 @@ export class UserService {
       groups: user?.groups?.map((group) => ({
         id: group.uuid,
         name: group.name,
+        owner: { uuid: group.owner.uuid, username: group.owner.username },
       })),
     };
     return userDto;
@@ -115,12 +113,8 @@ export class UserService {
     if (!user) {
       throw new NotFoundException();
     }
-    const hasDebts = await this.expenseRepository.existsBy({
-      paidOn: { uuid: user.uuid },
-    });
-    if (hasDebts) {
-      throw new BadRequestException('User has debts');
-    }
+    //TODO: check if the user have any expense on this group
+    //if he has to throw BadRequestException
     user.groups = [];
     user.expensesPaid = [];
     await this.userRepository.save(user);

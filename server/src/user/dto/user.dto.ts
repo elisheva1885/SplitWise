@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { GroupResponseDto } from 'src/group/dto/group-response.dto';
 
 export class UserResponseDto {
   id!: number;
@@ -7,17 +8,9 @@ export class UserResponseDto {
   username!: string;
 }
 
-export class GroupDto {
-  @ApiProperty({ example: 1 })
-  id!: number;
-
-  @ApiProperty({ example: 'Admins' })
-  name!: string;
-}
-
 export class GetUserResponseDto {
   user!: UserResponseDto;
-  groups?: GroupDto[];
+  groups?: GroupResponseDto[];
 }
 
 export class UpdateUserDto {
