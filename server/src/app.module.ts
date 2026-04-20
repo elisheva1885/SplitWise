@@ -7,10 +7,12 @@ import { User } from './user/user.entity';
 import { Group } from './group/group.entity';
 import { Expense } from './expense/expense.entity';
 import { AuthModule } from './auth/auth.module';
+import { GroupModule } from './group/group.module';
 
 @Module({
   imports: [
     AuthModule,
+    GroupModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
