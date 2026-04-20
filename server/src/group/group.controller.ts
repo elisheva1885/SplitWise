@@ -38,15 +38,20 @@ export class GroupController {
         return await this.groupService.getGroupDetails(gid, user.id);
     }
 
+
     @UseGuards(AuthGuard)
-    @Patch()
+    @ApiCookieAuth()
+    @Patch('gid')
     async updateGroup(
         @CurrentUser() user: JwtPayload,
+        @Param('gid', ParseIntPipe) gid: number,
         @Body() groupData: UpdateGroupDto,
     ): Promise<GroupResponseDto> {
-        return await this.groupService.updateGroup(groupData, user.id);
+        return await this.groupService.updateGroup(gid, groupData, user.id);
     }
+
     @UseGuards(AuthGuard)
+    @ApiCookieAuth()
     @Delete(':gid')
     async deleteGroup(
         @CurrentUser() user: JwtPayload,
@@ -67,5 +72,6 @@ export class GroupController {
     async removeUserFromGroup(@CurrentUser() user: JwtPayload, @Param('gid', ParseIntPipe) gid: number, @Param('uid', ParseIntPipe) uid: number): Promise<GroupResponseDto> {
         return await this.groupService.removeUserFromGroup(user.id, gid, uid);
     }
+
 
 }
