@@ -6,7 +6,6 @@
 // import type { JwtPayload } from "src/types/express";
 // import { ApiCookieAuth, ApiParam } from "@nestjs/swagger";
 
-
 // @Controller('user')
 // export class UserController {
 //   constructor(private readonly userService: UserService) { }
@@ -29,7 +28,5 @@
 //   async deleteUser(@CurrentUser() user: JwtPayload):Promise<{message: string}>{
 //     return await this.userService.deleteUser(user.id);
 //   }
-
-
 
 // }

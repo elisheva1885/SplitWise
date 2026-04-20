@@ -137,53 +137,67 @@ export class GroupService {
     return { message: 'Group deleted successfully' };
   }
 
-      async removeUserFromGroup(currentUserId: number, groupId: number, userToRemoveId: number): Promise<GroupResponseDto> {
-        const group = await this.groupRepository.findOne({
-            where: {
-                uuid: groupId,
-                owner: { uuid: currentUserId }
-            }, relations: ['owner', 'members']
-        })
-        if (!group) {
-            throw new NotFoundException('group not found')
-        }
-        const user = await this.userService.findById(userToRemoveId);
-        if (!user) {
-            throw new NotFoundException('user to remove not found')
-        }
-        const isMember = group.members.some(member => member.uuid == userToRemoveId);
-        if (!isMember) {
-            throw new NotFoundException('user is not in group');
-        }
-        if (userToRemoveId == group.owner.uuid) {
-            throw new ConflictException("cannot remove own from the group");
-        }
-        const members = group?.members.filter(member => member.uuid !== userToRemoveId);
-        group.members = members;
-        const updatedGroup = await this.groupRepository.save(group);
-        return this.toResponseDto(updatedGroup);
+  async removeUserFromGroup(
+    currentUserId: number,
+    groupId: number,
+    userToRemoveId: number,
+  ): Promise<GroupResponseDto> {
+    const group = await this.groupRepository.findOne({
+      where: {
+        uuid: groupId,
+        owner: { uuid: currentUserId },
+      },
+      relations: ['owner', 'members'],
+    });
+    if (!group) {
+      throw new NotFoundException('group not found');
     }
+    const user = await this.userService.findById(userToRemoveId);
+    if (!user) {
+      throw new NotFoundException('user to remove not found');
+    }
+    const isMember = group.members.some(
+      (member) => member.uuid == userToRemoveId,
+    );
+    if (!isMember) {
+      throw new NotFoundException('user is not in group');
+    }
+    if (userToRemoveId == group.owner.uuid) {
+      throw new ConflictException('cannot remove own from the group');
+    }
+    const members = group?.members.filter(
+      (member) => member.uuid !== userToRemoveId,
+    );
+    group.members = members;
+    const updatedGroup = await this.groupRepository.save(group);
+    return this.toResponseDto(updatedGroup);
+  }
 
-        async addUserToGroup(currentUserId: number, groupId: number, userToAddId: number): Promise<GroupResponseDto> {
-        const group = await this.groupRepository.findOne({
-            where: {
-                uuid: groupId,
-                owner: { uuid: currentUserId }
-            }, relations: ['owner', 'members']
-        })
-        if (!group) {
-            throw new NotFoundException('group not found')
-        }
-        const user = await this.userService.findById(userToAddId);
-        if (!user) {
-            throw new NotFoundException('user to add not found')
-        }
-        const isMember = group.members.some(member => member.uuid == userToAddId);
-        if (isMember) {
-            throw new ConflictException('user already in group');
-        }
-        group?.members.push(user);
-        const updatedGroup = await this.groupRepository.save(group);
-        return this.toResponseDto(updatedGroup);
+  async addUserToGroup(
+    currentUserId: number,
+    groupId: number,
+    userToAddId: number,
+  ): Promise<GroupResponseDto> {
+    const group = await this.groupRepository.findOne({
+      where: {
+        uuid: groupId,
+        owner: { uuid: currentUserId },
+      },
+      relations: ['owner', 'members'],
+    });
+    if (!group) {
+      throw new NotFoundException('group not found');
     }
+    const user = await this.userService.findById(userToAddId);
+    if (!user) {
+      throw new NotFoundException('user to add not found');
+    }
+    const isMember = group.members.some((member) => member.uuid == userToAddId);
+    if (isMember) {
+      throw new ConflictException('user already in group');
+    }
+    group?.members.push(user);
+    const updatedGroup = await this.groupRepository.save(group);
+    return this.toResponseDto(updatedGroup);
+  }
 }
