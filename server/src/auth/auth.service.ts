@@ -26,6 +26,15 @@ export class AuthService {
   generateToken(payload: JwtPayload): string {
     return this.jwtService.sign(payload);
   }
+
+  async verify(token: string): Promise<JwtPayload> {
+    try {
+      return await this.jwtService.verifyAsync<JwtPayload>(token);
+    } catch {
+      throw new UnauthorizedException();
+    }
+  }
+
   async signUp(signUpInfo: RegisterDto): Promise<UserResponseDto> {
     const existUser = await this.userService.findByUsernameOrEmail(
       signUpInfo.username,
@@ -48,7 +57,7 @@ export class AuthService {
     return userResult;
   }
 
-  async signIn(signInInfo: LoginDto): Promise<{ access_token: string }> {
+  async signIn(signInInfo: LoginDto): Promise<string> {
     const user = await this.userService.findByUsername(signInInfo.username);
     if (!user) {
       throw new NotFoundException('user not found');
@@ -63,6 +72,6 @@ export class AuthService {
       email: user.email,
     };
     const token = this.generateToken(payload);
-    return { access_token: token };
+    return token;
   }
 }
