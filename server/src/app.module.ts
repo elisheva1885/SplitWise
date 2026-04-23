@@ -8,11 +8,13 @@ import { Group } from './group/group.entity';
 import { Expense } from './expense/expense.entity';
 import { AuthModule } from './auth/auth.module';
 import { GroupModule } from './group/group.module';
+import { ExpenseModule } from './expense/expense.module';
 
 @Module({
   imports: [
     AuthModule,
     GroupModule,
+    ExpenseModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',

@@ -6,7 +6,8 @@ import { CreateExpenseDto, UpdateExpenseDto } from "./dto/expense.dto";
 import { CurrentUser } from "src/user/current-user.decorator";
 import { ApiCookieAuth, ApiParam } from "@nestjs/swagger";
 import { ExpenseResponseDto } from "./dto/expense-response.dto";
-
+@UseGuards(AuthGuard)
+@ApiCookieAuth()
 @Controller('expense')
 export class ExpenseController {
 
@@ -14,15 +15,13 @@ export class ExpenseController {
         private readonly expenseService: ExpenseService
     ) { }
 
-    @UseGuards(AuthGuard)
-    @ApiCookieAuth()
+
     @Post()
     async createExpense(@CurrentUser() user: JwtPayload, @Body() expenseData: CreateExpenseDto): Promise<ExpenseResponseDto> {
         return await this.expenseService.createExpense(user.id, expenseData);
     }
 
-    @UseGuards(AuthGuard)
-    @ApiCookieAuth()
+
     @Patch('gid')
     async updateExpense(
         @CurrentUser() user: JwtPayload,
@@ -32,8 +31,7 @@ export class ExpenseController {
         return await this.expenseService.updateExpense(gid, expenseData, user.id)
     }
 
-    @UseGuards(AuthGuard)
-    @ApiCookieAuth()
+
     @Patch('gid')
     async deleteExpense(
         @CurrentUser() user: JwtPayload,

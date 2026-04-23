@@ -1,10 +1,10 @@
 import {
     BadRequestException,
-  ConflictException,
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
+    ConflictException,
+    ForbiddenException,
+    Injectable,
+    InternalServerErrorException,
+    NotFoundException,
 } from '@nestjs/common';
 import { Group } from './group.entity';
 import { Repository } from 'typeorm';
@@ -16,142 +16,149 @@ import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class GroupService {
-  constructor(
-    @InjectRepository(Group)
-    private readonly groupRepository: Repository<Group>,
-    private readonly userService: UserService,
-  ) {}
+    constructor(
+        @InjectRepository(Group)
+        private readonly groupRepository: Repository<Group>,
+        private readonly userService: UserService,
+    ) { }
 
-  private toResponseDto(group: Group): GroupResponseDto {
-    return plainToInstance(GroupResponseDto, group, {
-      excludeExtraneousValues: true,
-    });
-  }
+    private toResponseDto(group: Group): GroupResponseDto {
+        return plainToInstance(GroupResponseDto, group, {
+            excludeExtraneousValues: true,
+        });
+    }
 
-  async findByGroupName(name: string): Promise<Group | null> {
-    return await this.groupRepository.findOne({
-      where: { name },
-    });
-  }
-  async findById(uuid: number): Promise<Group | null> {
-    return await this.groupRepository.findOne({
-      where: { uuid },
-    });
-  }
+    async findByGroupName(name: string): Promise<Group | null> {
+        return await this.groupRepository.findOne({
+            where: { name },
+        });
+    }
+    async findById(uuid: number): Promise<Group | null> {
+        return await this.groupRepository.findOne({
+            where: { uuid },
+        });
+    }
 
-  async createGroup(
-    groupData: CreateGroupDto,
-    userId: number,
-  ): Promise<GroupResponseDto> {
-    const existGroup = await this.findByGroupName(groupData.name);
-    if (existGroup) {
-      throw new ConflictException('Group name is already exist');
-    }
-    const user = await this.userService.findById(userId);
-    if (!user) {
-      throw new NotFoundException('user not found');
-    }
-    const group = this.groupRepository.create({
-      name: groupData.name,
-      description: groupData.description,
-      owner: user,
-      members: [user],
-    });
-    await this.groupRepository.save(group);
 
-    return this.toResponseDto(group);
-  }
+    async findByIdWithRelations(uuid: number, relations: string[]): Promise<Group | null> {
+        return await this.groupRepository.findOne({
+            where: { uuid },
+            relations: relations
+        });
+    }
+    async createGroup(
+        groupData: CreateGroupDto,
+        userId: number,
+    ): Promise<GroupResponseDto> {
+        const existGroup = await this.findByGroupName(groupData.name);
+        if (existGroup) {
+            throw new ConflictException('Group name is already exist');
+        }
+        const user = await this.userService.findById(userId);
+        if (!user) {
+            throw new NotFoundException('user not found');
+        }
+        const group = this.groupRepository.create({
+            name: groupData.name,
+            description: groupData.description,
+            owner: user,
+            members: [user],
+        });
+        await this.groupRepository.save(group);
 
-  async getGroupDetails(
-    groupId: number,
-    userId: number,
-  ): Promise<GroupResponseDto> {
-    const group = await this.groupRepository.findOne({
-      where: {
-        uuid: groupId,
-      },
-      relations: ['expenses', 'owner', 'members'],
-    });
-    if (!group) {
-      throw new NotFoundException('group not found');
+        return this.toResponseDto(group);
     }
-    const isMember = group.members.some((member) => member.uuid == userId);
-    if (!isMember) {
-      throw new NotFoundException('user is not in group');
-    }
-    return this.toResponseDto(group);
-  }
 
-  async updateGroup(
-    groupId: number,
-    groupData: UpdateGroupDto,
-    userId: number,
-  ): Promise<GroupResponseDto> {
-    const group = await this.groupRepository.findOne({
-      where: { uuid: groupId, owner: { uuid: userId } },
-      relations: ['owner'],
-    });
-    if (!group) {
-      throw new NotFoundException('group not found');
+    async getGroupDetails(
+        groupId: number,
+        userId: number,
+    ): Promise<GroupResponseDto> {
+        const group = await this.groupRepository.findOne({
+            where: {
+                uuid: groupId,
+            },
+            relations: ['expenses', 'owner', 'members'],
+        });
+        if (!group) {
+            throw new NotFoundException('group not found');
+        }
+        const isMember = group.members.some((member) => member.uuid == userId);
+        if (!isMember) {
+            throw new NotFoundException('user is not in group');
+        }
+        return this.toResponseDto(group);
     }
-    if (groupData.name) {
-      const exist = await this.findByGroupName(groupData.name);
-      if (exist && exist.uuid !== group.uuid) {
-        throw new ConflictException('Group name is already exist');
-      }
-      group.name = groupData.name;
-    }
-    if (groupData.description !== undefined) {
-      group.description = groupData.description;
-    }
-    if (groupData.ownerId) {
-      const user = await this.userService.findById(groupData.ownerId);
-      if (!user) {
-        throw new NotFoundException('the owner must be exist user');
-      }
-      group.owner = user;
-    }
-    const updatedGroup = await this.groupRepository.save(group);
-    return this.toResponseDto(updatedGroup);
-  }
 
-  async deleteGroup(
-    groupId: number,
-    userId: number,
-  ): Promise<{ message: string }> {
-    const group = await this.groupRepository.findOne({
-      where: { uuid: groupId },
-      relations: ['owner'],
-    });
+    async updateGroup(
+        groupId: number,
+        groupData: UpdateGroupDto,
+        userId: number,
+    ): Promise<GroupResponseDto> {
+        const group = await this.groupRepository.findOne({
+            where: { uuid: groupId, owner: { uuid: userId } },
+            relations: ['owner'],
+        });
+        if (!group) {
+            throw new NotFoundException('group not found');
+        }
+        if (groupData.name) {
+            const exist = await this.findByGroupName(groupData.name);
+            if (exist && exist.uuid !== group.uuid) {
+                throw new ConflictException('Group name is already exist');
+            }
+            group.name = groupData.name;
+        }
+        if (groupData.description !== undefined) {
+            group.description = groupData.description;
+        }
+        if (groupData.ownerId) {
+            const user = await this.userService.findById(groupData.ownerId);
+            if (!user) {
+                throw new NotFoundException('the owner must be exist user');
+            }
+            group.owner = user;
+        }
+        const updatedGroup = await this.groupRepository.save(group);
+        return this.toResponseDto(updatedGroup);
+    }
 
-    if (!group) throw new NotFoundException('group not found');
-    if (group.owner.uuid !== userId) {
-      throw new ForbiddenException('Only the owner can delete this group');
-    }
-    try {
-      await this.groupRepository.remove(group);
-    } catch {
-      throw new InternalServerErrorException(
-        'Could not delete group. Ensure all related data is cleared or cascading is enabled',
-      );
-    }
-    return { message: 'Group deleted successfully' };
-  }
+    async deleteGroup(
+        groupId: number,
+        userId: number,
+    ): Promise<{ message: string }> {
+        const group = await this.groupRepository.findOne({
+            where: { uuid: groupId },
+            relations: ['owner'],
+        });
 
-  async checkIfUserBelogToGroup(userId:number, groupId:number):Promise<Boolean>{
-    const group = await this.groupRepository.findOne({
-        where: {uuid: groupId},
-        relations: ['members']
-    })
-    if(!group){
-        throw new NotFoundException();
+        if (!group) throw new NotFoundException('group not found');
+        if (group.owner.uuid !== userId) {
+            throw new ForbiddenException('Only the owner can delete this group');
+        }
+        try {
+            await this.groupRepository.remove(group);
+        } catch {
+            throw new InternalServerErrorException(
+                'Could not delete group. Ensure all related data is cleared or cascading is enabled',
+            );
+        }
+        return { message: 'Group deleted successfully' };
     }
-    const existMember = group.members.filter(member=> {
-        member.uuid === userId
-    })
-    if(!existMember){
-        return false;
+
+    async checkIfUserBelogToGroup(userId: number, groupId: number): Promise<Boolean> {
+        const group = await this.groupRepository.findOne({
+            where: { uuid: groupId },
+            relations: ['members']
+        })
+        if (!group) {
+            throw new NotFoundException();
+        }
+        const existMember = group.members.filter(member => {
+            member.uuid === userId
+        })
+        if (!existMember) {
+            return false;
+        }
+        return true;
     }
-    return true;
-  }
 }

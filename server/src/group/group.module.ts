@@ -9,7 +9,7 @@ import { UserModule } from 'src/user/user.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Group]), UserModule],
   controllers: [GroupController],
-  providers: [GroupService, JwtService],
+  providers: [GroupService],
   exports: [GroupService],
 })
 export class GroupModule {}

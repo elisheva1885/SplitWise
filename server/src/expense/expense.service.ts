@@ -5,7 +5,6 @@ import { BadRequestException, ForbiddenException, Injectable, NotFoundException 
 import { CreateExpenseDto, UpdateExpenseDto } from "./dto/expense.dto";
 import { ExpenseResponseDto } from "./dto/expense-response.dto";
 import { GroupService } from "src/group/group.service";
-import { NotFoundError } from "rxjs";
 import { UserService } from "src/user/user.service";
 @Injectable()
 export class ExpenseService {
@@ -24,10 +23,13 @@ export class ExpenseService {
         if (userId !== expenseData.paidOn && userId !== expenseData.paidBy) {
             throw new ForbiddenException('user isnt allow th create this expense');
         }
-        const group = await this.gropService.findById(expenseData.groupId);
+        const group = await this.gropService.findByIdWithRelations(expenseData.groupId,['members']);
+        console.log(group);
+        
         if (!group) {
             throw new NotFoundException('group not found')
         }
+
         const paidByUser = await this.userService.findById(expenseData.paidBy);
         const paidOnUser = await this.userService.findById(expenseData.paidOn);
 
