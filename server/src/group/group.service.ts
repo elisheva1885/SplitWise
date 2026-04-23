@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 import { CreateGroupDto, UpdateGroupDto } from './dto/group.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
-import { FullGroupResponseDto } from './dto/group-response.dto';
+import { FullGroupResponseDto, GroupResponseDto } from './dto/group-response.dto';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
@@ -141,7 +141,7 @@ export class GroupService {
     currentUserId: number,
     groupId: number,
     userToRemoveId: number,
-  ): Promise<GroupResponseDto> {
+  ): Promise<FullGroupResponseDto> {
     const group = await this.groupRepository.findOne({
       where: { uuid: groupId },
       relations: ['owner', 'members'],
@@ -152,7 +152,7 @@ export class GroupService {
     if (group.owner.uuid !== currentUserId) {
       throw new ForbiddenException('only owner can remove users');
     }
-    const user = await this.userService.findById(userToRemoveId);
+    const user = await this.userService.findByUuid(userToRemoveId);
     if (!user) {
       throw new NotFoundException('user to remove not found');
     }
@@ -181,7 +181,7 @@ export class GroupService {
     currentUserId: number,
     groupId: number,
     userToAddId: number,
-  ): Promise<GroupResponseDto> {
+  ): Promise<FullGroupResponseDto> {
     const group = await this.groupRepository.findOne({
       where: { uuid: groupId },
       relations: ['owner', 'members'],
@@ -194,7 +194,7 @@ export class GroupService {
         'user isnt allow to add members to the group',
       );
     }
-    const user = await this.userService.findById(userToAddId);
+    const user = await this.userService.findByUuid(userToAddId);
     if (!user) {
       throw new NotFoundException('user to add not found');
     }
