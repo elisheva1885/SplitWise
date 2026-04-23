@@ -8,7 +8,7 @@ export class UserInGroupDto {
   username!: string;
 }
 
-export class GroupResponseDto {
+export class FullGroupResponseDto {
   @Expose()
   uuid!: number;
   @Expose()
@@ -23,4 +23,12 @@ export class GroupResponseDto {
   members!: UserInGroupDto[];
   @Expose()
   expenses?: Expense[];
+}
+
+export class GroupResponseDto {
+  id!: number;
+
+  name!: string;
+
+  owner!: UserInGroupDto;
 }

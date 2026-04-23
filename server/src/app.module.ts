@@ -9,12 +9,10 @@ import { Expense } from './expense/expense.entity';
 import { AuthModule } from './auth/auth.module';
 import { GroupModule } from './group/group.module';
 import { ExpenseModule } from './expense/expense.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    AuthModule,
-    GroupModule,
-    ExpenseModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -34,8 +32,12 @@ import { ExpenseModule } from './expense/expense.module';
         };
       },
     }),
+    UserModule,
+    AuthModule,
+    GroupModule,
+    ExpenseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

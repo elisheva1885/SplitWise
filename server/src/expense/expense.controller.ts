@@ -1,13 +1,13 @@
 import { Body, Controller, Param, ParseIntPipe, Patch, Post, UseGuards } from "@nestjs/common";
 import { ExpenseService } from "./expense.service";
-import { AuthGuard } from "@nestjs/passport";
 import type { JwtPayload } from "src/types/express";
 import { CreateExpenseDto, UpdateExpenseDto } from "./dto/expense.dto";
 import { CurrentUser } from "src/user/current-user.decorator";
 import { ApiCookieAuth, ApiParam } from "@nestjs/swagger";
 import { ExpenseResponseDto } from "./dto/expense-response.dto";
-@UseGuards(AuthGuard)
+import { AuthGuard } from "src/auth/auth.guard";
 @ApiCookieAuth()
+@UseGuards(AuthGuard)
 @Controller('expense')
 export class ExpenseController {
 

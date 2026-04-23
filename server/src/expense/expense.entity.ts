@@ -31,6 +31,3 @@ export class Expense {
   @CreateDateColumn()
   createDate!: Date;
 }
-
-
-
