@@ -1,7 +1,7 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { Expense } from "./expense.entity";
 import { Repository } from "typeorm";
-import { BadRequestException, ForbiddenException, forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, forwardRef, Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { CreateExpenseDto, UpdateExpenseDto } from "./dto/expense.dto";
 import { ExpenseResponseDto } from "./dto/expense-response.dto";
 import { GroupService } from "src/group/group.service";
@@ -20,6 +20,8 @@ export class ExpenseService {
         const members = new Set(group.members.map(m => m.uuid));
         userIds.forEach(userId => {
             if (!members.has(userId)) {
+                console.log(userId, group.uuid);
+                
                 throw new BadRequestException('User not in group');
             }
         })
@@ -121,7 +123,22 @@ export class ExpenseService {
         return expenseRespone;
     }
 
-    async deleteExpense() {
+    async deleteExpense(eid: number, userId: number) : Promise<{ message: string }> {
+        const expense = await this.expenseRepository.findOne({
+            where: { uuid: eid },
+            relations: ['paidBy', 'paidOn', 'group']
+        })
+        if (userId !== expense?.paidBy.uuid && userId !== expense?.paidOn.uuid) {
+            throw new ForbiddenException('user isnt allow to delete this expense');
+        }
+        try {
+            await this.expenseRepository.remove(expense);
+        } catch {
+            throw new InternalServerErrorException(
+                'Could not delete group. Ensure all related data is cleared or cascading is enabled',
+            );
+        }
+        return { message: 'Group deleted successfully' };
 
     }
 }

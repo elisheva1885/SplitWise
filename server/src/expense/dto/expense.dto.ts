@@ -72,7 +72,7 @@ export class CreateExpenseDto {
 export class UpdateExpenseDto {
     @ApiProperty({ example: 'Developers Team', required: false })
     @IsString()
-    @Optional()
+    @IsOptional()
     @MinLength(3)
     cause?: string;
 
@@ -81,19 +81,22 @@ export class UpdateExpenseDto {
         required: true,
     })
     @IsInt()
-    @IsNotEmpty()
+    @IsOptional()
+
     value?: number;
 
 
     @ApiProperty({ example: 1, required: false })
     @IsInt()
     @Min(1)
-    @IsNotEmpty()
+    @IsOptional()
+
     paidBy?: number;
 
     @ApiProperty({ example: 1, required: false })
     @IsInt()
     @Min(1)
-    @IsNotEmpty()
+    @IsOptional()
+
     paidOn?: number;
 }

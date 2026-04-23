@@ -1,4 +1,4 @@
-import { Body, Controller, Param, ParseIntPipe, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Param, ParseIntPipe, Patch, Post, UseGuards } from "@nestjs/common";
 import { ExpenseService } from "./expense.service";
 import type { JwtPayload } from "src/types/express";
 import { CreateExpenseDto, UpdateExpenseDto } from "./dto/expense.dto";
@@ -22,7 +22,7 @@ export class ExpenseController {
     }
 
 
-    @Patch('gid')
+    @Patch(':gid')
     async updateExpense(
         @CurrentUser() user: JwtPayload,
         @Param('gid', ParseIntPipe) gid: number,
@@ -32,12 +32,11 @@ export class ExpenseController {
     }
 
 
-    @Patch('gid')
+    @Delete(':eid')
     async deleteExpense(
         @CurrentUser() user: JwtPayload,
-        @Param('gid', ParseIntPipe) gid: number,
-        @Body() expenseData: UpdateExpenseDto,
-    ): Promise<ExpenseResponseDto> {
-        return await this.expenseService.updateExpense(gid, expenseData, user.id)
+        @Param('eid', ParseIntPipe) eid: number,
+    ): Promise<{ message: string }>  {
+        return await this.expenseService.deleteExpense(eid, user.id)
     }
 }
