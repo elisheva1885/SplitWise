@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 import { CreateGroupDto, UpdateGroupDto } from './dto/group.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
-import { GroupResponseDto } from './dto/group-response.dto';
+import { FullGroupResponseDto } from './dto/group-response.dto';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
@@ -21,8 +21,8 @@ export class GroupService {
     private readonly userService: UserService,
   ) {}
 
-  private toResponseDto(group: Group): GroupResponseDto {
-    return plainToInstance(GroupResponseDto, group, {
+  private toResponseDto(group: Group): FullGroupResponseDto {
+    return plainToInstance(FullGroupResponseDto, group, {
       excludeExtraneousValues: true,
     });
   }
@@ -41,12 +41,12 @@ export class GroupService {
   async createGroup(
     groupData: CreateGroupDto,
     userId: number,
-  ): Promise<GroupResponseDto> {
+  ): Promise<FullGroupResponseDto> {
     const existGroup = await this.findByGroupName(groupData.name);
     if (existGroup) {
       throw new ConflictException('Group name is already exist');
     }
-    const user = await this.userService.findById(userId);
+    const user = await this.userService.findByUuid(userId);
     if (!user) {
       throw new NotFoundException('user not found');
     }
@@ -64,7 +64,7 @@ export class GroupService {
   async getGroupDetails(
     groupId: number,
     userId: number,
-  ): Promise<GroupResponseDto> {
+  ): Promise<FullGroupResponseDto> {
     const group = await this.groupRepository.findOne({
       where: {
         uuid: groupId,
@@ -85,7 +85,7 @@ export class GroupService {
     groupId: number,
     groupData: UpdateGroupDto,
     userId: number,
-  ): Promise<GroupResponseDto> {
+  ): Promise<FullGroupResponseDto> {
     const group = await this.groupRepository.findOne({
       where: { uuid: groupId, owner: { uuid: userId } },
       relations: ['owner'],
@@ -104,7 +104,7 @@ export class GroupService {
       group.description = groupData.description;
     }
     if (groupData.ownerId) {
-      const user = await this.userService.findById(groupData.ownerId);
+      const user = await this.userService.findByUuid(groupData.ownerId);
       if (!user) {
         throw new NotFoundException('the owner must be exist user');
       }
