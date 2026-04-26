@@ -11,7 +11,7 @@ export class RegisterDto {
   @ApiProperty({ example: 'john_doe' })
   @IsString()
   @IsNotEmpty()
-  @MinLength(4)
+  @MinLength(3)
   @MaxLength(100)
   username!: string;
 

@@ -1,4 +1,5 @@
 export class ExpenseResponseDto {
+    id!:number;
     cause?: string;
     value!: number;
     paidBy!: number;

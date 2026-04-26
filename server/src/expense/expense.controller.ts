@@ -22,13 +22,13 @@ export class ExpenseController {
     }
 
 
-    @Patch(':gid')
+    @Patch(':eid')
     async updateExpense(
         @CurrentUser() user: JwtPayload,
-        @Param('gid', ParseIntPipe) gid: number,
+        @Param('eid', ParseIntPipe) eid: number,
         @Body() expenseData: UpdateExpenseDto,
     ): Promise<ExpenseResponseDto> {
-        return await this.expenseService.updateExpense(gid, expenseData, user.id)
+        return await this.expenseService.updateExpense(eid, expenseData, user.id)
     }
 
 

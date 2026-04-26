@@ -22,6 +22,7 @@ export class CreateExpenseDto {
     })
     @IsInt()
     @IsNotEmpty()
+    @Min(1)
     value!: number;
 
 
