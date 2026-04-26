@@ -9,10 +9,12 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import { CreateExpenseDto, UpdateExpenseDto } from './dto/expense.dto';
-import { BalanceExpenseResponse, ExpenseResponseDto } from './dto/expense-response.dto';
+import {
+    BalanceExpenseResponse,
+    ExpenseResponseDto,
+} from './dto/expense-response.dto';
 import { GroupService } from 'src/group/group.service';
 import { ExpenseValidator } from './expense.validator';
-import { group } from 'console';
 import { UserService } from 'src/user/user.service';
 @Injectable()
 export class ExpenseService {
@@ -22,7 +24,6 @@ export class ExpenseService {
         private readonly groupService: GroupService,
         private readonly expenseValidator: ExpenseValidator,
         private readonly userService: UserService,
-
     ) { }
 
     private toResponse(expense: Expense): ExpenseResponseDto {
@@ -35,8 +36,6 @@ export class ExpenseService {
             groupId: expense.group.uuid,
         };
     }
-
-
 
     async createExpense(
         userId: number,
@@ -132,34 +131,49 @@ export class ExpenseService {
         return { message: 'Expense deleted successfully' };
     }
 
-    async getGroupExpense(gid: number,
-        userId: number): Promise<BalanceExpenseResponse[]> {
-        const group = await this.groupService.findByIdWithRelations(gid, ['expenses', 'expenses.paidOn', 'expenses.paidBy']);
-        if (!group) throw new NotFoundException('group not found')
+    async getGroupExpense(
+        gid: number,
+        userId: number,
+    ): Promise<BalanceExpenseResponse[]> {
+        const group = await this.groupService.findByIdWithRelations(gid, [
+            'members',
+             'expenses',
+            'expenses.paidOn',
+            'expenses.paidBy',
+        ]);
+        if (!group) throw new NotFoundException('group not found');
 
-        this.expenseValidator.validateUsersInGroup[userId];
+        this.expenseValidator.validateUsersInGroup(group, [userId]);
         const map = new Map<number, number>();
         const map2 = new Map<number, number>();
 
         let counter = 0;
         const mapper = new Map<string, number>();
-        group.expenses.forEach(expense => {
-            mapper.set(`${expense.paidBy.uuid}-${expense.paidOn.uuid}`, expense.value)
+        group.expenses.forEach((expense) => {
+            mapper.set(
+                `${expense.paidBy.uuid}-${expense.paidOn.uuid}`,
+                expense.value,
+            );
             if (!map.has(expense.paidBy.uuid)) {
                 map.set(expense.paidBy.uuid, counter);
                 map2.set(counter, expense.paidBy.uuid);
-                counter++
+                counter++;
             }
             if (!map.has(expense.paidOn.uuid)) {
-                map.set(expense.paidOn.uuid, counter)
+                map.set(expense.paidOn.uuid, counter);
                 map2.set(counter, expense.paidOn.uuid);
-                counter++
+                counter++;
             }
-        })
+        });
 
         const matSize: number = map.size;
-        let expensesMat: number[][] = Array.from({ length: matSize }, () =>
-            new Array(matSize)
+        // const expensesMat: number[][] = Array.from(
+        //   { length: matSize },
+        //   (): number[] => new Array(matSize),
+        // );
+
+        const expensesMat = Array.from({ length: matSize }, () =>
+            Array.from({ length: matSize }, () => 0),
         );
 
         for (let i = 0; i < expensesMat.length; i++) {
@@ -169,9 +183,8 @@ export class ExpenseService {
                 const paidOn = map2.get(i);
                 const value = mapper.get(`${paidBy}-${paidOn}`);
                 if (value !== undefined) {
-                    expensesMat[i][j] = value
-                }
-                else {
+                    expensesMat[i][j] = value;
+                } else {
                     expensesMat[i][j] = 0;
                 }
             }
@@ -210,10 +223,10 @@ export class ExpenseService {
                         const paidByUser = await this.userService.findByUuid(paidBy);
                         const paidOnUser = await this.userService.findByUuid(paidOn);
                         if (!paidByUser) {
-                            throw new NotFoundException()
+                            throw new NotFoundException();
                         }
                         if (!paidOnUser) {
-                            throw new NotFoundException()
+                            throw new NotFoundException();
                         }
                         updatedExpense.push({
                             paidByUser: {
@@ -224,7 +237,7 @@ export class ExpenseService {
                                 uuid: paidOnUser.uuid,
                                 username: paidOnUser.username,
                             },
-                            value: expensesMat[i][j]
+                            value: expensesMat[i][j],
                         });
                     }
                 }

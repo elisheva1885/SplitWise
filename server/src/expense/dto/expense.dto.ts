@@ -71,5 +71,3 @@ export class UpdateExpenseDto {
   @IsOptional()
   paidOn?: number;
 }
-
-
