@@ -1,5 +1,4 @@
 import { Expose, Type } from 'class-transformer';
-import { Expense } from 'src/expense/expense.entity';
 
 export class UserInGroupDto {
   @Expose()

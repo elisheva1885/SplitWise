@@ -6,4 +6,3 @@ export class ExpenseResponseDto {
   paidOn!: number;
   groupId!: number;
 }
-

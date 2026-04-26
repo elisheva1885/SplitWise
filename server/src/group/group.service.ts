@@ -1,8 +1,6 @@
 import {
   ConflictException,
   ForbiddenException,
-  forwardRef,
-  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -81,10 +79,16 @@ export class GroupService {
       where: {
         uuid: groupId,
       },
-      relations: ['expenses', 'owner', 'members','expenses.paidBy','expenses.paidOn'],
+      relations: [
+        'expenses',
+        'owner',
+        'members',
+        'expenses.paidBy',
+        'expenses.paidOn',
+      ],
     });
     console.log(group);
-    
+
     if (!group) {
       throw new NotFoundException('group not found');
     }
