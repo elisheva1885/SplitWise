@@ -1,55 +1,56 @@
 import {
-    BadRequestException,
-    ConflictException,
-    ForbiddenException,
-    forwardRef,
-    Inject,
-    Injectable,
-    InternalServerErrorException,
-    NotFoundException,
+  ConflictException,
+  ForbiddenException,
+  forwardRef,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { Group } from './group.entity';
 import { Repository } from 'typeorm';
 import { CreateGroupDto, UpdateGroupDto } from './dto/group.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
-import { FullGroupResponseDto, GroupResponseDto } from './dto/group-response.dto';
+import { FullGroupResponseDto } from './dto/group-response.dto';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class GroupService {
-    constructor(
-        @InjectRepository(Group)
-        private readonly groupRepository: Repository<Group>,
-        @Inject(forwardRef(() => UserService))
-        private readonly userService: UserService,
-    ) { }
+  constructor(
+    @InjectRepository(Group)
+    private readonly groupRepository: Repository<Group>,
+    private readonly userService: UserService,
+  ) {}
 
-    private toResponseDto(group: Group): FullGroupResponseDto {
-        return plainToInstance(FullGroupResponseDto, group, {
-            excludeExtraneousValues: true,
-        });
-    }
+  private toResponseDto(group: Group): FullGroupResponseDto {
+    return plainToInstance(FullGroupResponseDto, group, {
+      excludeExtraneousValues: true,
+    });
+  }
 
-    async findByGroupName(name: string): Promise<Group | null> {
-        return await this.groupRepository.findOne({
-            where: { name },
-        });
-    }
-    async findById(uuid: number): Promise<Group | null> {
-        return await this.groupRepository.findOne({
-            where: { uuid },
-        });
-    }
+  async findByGroupName(name: string): Promise<Group | null> {
+    return await this.groupRepository.findOne({
+      where: { name },
+    });
+  }
+  async findById(uuid: number): Promise<Group | null> {
+    return await this.groupRepository.findOne({
+      where: { uuid },
+    });
+  }
 
-    async findByIdWithRelations(uuid: number, relations: string[]): Promise<Group | null> {
-        return await this.groupRepository.findOne({
-            where: { uuid },
-            relations: relations
-        });
-    }
+  async findByIdWithRelations(
+    uuid: number,
+    relations: string[],
+  ): Promise<Group | null> {
+    return await this.groupRepository.findOne({
+      where: { uuid },
+      relations: relations,
+    });
+  }
 
-    async createGroup(
+  async createGroup(
     groupData: CreateGroupDto,
     userId: number,
   ): Promise<FullGroupResponseDto> {
@@ -80,8 +81,10 @@ export class GroupService {
       where: {
         uuid: groupId,
       },
-      relations: ['expenses', 'owner', 'members'],
+      relations: ['expenses', 'owner', 'members','expenses.paidBy','expenses.paidOn'],
     });
+    console.log(group);
+    
     if (!group) {
       throw new NotFoundException('group not found');
     }
@@ -89,6 +92,7 @@ export class GroupService {
     if (!isMember) {
       throw new NotFoundException('user is not in group');
     }
+
     return this.toResponseDto(group);
   }
 
@@ -201,7 +205,7 @@ export class GroupService {
       throw new NotFoundException('group not found');
     }
     if (group.owner.uuid !== currentUserId) {
-       throw new ForbiddenException(
+      throw new ForbiddenException(
         'user isnt allow to add members to the group',
       );
     }

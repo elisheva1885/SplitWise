@@ -8,6 +8,22 @@ export class UserInGroupDto {
   username!: string;
 }
 
+export class ExpenseInGroupDto {
+  @Expose()
+  uuid!: number;
+  @Expose()
+  cause?: string;
+  @Expose()
+  value!: number;
+  @Expose()
+  @Type(() => UserInGroupDto)
+  paidBy!: UserInGroupDto;
+
+  @Expose()
+  @Type(() => UserInGroupDto)
+  paidOn!: UserInGroupDto;
+}
+
 export class FullGroupResponseDto {
   @Expose()
   uuid!: number;
@@ -22,7 +38,8 @@ export class FullGroupResponseDto {
   @Type(() => UserInGroupDto)
   members!: UserInGroupDto[];
   @Expose()
-  expenses?: Expense[];
+  @Type(() => ExpenseInGroupDto)
+  expenses?: ExpenseInGroupDto[];
 }
 
 export class GroupResponseDto {
