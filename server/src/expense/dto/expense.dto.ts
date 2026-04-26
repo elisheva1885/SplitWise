@@ -44,29 +44,6 @@ export class CreateExpenseDto {
   groupId!: number;
 }
 
-// export class UpdateGroupDto {
-//     @ApiProperty({ example: 'Developers Team', required: false })
-//     @IsString()
-//     @IsNotEmpty()
-//     @MinLength(3)
-//     @IsOptional()
-//     name?: string;
-
-//     @ApiProperty({
-//         example: 'A group for all backend developers',
-//         required: false,
-//     })
-//     @IsString()
-//     @IsOptional()
-//     description?: string;
-
-//     @ApiProperty({ example: 1, required: false })
-//     @IsInt()
-//     @Min(1)
-//     @IsOptional()
-//     ownerId?: number;
-// }
-
 export class UpdateExpenseDto {
   @ApiProperty({ example: 'Developers Team', required: false })
   @IsString()
@@ -94,3 +71,5 @@ export class UpdateExpenseDto {
   @IsOptional()
   paidOn?: number;
 }
+
+

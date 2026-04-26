@@ -87,7 +87,6 @@ export class GroupService {
         'expenses.paidOn',
       ],
     });
-    console.log(group);
 
     if (!group) {
       throw new NotFoundException('group not found');

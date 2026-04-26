@@ -2,127 +2,234 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Expense } from './expense.entity';
 import { Repository } from 'typeorm';
 import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
+    BadRequestException,
+    ForbiddenException,
+    Injectable,
+    InternalServerErrorException,
+    NotFoundException,
 } from '@nestjs/common';
 import { CreateExpenseDto, UpdateExpenseDto } from './dto/expense.dto';
-import { ExpenseResponseDto } from './dto/expense-response.dto';
+import { BalanceExpenseResponse, ExpenseResponseDto } from './dto/expense-response.dto';
 import { GroupService } from 'src/group/group.service';
 import { ExpenseValidator } from './expense.validator';
+import { group } from 'console';
+import { UserService } from 'src/user/user.service';
 @Injectable()
 export class ExpenseService {
-  constructor(
-    @InjectRepository(Expense)
-    private readonly expenseRepository: Repository<Expense>,
-    private readonly groupService: GroupService,
-    private readonly expenseValidator: ExpenseValidator,
-  ) {}
+    constructor(
+        @InjectRepository(Expense)
+        private readonly expenseRepository: Repository<Expense>,
+        private readonly groupService: GroupService,
+        private readonly expenseValidator: ExpenseValidator,
+        private readonly userService: UserService,
 
-  private toResponse(expense: Expense): ExpenseResponseDto {
-    return {
-      id: expense.uuid,
-      value: expense.value,
-      cause: expense.cause,
-      paidBy: expense.paidBy.uuid,
-      paidOn: expense.paidOn.uuid,
-      groupId: expense.group.uuid,
-    };
-  }
+    ) { }
 
-  async createExpense(
-    userId: number,
-    expenseData: CreateExpenseDto,
-  ): Promise<ExpenseResponseDto> {
-    const group = await this.groupService.findByIdWithRelations(
-      expenseData.groupId,
-      ['members'],
-    );
-    if (!group) {
-      throw new NotFoundException('group not found');
+    private toResponse(expense: Expense): ExpenseResponseDto {
+        return {
+            id: expense.uuid,
+            value: expense.value,
+            cause: expense.cause,
+            paidBy: expense.paidBy.uuid,
+            paidOn: expense.paidOn.uuid,
+            groupId: expense.group.uuid,
+        };
     }
 
-    const { paidByUser, paidOnUser } =
-      await this.expenseValidator.validateExpenseParticipant(
-        group,
-        expenseData.paidBy,
-        expenseData.paidOn,
-        userId,
-        'create',
-      );
-    const expense = this.expenseRepository.create({
-      cause: expenseData.cause,
-      value: expenseData.value,
-      paidBy: paidByUser,
-      paidOn: paidOnUser,
-      group: group,
-    });
-    await this.expenseRepository.save(expense);
 
-    return this.toResponse(expense);
-  }
 
-  async updateExpense(
-    eid: number,
-    expenseData: UpdateExpenseDto,
-    userId: number,
-  ): Promise<ExpenseResponseDto> {
-    const expense = await this.expenseRepository.findOne({
-      where: { uuid: eid },
-      relations: ['paidBy', 'paidOn', 'group', 'group.members'],
-    });
-    if (!expense) {
-      throw new NotFoundException('expense not found');
+    async createExpense(
+        userId: number,
+        expenseData: CreateExpenseDto,
+    ): Promise<ExpenseResponseDto> {
+        const group = await this.groupService.findByIdWithRelations(
+            expenseData.groupId,
+            ['members'],
+        );
+        if (!group) {
+            throw new NotFoundException('group not found');
+        }
+
+        const { paidByUser, paidOnUser } =
+            await this.expenseValidator.validateExpenseParticipant(
+                group,
+                expenseData.paidBy,
+                expenseData.paidOn,
+                userId,
+                'create',
+            );
+        const expense = this.expenseRepository.create({
+            cause: expenseData.cause,
+            value: expenseData.value,
+            paidBy: paidByUser,
+            paidOn: paidOnUser,
+            group: group,
+        });
+        await this.expenseRepository.save(expense);
+
+        return this.toResponse(expense);
     }
-    const newPaidBy = expenseData.paidBy ?? expense.paidBy.uuid;
-    const newPaidOn = expenseData.paidOn ?? expense.paidOn.uuid;
-    const { paidByUser, paidOnUser } =
-      await this.expenseValidator.validateExpenseParticipant(
-        expense.group,
-        newPaidBy,
-        newPaidOn,
-        userId,
-        'update',
-      );
 
-    expense.paidBy = paidByUser;
-    expense.paidOn = paidOnUser;
+    async updateExpense(
+        eid: number,
+        expenseData: UpdateExpenseDto,
+        userId: number,
+    ): Promise<ExpenseResponseDto> {
+        const expense = await this.expenseRepository.findOne({
+            where: { uuid: eid },
+            relations: ['paidBy', 'paidOn', 'group', 'group.members'],
+        });
+        if (!expense) {
+            throw new NotFoundException('expense not found');
+        }
+        const newPaidBy = expenseData.paidBy ?? expense.paidBy.uuid;
+        const newPaidOn = expenseData.paidOn ?? expense.paidOn.uuid;
+        const { paidByUser, paidOnUser } =
+            await this.expenseValidator.validateExpenseParticipant(
+                expense.group,
+                newPaidBy,
+                newPaidOn,
+                userId,
+                'update',
+            );
 
-    if (expenseData.cause) {
-      expense.cause = expenseData.cause;
-    }
-    if (expenseData.value !== undefined) {
-      if (expenseData.value <= 0) {
-        throw new BadRequestException('value must be greater than 0');
-      }
-      expense.value = expenseData.value;
-    }
-    const updatedExpense = await this.expenseRepository.save(expense);
-    return this.toResponse(updatedExpense);
-  }
+        expense.paidBy = paidByUser;
+        expense.paidOn = paidOnUser;
 
-  async deleteExpense(
-    eid: number,
-    userId: number,
-  ): Promise<{ message: string }> {
-    const expense = await this.expenseRepository.findOne({
-      where: { uuid: eid },
-      relations: ['paidBy', 'paidOn', 'group'],
-    });
-    if (!expense) throw new NotFoundException('expense not found');
+        if (expenseData.cause) {
+            expense.cause = expenseData.cause;
+        }
+        if (expenseData.value !== undefined) {
+            if (expenseData.value <= 0) {
+                throw new BadRequestException('value must be greater than 0');
+            }
+            expense.value = expenseData.value;
+        }
+        const updatedExpense = await this.expenseRepository.save(expense);
+        return this.toResponse(updatedExpense);
+    }
 
-    if (userId !== expense.paidBy.uuid && userId !== expense.paidOn.uuid) {
-      throw new ForbiddenException('user isnt allowed to delete this expense');
+    async deleteExpense(
+        eid: number,
+        userId: number,
+    ): Promise<{ message: string }> {
+        const expense = await this.expenseRepository.findOne({
+            where: { uuid: eid },
+            relations: ['paidBy', 'paidOn', 'group'],
+        });
+        if (!expense) throw new NotFoundException('expense not found');
+
+        if (userId !== expense.paidBy.uuid && userId !== expense.paidOn.uuid) {
+            throw new ForbiddenException('user isnt allowed to delete this expense');
+        }
+        try {
+            await this.expenseRepository.remove(expense);
+        } catch {
+            throw new InternalServerErrorException(
+                'Could not delete expense. Ensure all related data is cleared or cascading is enabled',
+            );
+        }
+        return { message: 'Expense deleted successfully' };
     }
-    try {
-      await this.expenseRepository.delete(expense);
-    } catch {
-      throw new InternalServerErrorException(
-        'Could not delete expense. Ensure all related data is cleared or cascading is enabled',
-      );
+
+    async getGroupExpense(gid: number,
+        userId: number): Promise<BalanceExpenseResponse[]> {
+        const group = await this.groupService.findByIdWithRelations(gid, ['expenses', 'expenses.paidOn', 'expenses.paidBy']);
+        if (!group) throw new NotFoundException('group not found')
+
+        this.expenseValidator.validateUsersInGroup[userId];
+        const map = new Map<number, number>();
+        const map2 = new Map<number, number>();
+
+        let counter = 0;
+        const mapper = new Map<string, number>();
+        group.expenses.forEach(expense => {
+            mapper.set(`${expense.paidBy.uuid}-${expense.paidOn.uuid}`, expense.value)
+            if (!map.has(expense.paidBy.uuid)) {
+                map.set(expense.paidBy.uuid, counter);
+                map2.set(counter, expense.paidBy.uuid);
+                counter++
+            }
+            if (!map.has(expense.paidOn.uuid)) {
+                map.set(expense.paidOn.uuid, counter)
+                map2.set(counter, expense.paidOn.uuid);
+                counter++
+            }
+        })
+
+        const matSize: number = map.size;
+        let expensesMat: number[][] = Array.from({ length: matSize }, () =>
+            new Array(matSize)
+        );
+
+        for (let i = 0; i < expensesMat.length; i++) {
+            for (let j = 0; j < expensesMat[i].length; j++) {
+                if (i == j) expensesMat[i][j] = 0;
+                const paidBy = map2.get(j);
+                const paidOn = map2.get(i);
+                const value = mapper.get(`${paidBy}-${paidOn}`);
+                if (value !== undefined) {
+                    expensesMat[i][j] = value
+                }
+                else {
+                    expensesMat[i][j] = 0;
+                }
+            }
+        }
+        console.table(expensesMat);
+        for (let i = 0; i < expensesMat.length; i++) {
+            for (let j = 0; j < expensesMat[i].length; j++) {
+                if (expensesMat[i][j] > 0) {
+                    for (let k = 0; k < expensesMat.length; k++) {
+                        if (expensesMat[k][i] > 0) {
+                            if (expensesMat[k][i] > expensesMat[i][j] && k !== i) {
+                                expensesMat[k][j] = expensesMat[k][i] - expensesMat[i][j];
+                                expensesMat[k][i] = expensesMat[k][i] - expensesMat[i][j];
+                                expensesMat[i][j] = 0;
+                                console.table(expensesMat);
+                            }
+                            if (expensesMat[k][i] == expensesMat[i][j] && k !== i) {
+                                expensesMat[k][j] = expensesMat[k][i];
+                                expensesMat[k][i] = expensesMat[k][i] - expensesMat[i][j];
+                                expensesMat[i][j] = 0;
+                                console.table(expensesMat);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        console.table(expensesMat);
+        const updatedExpense: BalanceExpenseResponse[] = [];
+        for (let i = 0; i < expensesMat.length; i++) {
+            for (let j = 0; j < expensesMat[i].length; j++) {
+                if (expensesMat[i][j]) {
+                    const paidBy = map2.get(j);
+                    const paidOn = map2.get(i);
+                    if (paidBy !== undefined && paidOn !== undefined) {
+                        const paidByUser = await this.userService.findByUuid(paidBy);
+                        const paidOnUser = await this.userService.findByUuid(paidOn);
+                        if (!paidByUser) {
+                            throw new NotFoundException()
+                        }
+                        if (!paidOnUser) {
+                            throw new NotFoundException()
+                        }
+                        updatedExpense.push({
+                            paidByUser: {
+                                uuid: paidByUser.uuid,
+                                username: paidByUser.username,
+                            },
+                            paidOnUser: {
+                                uuid: paidOnUser.uuid,
+                                username: paidOnUser.username,
+                            },
+                            value: expensesMat[i][j]
+                        });
+                    }
+                }
+            }
+        }
+        return updatedExpense;
     }
-    return { message: 'Expense deleted successfully' };
-  }
 }
