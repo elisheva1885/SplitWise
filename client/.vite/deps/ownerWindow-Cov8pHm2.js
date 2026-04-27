@@ -1,0 +1,25 @@
+import { n as ownerDocument } from "./useEnhancedEffect-C3sE3HDU.js";
+//#region node_modules/@mui/utils/debounce/debounce.mjs
+function debounce(func, wait = 166) {
+	let timeout;
+	function debounced(...args) {
+		const later = () => {
+			func.apply(this, args);
+		};
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+	}
+	debounced.clear = () => {
+		clearTimeout(timeout);
+	};
+	return debounced;
+}
+//#endregion
+//#region node_modules/@mui/utils/ownerWindow/ownerWindow.mjs
+function ownerWindow(node) {
+	return ownerDocument(node).defaultView || window;
+}
+//#endregion
+export { debounce as n, ownerWindow as t };
+
+//# sourceMappingURL=ownerWindow-Cov8pHm2.js.map
