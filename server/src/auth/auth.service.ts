@@ -19,7 +19,6 @@ import { JwtPayload } from 'src/types/express';
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
