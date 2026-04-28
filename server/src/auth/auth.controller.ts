@@ -46,4 +46,18 @@ export class AuthController {
     });
     return { message: 'Logged in successfully' };
   }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('login')
+  async logout(
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ message: string }> {    
+    res.clearCookie('access_token',{
+          httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+    return { message: 'Loggedout successfully' };
+  }
+
 }

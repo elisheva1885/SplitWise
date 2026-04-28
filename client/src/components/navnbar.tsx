@@ -11,20 +11,22 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import type { User } from '../types/user';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 export const Navbar = () => {
     const [userConnected, setUserConnected] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const user = {
-        username :'elisheva',
-        email: 'elisheva@gmail.com'
-    }
+    const [user, setUser] = React.useState<User| null>({
+            username: 'elisheva',
+            email: 'elisheva@gmail.com'
+        });
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUserConnected(event.target.checked);
     };
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-        alert('')
         if (userConnected) {
             setAnchorEl(event.currentTarget);
         }
@@ -34,12 +36,20 @@ export const Navbar = () => {
         setAnchorEl(null);
     };
 
-    const getUser = ()=> {
+    const getUser = () => {
         //get the userData from the context 
-        //now cared like the user isnt connected
-        setUserConnected(false);
-    }
+        // setUserConnected(false);
+        // const user: User = {
+        //     username: 'elisheva',
+        //     email: 'elisheva@gmail.com'
+        // }
+        // setUser(user)
+        // console.log(user);
 
+    }
+    React.useEffect(() => {
+        getUser()
+    }, [])
     return (
         <Box sx={{ flexGrow: 1 }}>
             {/* <FormGroup>
@@ -63,7 +73,8 @@ export const Navbar = () => {
                         aria-label="menu"
                         sx={{ mr: 2 }}
                     >
-                        <MenuIcon />
+                        {/* <MenuIcon /> */}
+                        {user? <button>My Groups</button>: <></>}
                     </IconButton>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         Photos
@@ -78,6 +89,9 @@ export const Navbar = () => {
                                 onClick={handleMenu}
                                 color="inherit"
                             >
+                                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                                    {user?user?.username: ''}
+                                </Typography>
                                 <AccountCircle />
                             </IconButton>
                             <Menu
@@ -95,9 +109,9 @@ export const Navbar = () => {
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
                             >
-                                <div >
+                                <div aria-disabled={user? true: false}>
                                     <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                    <MenuItem onClick={handleClose}>My account</MenuItem>
+                                    <MenuItem onClick={handleClose}><LogoutIcon/> Logout</MenuItem>
                                 </div>
                             </Menu>
                         </div>
