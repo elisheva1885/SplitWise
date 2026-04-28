@@ -16,6 +16,7 @@ import {
 import { GroupService } from 'src/group/group.service';
 import { ExpenseValidator } from './expense.validator';
 import { UserService } from 'src/user/user.service';
+import { log } from 'node:console';
 @Injectable()
 export class ExpenseService {
     constructor(
@@ -137,7 +138,7 @@ export class ExpenseService {
     ): Promise<BalanceExpenseResponse[]> {
         const group = await this.groupService.findByIdWithRelations(gid, [
             'members',
-             'expenses',
+            'expenses',
             'expenses.paidOn',
             'expenses.paidBy',
         ]);
@@ -150,10 +151,8 @@ export class ExpenseService {
         let counter = 0;
         const mapper = new Map<string, number>();
         group.expenses.forEach((expense) => {
-            mapper.set(
-                `${expense.paidBy.uuid}-${expense.paidOn.uuid}`,
-                expense.value,
-            );
+            const key = `${expense.paidBy.uuid}-${expense.paidOn.uuid}`;
+            mapper.set(key, (mapper.get(key) || 0) + expense.value);
             if (!map.has(expense.paidBy.uuid)) {
                 map.set(expense.paidBy.uuid, counter);
                 map2.set(counter, expense.paidBy.uuid);
@@ -167,15 +166,12 @@ export class ExpenseService {
         });
 
         const matSize: number = map.size;
-        // const expensesMat: number[][] = Array.from(
-        //   { length: matSize },
-        //   (): number[] => new Array(matSize),
-        // );
-
         const expensesMat = Array.from({ length: matSize }, () =>
             Array.from({ length: matSize }, () => 0),
         );
-
+        const result = Array.from({ length: matSize }, () =>
+            Array.from({ length: matSize }, () => 0),
+        );
         for (let i = 0; i < expensesMat.length; i++) {
             for (let j = 0; j < expensesMat[i].length; j++) {
                 if (i == j) expensesMat[i][j] = 0;
@@ -190,28 +186,52 @@ export class ExpenseService {
             }
         }
         console.table(expensesMat);
-        for (let i = 0; i < expensesMat.length; i++) {
-            for (let j = 0; j < expensesMat[i].length; j++) {
-                if (expensesMat[i][j] > 0) {
-                    for (let k = 0; k < expensesMat.length; k++) {
-                        if (expensesMat[k][i] > 0) {
-                            if (expensesMat[k][i] > expensesMat[i][j] && k !== i) {
-                                expensesMat[k][j] = expensesMat[k][i] - expensesMat[i][j];
-                                expensesMat[k][i] = expensesMat[k][i] - expensesMat[i][j];
-                                expensesMat[i][j] = 0;
-                                console.table(expensesMat);
-                            }
-                            if (expensesMat[k][i] == expensesMat[i][j] && k !== i) {
-                                expensesMat[k][j] = expensesMat[k][i];
-                                expensesMat[k][i] = expensesMat[k][i] - expensesMat[i][j];
-                                expensesMat[i][j] = 0;
-                                console.table(expensesMat);
-                            }
-                        }
-                    }
-                }
-            }
+        // for (let i = 0; i < expensesMat.length; i++) {
+        //     for (let j = 0; j < expensesMat[i].length; j++) {
+        //         // while (expensesMat[i][j] > 0) {
+        //             // console.log(expensesMat[i][j]); 
+        //             for (let k = 0; k < expensesMat.length; k++) {
+        //                 if(i==j) continue;
+        //                 if (expensesMat[k][i] === 0 || k===j) {
+
+        //                     const min = Math.min(expensesMat[k][i], expensesMat[i][j])
+
+        //                     console.log("min", min, ' ', expensesMat[k][i]);
+        //                     expensesMat[k][j] += min;
+        //                     expensesMat[i][j] -= min;
+        //                     expensesMat[k][i] -= min;
+        //                     if(expensesMat[i][j] === 0){
+        //                         break;
+        //                     }
+        //                 }
+        //         }
+        //     }
+        // }
+for (let i = 0; i < matSize; i++) {
+    for (let j = i + 1; j < matSize; j++) {
+        if (expensesMat[i][j] > 0 && expensesMat[j][i] > 0) {
+            const min = Math.min(expensesMat[i][j], expensesMat[j][i]);
+            expensesMat[i][j] -= min;
+            expensesMat[j][i] -= min;
         }
+    }
+}
+ 
+for (let i = 0; i < matSize; i++) {
+    for (let k = 0; k < matSize; k++) {
+        if (k === i || expensesMat[k][i] === 0) continue;
+        for (let j = 0; j < matSize; j++) {
+            if (j === i || j === k) continue;
+            if (expensesMat[i][j] === 0) continue;
+ 
+            const min = Math.min(expensesMat[k][i], expensesMat[i][j]);
+            expensesMat[k][j] += min;
+            expensesMat[k][i] -= min;
+            expensesMat[i][j] -= min;
+        }
+    }
+}
+        
         console.table(expensesMat);
         const updatedExpense: BalanceExpenseResponse[] = [];
         for (let i = 0; i < expensesMat.length; i++) {
