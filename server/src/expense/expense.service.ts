@@ -132,137 +132,152 @@ export class ExpenseService {
         return { message: 'Expense deleted successfully' };
     }
 
+    private buildUserMappings(expenses: Expense[]) {
+    const userToIndexMap = new Map<number, number>();
+    const indexToUserMap = new Map<number, number>();
+    const expenseByUserPair = new Map<string, number>();
+
+    let currentIndex = 0;
+
+    expenses.forEach((expense) => {
+        const key = `${expense.paidBy.uuid}-${expense.paidOn.uuid}`;
+        expenseByUserPair.set(
+            key,
+            (expenseByUserPair.get(key) || 0) + expense.value,
+        );
+
+        if (!userToIndexMap.has(expense.paidBy.uuid)) {
+            userToIndexMap.set(expense.paidBy.uuid, currentIndex);
+            indexToUserMap.set(currentIndex, expense.paidBy.uuid);
+            currentIndex++;
+        }
+
+        if (!userToIndexMap.has(expense.paidOn.uuid)) {
+            userToIndexMap.set(expense.paidOn.uuid, currentIndex);
+            indexToUserMap.set(currentIndex, expense.paidOn.uuid);
+            currentIndex++;
+        }
+    });
+
+    return { userToIndexMap, indexToUserMap, expenseByUserPair };
+}
+private buildDebtMatrix(
+    userToIndexMap: Map<number, number>,
+    indexToUserMap: Map<number, number>,
+    expenseByUserPair: Map<string, number>,
+): number[][] {
+    const size = userToIndexMap.size;
+
+    const debtMatrix = Array.from({ length: size }, () =>
+        Array.from({ length: size }, () => 0),
+    );
+
+    for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+            if (i === j) continue;
+
+            const paidBy = indexToUserMap.get(j);
+            const paidOn = indexToUserMap.get(i);
+
+            const value = expenseByUserPair.get(`${paidBy}-${paidOn}`);
+            debtMatrix[i][j] = value ?? 0;
+        }
+    }
+
+    return debtMatrix;
+}
+private simplifyDebts(debtMatrix: number[][]) {
+    for (let i = 0; i < debtMatrix.length; i++) {
+        for (let j = 0; j < debtMatrix[i].length; j++) {
+            for (let k = 0; k < debtMatrix.length; k++) {
+                if (i === j) continue;
+
+                if (debtMatrix[k][i] === 0) {
+                    const min = Math.min(
+                        debtMatrix[k][i],
+                        debtMatrix[i][j],
+                    );
+
+                    debtMatrix[k][j] += min;
+                    debtMatrix[i][j] -= min;
+                    debtMatrix[k][i] -= min;
+
+                    if (debtMatrix[i][j] === 0) break;
+                }
+            }
+        }
+    }
+}
+private async mapToResponse(
+    debtMatrix: number[][],
+    indexToUserMap: Map<number, number>,
+): Promise<BalanceExpenseResponse[]> {
+    const simplifiedExpenses: BalanceExpenseResponse[] = [];
+
+    for (let i = 0; i < debtMatrix.length; i++) {
+        for (let j = 0; j < debtMatrix[i].length; j++) {
+            if (!debtMatrix[i][j]) continue;
+
+            const paidBy = indexToUserMap.get(j);
+            const paidOn = indexToUserMap.get(i);
+
+            if (paidBy === undefined || paidOn === undefined) continue;
+
+            const [paidByUser, paidOnUser] = await Promise.all([
+                this.userService.findByUuid(paidBy),
+                this.userService.findByUuid(paidOn),
+            ]);
+
+            if (!paidByUser || !paidOnUser) {
+                throw new NotFoundException();
+            }
+
+            simplifiedExpenses.push({
+                paidByUser: {
+                    uuid: paidByUser.uuid,
+                    username: paidByUser.username,
+                },
+                paidOnUser: {
+                    uuid: paidOnUser.uuid,
+                    username: paidOnUser.username,
+                },
+                value: debtMatrix[i][j],
+            });
+        }
+    }
+
+    return simplifiedExpenses;
+}
     async getGroupExpense(
-        gid: number,
-        userId: number,
-    ): Promise<BalanceExpenseResponse[]> {
-        const group = await this.groupService.findByIdWithRelations(gid, [
-            'members',
-            'expenses',
-            'expenses.paidOn',
-            'expenses.paidBy',
-        ]);
-        if (!group) throw new NotFoundException('group not found');
+    gid: number,
+    userId: number,
+): Promise<BalanceExpenseResponse[]> {
+    const group = await this.groupService.findByIdWithRelations(gid, [
+        'members',
+        'expenses',
+        'expenses.paidOn',
+        'expenses.paidBy',
+    ]);
+    if (!group) throw new NotFoundException('group not found');
 
-        this.expenseValidator.validateUsersInGroup(group, [userId]);
-        const map = new Map<number, number>();
-        const map2 = new Map<number, number>();
+    this.expenseValidator.validateUsersInGroup(group, [userId]);
 
-        let counter = 0;
-        const mapper = new Map<string, number>();
-        group.expenses.forEach((expense) => {
-            const key = `${expense.paidBy.uuid}-${expense.paidOn.uuid}`;
-            mapper.set(key, (mapper.get(key) || 0) + expense.value);
-            if (!map.has(expense.paidBy.uuid)) {
-                map.set(expense.paidBy.uuid, counter);
-                map2.set(counter, expense.paidBy.uuid);
-                counter++;
-            }
-            if (!map.has(expense.paidOn.uuid)) {
-                map.set(expense.paidOn.uuid, counter);
-                map2.set(counter, expense.paidOn.uuid);
-                counter++;
-            }
-        });
+    const {
+        userToIndexMap,
+        indexToUserMap,
+        expenseByUserPair,
+    } = this.buildUserMappings(group.expenses);
 
-        const matSize: number = map.size;
-        const expensesMat = Array.from({ length: matSize }, () =>
-            Array.from({ length: matSize }, () => 0),
-        );
-        const result = Array.from({ length: matSize }, () =>
-            Array.from({ length: matSize }, () => 0),
-        );
-        for (let i = 0; i < expensesMat.length; i++) {
-            for (let j = 0; j < expensesMat[i].length; j++) {
-                if (i == j) expensesMat[i][j] = 0;
-                const paidBy = map2.get(j);
-                const paidOn = map2.get(i);
-                const value = mapper.get(`${paidBy}-${paidOn}`);
-                if (value !== undefined) {
-                    expensesMat[i][j] = value;
-                } else {
-                    expensesMat[i][j] = 0;
-                }
-            }
-        }
-        console.table(expensesMat);
-        // for (let i = 0; i < expensesMat.length; i++) {
-        //     for (let j = 0; j < expensesMat[i].length; j++) {
-        //         // while (expensesMat[i][j] > 0) {
-        //             // console.log(expensesMat[i][j]); 
-        //             for (let k = 0; k < expensesMat.length; k++) {
-        //                 if(i==j) continue;
-        //                 if (expensesMat[k][i] === 0 || k===j) {
+    const debtMatrix = this.buildDebtMatrix(
+        userToIndexMap,
+        indexToUserMap,
+        expenseByUserPair,
+    );
 
-        //                     const min = Math.min(expensesMat[k][i], expensesMat[i][j])
+    this.simplifyDebts(debtMatrix);
 
-        //                     console.log("min", min, ' ', expensesMat[k][i]);
-        //                     expensesMat[k][j] += min;
-        //                     expensesMat[i][j] -= min;
-        //                     expensesMat[k][i] -= min;
-        //                     if(expensesMat[i][j] === 0){
-        //                         break;
-        //                     }
-        //                 }
-        //         }
-        //     }
-        // }
-for (let i = 0; i < matSize; i++) {
-    for (let j = i + 1; j < matSize; j++) {
-        if (expensesMat[i][j] > 0 && expensesMat[j][i] > 0) {
-            const min = Math.min(expensesMat[i][j], expensesMat[j][i]);
-            expensesMat[i][j] -= min;
-            expensesMat[j][i] -= min;
-        }
-    }
+    return await this.mapToResponse(debtMatrix, indexToUserMap);
 }
- 
-for (let i = 0; i < matSize; i++) {
-    for (let k = 0; k < matSize; k++) {
-        if (k === i || expensesMat[k][i] === 0) continue;
-        for (let j = 0; j < matSize; j++) {
-            if (j === i || j === k) continue;
-            if (expensesMat[i][j] === 0) continue;
- 
-            const min = Math.min(expensesMat[k][i], expensesMat[i][j]);
-            expensesMat[k][j] += min;
-            expensesMat[k][i] -= min;
-            expensesMat[i][j] -= min;
-        }
-    }
 }
-        
-        console.table(expensesMat);
-        const updatedExpense: BalanceExpenseResponse[] = [];
-        for (let i = 0; i < expensesMat.length; i++) {
-            for (let j = 0; j < expensesMat[i].length; j++) {
-                if (expensesMat[i][j]) {
-                    const paidBy = map2.get(j);
-                    const paidOn = map2.get(i);
-                    if (paidBy !== undefined && paidOn !== undefined) {
-                        const paidByUser = await this.userService.findByUuid(paidBy);
-                        const paidOnUser = await this.userService.findByUuid(paidOn);
-                        if (!paidByUser) {
-                            throw new NotFoundException();
-                        }
-                        if (!paidOnUser) {
-                            throw new NotFoundException();
-                        }
-                        updatedExpense.push({
-                            paidByUser: {
-                                uuid: paidByUser.uuid,
-                                username: paidByUser.username,
-                            },
-                            paidOnUser: {
-                                uuid: paidOnUser.uuid,
-                                username: paidOnUser.username,
-                            },
-                            value: expensesMat[i][j],
-                        });
-                    }
-                }
-            }
-        }
-        return updatedExpense;
-    }
-}
+
+
