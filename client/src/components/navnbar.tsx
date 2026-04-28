@@ -13,16 +13,19 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 
 export const Navbar = () => {
-    const [auth, setAuth] = React.useState(true);
+    const [userConnected, setUserConnected] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
+    const user = {
+        username :'elisheva',
+        email: 'elisheva@gmail.com'
+    }
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setAuth(event.target.checked);
+        setUserConnected(event.target.checked);
     };
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
         alert('')
-        if (auth) {
+        if (userConnected) {
             setAnchorEl(event.currentTarget);
         }
     };
@@ -31,18 +34,24 @@ export const Navbar = () => {
         setAnchorEl(null);
     };
 
+    const getUser = ()=> {
+        //get the userData from the context 
+        //now cared like the user isnt connected
+        setUserConnected(false);
+    }
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             {/* <FormGroup>
         <FormControlLabel
           control={
             <Switch
-              checked={auth}
+              checked={userConnected}
               onChange={handleChange}
               aria-label="login switch"
             />
           }
-          label={auth ? 'Logout' : 'Login'}
+          label={userConnected ? 'Logout' : 'Login'}
         />
       </FormGroup> */}
             <AppBar position="static">
@@ -59,7 +68,7 @@ export const Navbar = () => {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         Photos
                     </Typography>
-                    {auth && (
+                    {userConnected && (
                         <div>
                             <IconButton
                                 size="large"
