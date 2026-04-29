@@ -2,6 +2,8 @@ import * as bcrypt from 'bcrypt';
 import {
   BadRequestException,
   ConflictException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,

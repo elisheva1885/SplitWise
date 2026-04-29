@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 import { CreateGroupDto, UpdateGroupDto } from './dto/group.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
-import { FullGroupResponseDto, GroupResponseDto } from './dto/group-response.dto';
+import { FullGroupResponseDto } from './dto/group-response.dto';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
@@ -35,6 +35,16 @@ export class GroupService {
   async findById(uuid: number): Promise<Group | null> {
     return await this.groupRepository.findOne({
       where: { uuid },
+    });
+  }
+
+  async findByIdWithRelations(
+    uuid: number,
+    relations: string[],
+  ): Promise<Group | null> {
+    return await this.groupRepository.findOne({
+      where: { uuid },
+      relations: relations,
     });
   }
 
@@ -69,7 +79,13 @@ export class GroupService {
       where: {
         uuid: groupId,
       },
-      relations: ['expenses', 'owner', 'members'],
+      relations: [
+        'expenses',
+        'owner',
+        'members',
+        'expenses.paidBy',
+        'expenses.paidOn',
+      ],
     });
     if (!group) {
       throw new NotFoundException('group not found');
@@ -78,6 +94,7 @@ export class GroupService {
     if (!isMember) {
       throw new NotFoundException('user is not in group');
     }
+
     return this.toResponseDto(group);
   }
 
@@ -190,7 +207,7 @@ export class GroupService {
       throw new NotFoundException('group not found');
     }
     if (group.owner.uuid !== currentUserId) {
-       throw new ForbiddenException(
+      throw new ForbiddenException(
         'user isnt allow to add members to the group',
       );
     }
