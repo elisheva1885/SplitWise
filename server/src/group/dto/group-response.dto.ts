@@ -1,11 +1,26 @@
 import { Expose, Type } from 'class-transformer';
-import { Expense } from 'src/expense/expense.entity';
 
 export class UserInGroupDto {
   @Expose()
   uuid!: number;
   @Expose()
   username!: string;
+}
+
+export class ExpenseInGroupDto {
+  @Expose()
+  uuid!: number;
+  @Expose()
+  cause?: string;
+  @Expose()
+  value!: number;
+  @Expose()
+  @Type(() => UserInGroupDto)
+  paidBy!: UserInGroupDto;
+
+  @Expose()
+  @Type(() => UserInGroupDto)
+  paidOn!: UserInGroupDto;
 }
 
 export class FullGroupResponseDto {
@@ -22,7 +37,8 @@ export class FullGroupResponseDto {
   @Type(() => UserInGroupDto)
   members!: UserInGroupDto[];
   @Expose()
-  expenses?: Expense[];
+  @Type(() => ExpenseInGroupDto)
+  expenses?: ExpenseInGroupDto[];
 }
 
 export class GroupResponseDto {

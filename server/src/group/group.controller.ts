@@ -40,7 +40,7 @@ export class GroupController {
   }
 
   @ApiCookieAuth()
-  @Patch('gid')
+  @Patch(':gid')
   async updateGroup(
     @CurrentUser() user: JwtPayload,
     @Param('gid', ParseIntPipe) gid: number,
