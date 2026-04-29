@@ -1,13 +1,16 @@
 import type { AxiosResponse } from "axios";
-import type { LoginUserDto, RegisterUserDto } from "../types/auth-types";
+import type { LoginUserDto, RegisterUserDto, UserData } from "../types/auth.types";
 import api from "./client-api";
 
-export function loginUser(userData:LoginUserDto) :Promise<void>{
-     return api.post('/user/login', userData);
-    
-} 
+export async function loginUser(userData: LoginUserDto): Promise<UserData> {
+    const { data } = await api.post('/user/login', userData);
+    console.log(data);
+    return data;
 
-export function registerUser(userData:RegisterUserDto):Promise<void> {
-    return api.post('/user/register', userData);
+}
 
+export async function registerUser(userData: RegisterUserDto): Promise<UserData> {
+    const { data } = await api.post('/user/register', userData);
+    console.log(data);
+    return data;
 } 
