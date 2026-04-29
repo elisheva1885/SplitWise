@@ -21,7 +21,12 @@ export type RegisterFormData = {
     email:string,
     password: string
 }
+
+export type ForgetPasswordFormData = {
+    email:string,
+}
 export type UserData = {
       username: string;
     email: string;
 }
+

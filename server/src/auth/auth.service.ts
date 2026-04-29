@@ -2,10 +2,7 @@ import * as bcrypt from 'bcrypt';
 import {
   BadRequestException,
   ConflictException,
-  forwardRef,
-  Inject,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
@@ -75,10 +72,10 @@ export class AuthService {
       email: user.email,
     };
     const token = this.generateToken(payload);
-      const userResult: LoginResponseDto = {
+    const userResult: LoginResponseDto = {
       email: user.email,
       username: user.username,
-      token: token
+      token: token,
     };
     return userResult;
   }

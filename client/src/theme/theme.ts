@@ -1,40 +1,50 @@
 import { createTheme } from '@mui/material/styles';
- 
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
- 
-    // primary: {
-    //   main: '#1B5E20',
-    //   light: '#2E7D32',
-    // },
- 
-    // secondary: {
-    //   main: '#424242',
-    // },
- 
-    background: {
-      default: '#121212',
-      paper: '#1E1E1E',
+
+export const theme = createTheme({
+  components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'transparent',
+          WebkitBorderBeforeColor: '#ffffff',
+          borderColor: '#ffffff',
+          color: 'white',
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#ffffff',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#12300a',
+          },
+          input: {
+            '&:-webkit-autofill': {
+              WebkitBoxShadow: '0 0 0 1000px transparent inset',
+              WebkitTextFillColor: '#fff',
+               
+            }
+          }
+
+        }
+
+      },
     },
- 
-    // text: {
-    //   primary: '#E0E0E0',
-    //   secondary: '#A5A5A5',
-    // },
- 
-    // success: {
-    //   main: '#66BB6A', // למשל כשמישהו קיבל כסף
-    // },
- 
-    // error: {
-    //   main: '#EF5350', // חובות / שגיאות
-    // },
-  },
- 
-  shape: {
-    borderRadius: 10,
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'transparent',
+          color: 'white'
+        }
+      }
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'transparent',
+          color: 'white',
+
+        }
+      }
+    }
   },
 });
- 
-export default theme;
+
+

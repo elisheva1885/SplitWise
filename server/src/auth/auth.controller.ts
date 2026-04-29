@@ -11,12 +11,11 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import type { Response } from 'express';
 import { JwtPayload } from 'src/types/express';
-import { UserResponseDto } from 'src/user/dto/user.dto';
-import { AuthResponseDto, LoginResponseDto } from './dto/auth.dto';
+import { AuthResponseDto } from './dto/auth.dto';
 
 @Controller('user')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   async signUp(
@@ -31,7 +30,7 @@ export class AuthController {
       secure: false,
       sameSite: 'strict',
     });
-    return {username, email };
+    return { username, email };
   }
 
   @HttpCode(HttpStatus.OK)
@@ -40,21 +39,19 @@ export class AuthController {
     @Body() signInInfo: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AuthResponseDto> {
-    const  {  username, email, token } = await this.authService.signIn(signInInfo);
+    const { username, email, token } =
+      await this.authService.signIn(signInInfo);
     res.cookie('access_token', token, {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
     });
-    return {  username, email };
-
+    return { username, email };
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('logout')
-  async logout(
-    @Res({ passthrough: true }) res: Response,
-  ): Promise<{ message: string }> {
+  logout(@Res({ passthrough: true }) res: Response): { message: string } {
     res.clearCookie('access_token', {
       httpOnly: true,
       secure: true,
@@ -62,6 +59,4 @@ export class AuthController {
     });
     return { message: 'Loggedout successfully' };
   }
-
 }
-

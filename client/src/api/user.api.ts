@@ -1,4 +1,3 @@
-import type { AxiosResponse } from "axios";
 import type { LoginUserDto, RegisterUserDto } from "../types/auth.types";
 import api from "./client-api";
 

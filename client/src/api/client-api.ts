@@ -1,7 +1,5 @@
-import axios, { AxiosError } from 'axios';
-type ApiError = {
-    message: string;
-};
+import axios from "axios";
+
 const url = import.meta.env.VITE_API_URL;
 
 const api = axios.create({

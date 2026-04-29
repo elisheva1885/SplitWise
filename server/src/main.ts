@@ -10,10 +10,10 @@ const clientUrl = process.env.CLIENT_URL ?? 'http://localhost:3000';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-   app.enableCors({
-    origin: clientUrl, 
+  app.enableCors({
+    origin: clientUrl,
     credentials: true,
-  });  
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

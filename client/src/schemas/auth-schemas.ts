@@ -17,3 +17,10 @@ export const LoginSchema = z.object({
 })
 
 export type LoginData = z.infer<typeof LoginSchema>;
+
+
+export const ForgetPasswordSchema = z.object({
+    email: z.email(),
+})
+
+export type ForgetPasswordData = z.infer<typeof ForgetPasswordSchema>;
