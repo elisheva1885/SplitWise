@@ -13,46 +13,72 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import type { User } from '../types/user';
 import LogoutIcon from '@mui/icons-material/Logout';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { useUserContext } from '../store/use-user.context';
+import { LoginPage } from '../pages/login.page';
+import { useNavigate } from 'react-router';
 
 export const Navbar = () => {
-    const [userConnected, setUserConnected] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [user, setUser] = React.useState<User| null>({
-            username: 'elisheva',
-            email: 'elisheva@gmail.com'
-        });
-
+    const { user, logout } = useUserContext();
+    const navigate  = useNavigate();
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUserConnected(event.target.checked);
+        // setUserConnected(event.target.checked);
     };
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-        if (userConnected) {
+        if (!user) {
+            setOpen(true);
+        }
+        else {
             setAnchorEl(event.currentTarget);
         }
+
     };
 
     const handleClose = () => {
         setAnchorEl(null);
     };
 
-    const getUser = () => {
-        //get the userData from the context 
-        // setUserConnected(false);
-        // const user: User = {
-        //     username: 'elisheva',
-        //     email: 'elisheva@gmail.com'
-        // }
-        // setUser(user)
-        // console.log(user);
+    const [open, setOpen] = React.useState(false);
 
+    const handleClickOpen = () => {
+        // if(user){
+        //     handleMenu()
+        // }
+        setOpen(true);
+    };
+
+    const handleCloseDialog = () => {
+        setOpen(false);
+    };
+
+     const toGroups = () => {
+        navigate('/groups')
+    };
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const formJson = Object.fromEntries((formData as any).entries());
+        const email = formJson.email;
+        console.log(email);
+        handleClose();
+    };
+    const handleLogout = () => {
+        logout();
     }
-    React.useEffect(() => {
-        getUser()
-    }, [])
+
     return (
-        <Box sx={{ flexGrow: 1 }}>
-            {/* <FormGroup>
+        <>
+            <Box sx={{ flexGrow: 1 }}>
+                {/* <FormGroup>
         <FormControlLabel
           control={
             <Switch
@@ -64,22 +90,22 @@ export const Navbar = () => {
           label={userConnected ? 'Logout' : 'Login'}
         />
       </FormGroup> */}
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{ mr: 2 }}
-                    >
-                        {/* <MenuIcon /> */}
-                        {user? <button>My Groups</button>: <></>}
-                    </IconButton>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        Photos
-                    </Typography>
-                    {userConnected && (
+                <AppBar position="static">
+                    <Toolbar>
+                        <IconButton
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="menu"
+                            sx={{ mr: 2 }}
+                        >
+                            {/* <MenuIcon /> */}
+                            {user ? <Button onClick={toGroups}>My Groups</Button> : <></>}
+                        </IconButton>
+                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                            Photos
+                        </Typography>
+
                         <div>
                             <IconButton
                                 size="large"
@@ -90,7 +116,7 @@ export const Navbar = () => {
                                 color="inherit"
                             >
                                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                                    {user?user?.username: ''}
+                                    {user ? user?.username : ''}
                                 </Typography>
                                 <AccountCircle />
                             </IconButton>
@@ -109,15 +135,32 @@ export const Navbar = () => {
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
                             >
-                                <div aria-disabled={user? true: false}>
+                                <div aria-disabled={user ? true : false}>
                                     <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                    <MenuItem onClick={handleClose}><LogoutIcon/> Logout</MenuItem>
+                                    <MenuItem onClick={handleLogout}><LogoutIcon /> Logout</MenuItem>
                                 </div>
                             </Menu>
                         </div>
-                    )}
-                </Toolbar>
-            </AppBar>
-        </Box>
+
+                    </Toolbar>
+                </AppBar>
+            </Box>
+            <React.Fragment>
+                <Button variant="outlined" onClick={handleClickOpen}>
+                    Open form dialog
+                </Button>
+                <Dialog open={open} onClose={handleCloseDialog}>
+                    {/* <DialogTitle>Subscribe</DialogTitle> */}
+                    <LoginPage />
+                    <DialogActions>
+                        <Button onClick={handleCloseDialog}>Cancel</Button>
+                        <Button type="submit" form="subscription-form">
+                            Subscribe
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </React.Fragment>
+
+        </>
     );
 }
