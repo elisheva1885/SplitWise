@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
@@ -35,7 +33,7 @@ import { UserModule } from './user/user.module';
     UserModule,
     AuthModule,
     GroupModule,
-    ExpenseModule
+    ExpenseModule,
   ],
   controllers: [],
   providers: [],
