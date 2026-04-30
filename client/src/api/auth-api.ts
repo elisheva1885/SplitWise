@@ -3,13 +3,11 @@ import api from "./client-api";
 
 export async function loginUser(userData: LoginUserDto): Promise<UserData> {
     const { data } = await api.post('/user/login', userData);
-    console.log(data);
     return data;
 
 }
 
 export async function registerUser(userData: RegisterUserDto): Promise<UserData> {
     const { data } = await api.post('/user/register', userData);
-    console.log(data);
     return data;
 } 
