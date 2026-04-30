@@ -6,8 +6,10 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Snackbar from "@mui/material/Snackbar";
 import { ForgetPasswordForm } from "../components/forget-password-form";
 
-
-export const ForgetPasswordPage = () => {
+type ForgetPasswordPageProps = {
+    toLoginMode: () => void,
+}
+export const ForgetPasswordPage = ({toLoginMode}: ForgetPasswordPageProps) => {
     const [error, setError] = useState<string>("");
     const [success, setSuccess] = useState<string>("");
     const [open, setOpen] = useState(false);
@@ -35,7 +37,7 @@ export const ForgetPasswordPage = () => {
     }
     return (
         <>
-            <ForgetPasswordForm onSubmit={handleSubmit} />
+            <ForgetPasswordForm onSubmit={handleSubmit}  toLoginMode={toLoginMode}/>
             <Snackbar
                 open={open}
                 autoHideDuration={5000}

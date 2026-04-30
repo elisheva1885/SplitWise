@@ -9,10 +9,12 @@ import { ForgetPasswordSchema, type ForgetPasswordData } from '../schemas/auth-s
 import type { ForgetPasswordFormData } from '../types/auth.types';
 
 type ForgetPasswordProps = {
-    onSubmit: (data: ForgetPasswordFormData) => void
+    onSubmit: (data: ForgetPasswordFormData) => void,
+    toLoginMode: () => void,
+
 }
 
-export const ForgetPasswordForm = ({ onSubmit }: ForgetPasswordProps) => {
+export const ForgetPasswordForm = ({ onSubmit, toLoginMode }: ForgetPasswordProps) => {
 
     const {
         register,
@@ -31,10 +33,13 @@ export const ForgetPasswordForm = ({ onSubmit }: ForgetPasswordProps) => {
                 <InputLabel >Email</InputLabel>
                 <TextField type='email' size='small'  {...register('email')} error={!!errors.email}
                     helperText={errors.email?.message} />
-                    <br/>
+                <br />
+                <Button onClick={toLoginMode}>Login</Button>
                 <Button type='submit' variant="contained">SUBMIT</Button>
             </form>
 
         </>
     )
+
+    
 }

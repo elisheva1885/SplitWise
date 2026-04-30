@@ -9,10 +9,11 @@ import { RegisterSchema, type RegisterData } from '../schemas/auth-schemas';
 import type { RegisterFormData } from '../types/auth.types';
 
 type RegisterFormProps = {
-    onSubmit: (data: RegisterFormData) => void
+    onSubmit: (data: RegisterFormData) => void,
+    toLoginMode: () => void,
 }
 
-export const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
+export const RegisterForm = ({ onSubmit , toLoginMode}: RegisterFormProps) => {
     const {
         register,
         handleSubmit,
@@ -39,7 +40,8 @@ export const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
                 <TextField type='password' size='small'  {...register('password')} error={!!errors.password}
                     helperText={errors.password?.message}/>
                 <br />
-                <Button type='submit'>Register</Button>
+                 <Button onClick={toLoginMode}>Login</Button>
+                <Button type='submit'>Submit</Button>
             </form>
         </>
     )

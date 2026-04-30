@@ -30,3 +30,6 @@ export type UserData = {
     email: string;
 }
 
+export type AuthFormStatus = 'Login' | 'Register' | 'ForgetPassword';
+
+

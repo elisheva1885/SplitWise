@@ -23,11 +23,15 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useUserContext } from '../store/use-user.context';
 import { LoginPage } from '../pages/login.page';
 import { useNavigate } from 'react-router';
+import { AuthForms } from './auth-forms';
+import CloseIcon from '@mui/icons-material/Close';
 
 export const Navbar = () => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const { user, logout } = useUserContext();
-    const navigate  = useNavigate();
+    const navigate = useNavigate();
+    const [open, setOpen] = React.useState(false);
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         // setUserConnected(event.target.checked);
     };
@@ -41,17 +45,12 @@ export const Navbar = () => {
         }
 
     };
-
     const handleClose = () => {
         setAnchorEl(null);
     };
 
-    const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
-        // if(user){
-        //     handleMenu()
-        // }
         setOpen(true);
     };
 
@@ -59,7 +58,7 @@ export const Navbar = () => {
         setOpen(false);
     };
 
-     const toGroups = () => {
+    const toGroups = () => {
         navigate('/groups')
     };
 
@@ -73,12 +72,18 @@ export const Navbar = () => {
     };
     const handleLogout = () => {
         logout();
+        navigate('/')
+        setAnchorEl(null);
+    }
+    const handleProfile = () => {
+        navigate('/user')
+        setAnchorEl(null);
+
     }
 
     return (
         <>
-            <Box sx={{ flexGrow: 1 }}>
-                {/* <FormGroup>
+            {/* <FormGroup>
         <FormControlLabel
           control={
             <Switch
@@ -90,74 +95,69 @@ export const Navbar = () => {
           label={userConnected ? 'Logout' : 'Login'}
         />
       </FormGroup> */}
-                <AppBar position="static">
-                    <Toolbar>
+            <AppBar position="static" style={{ backgroundColor: '#12300a' }}>
+                <Toolbar>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{ mr: 2 }}
+                    >
+                        {/* <MenuIcon /> */}
+                        {user ? <Button onClick={toGroups}>My Groups</Button> : <></>}
+                    </IconButton>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        Photos
+                    </Typography>
+
+                    <div>
                         <IconButton
                             size="large"
-                            edge="start"
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            onClick={handleMenu}
                             color="inherit"
-                            aria-label="menu"
-                            sx={{ mr: 2 }}
                         >
-                            {/* <MenuIcon /> */}
-                            {user ? <Button onClick={toGroups}>My Groups</Button> : <></>}
+                            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                                {user ? user?.username : ''}
+                            </Typography>
+                            <AccountCircle />
                         </IconButton>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            Photos
-                        </Typography>
+                        <Menu
+                            id="menu-appbar"
+                            anchorEl={anchorEl}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(anchorEl)}
+                            onClose={handleClose}
+                        >
+                            <div aria-disabled={user ? true : false}>
+                                <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                                <MenuItem onClick={handleLogout}><LogoutIcon /> Logout</MenuItem>
+                            </div>
+                        </Menu>
+                    </div>
 
-                        <div>
-                            <IconButton
-                                size="large"
-                                aria-label="account of current user"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
-                                onClick={handleMenu}
-                                color="inherit"
-                            >
-                                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                                    {user ? user?.username : ''}
-                                </Typography>
-                                <AccountCircle />
-                            </IconButton>
-                            <Menu
-                                id="menu-appbar"
-                                anchorEl={anchorEl}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorEl)}
-                                onClose={handleClose}
-                            >
-                                <div aria-disabled={user ? true : false}>
-                                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                    <MenuItem onClick={handleLogout}><LogoutIcon /> Logout</MenuItem>
-                                </div>
-                            </Menu>
-                        </div>
-
-                    </Toolbar>
-                </AppBar>
-            </Box>
+                </Toolbar>
+            </AppBar>
             <React.Fragment>
-                <Button variant="outlined" onClick={handleClickOpen}>
-                    Open form dialog
-                </Button>
-                <Dialog open={open} onClose={handleCloseDialog}>
-                    {/* <DialogTitle>Subscribe</DialogTitle> */}
-                    <LoginPage />
-                    <DialogActions>
-                        <Button onClick={handleCloseDialog}>Cancel</Button>
-                        <Button type="submit" form="subscription-form">
-                            Subscribe
-                        </Button>
-                    </DialogActions>
+                <Dialog open={open} onClose={handleCloseDialog} >
+                    <div style={{ backgroundColor: '#2e3136' }}>
+                        <CloseIcon onClick={handleCloseDialog} sx={{ backgroundColor: '#2e3136', color: 'white', position: 'absolute', insetInlineEnd: 3 }} />
+                        <br />
+                        <Box sx={{ textAlign: 'center', padding: '8px' }}>
+                            <AuthForms setDialogOpen={setOpen} />
+                        </Box>
+                    </div>
                 </Dialog>
             </React.Fragment>
 

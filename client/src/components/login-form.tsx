@@ -9,10 +9,12 @@ import { LoginSchema, type LoginData } from '../schemas/auth-schemas';
 import type { LoginFormData } from '../types/auth.types';
 
 type LoginFormProps = {
-    onSubmit: (data: LoginFormData) => void
+    onSubmit: (data: LoginFormData) => void,
+    toRegisterMode: () => void,
+    toForgetPasswordMode: () => void,
 }
 
-export const LoginForm = ({ onSubmit }: LoginFormProps) => {
+export const LoginForm = ({ onSubmit, toRegisterMode, toForgetPasswordMode }: LoginFormProps) => {
 
     const {
         register,
@@ -26,7 +28,7 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
 
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)}  style={{ backgroundColor: '#2e3136' }}>
+            <form onSubmit={handleSubmit(onSubmit)} style={{ backgroundColor: '#2e3136' }}>
                 <Typography sx={{ color: 'white' }}>Login</Typography>
                 <InputLabel>username</InputLabel>
                 <TextField type='text' size='small' error={!!errors.username}
@@ -34,8 +36,10 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
                 <InputLabel>password</InputLabel>
                 <TextField type='password' size='small' error={!!errors.password}
                     helperText={errors.password?.message}   {...register('password')} />
-                    <br/>
-                <Button type='submit'>Login</Button>
+                <br />
+                <Button onClick={toForgetPasswordMode}>ForgetPassword</Button>
+                <Button onClick={toRegisterMode}>Register</Button>
+                <Button type='submit'>Submit</Button>
             </form>
 
         </>

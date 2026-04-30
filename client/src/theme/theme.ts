@@ -31,7 +31,8 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'transparent',
-          color: 'white'
+          color: 'white',
+          fontSize:'11px'
         }
       }
     },

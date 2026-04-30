@@ -8,8 +8,10 @@ import Snackbar from "@mui/material/Snackbar";
 import { RegisterForm } from "../components/register-form";
 import { useUserContext } from "../store/use-user.context";
 
-
-export const RegisterPage = () => {
+type RegisterPageProps = {
+    toLoginMode: () => void,
+}
+export const RegisterPage = ({toLoginMode}: RegisterPageProps) => {
     const [error, setError] = useState<string>("");
     const [success, setSuccess] = useState<string>("");
     const [open, setOpen] = useState(false);
@@ -39,7 +41,7 @@ export const RegisterPage = () => {
     }
     return (
         <>
-            <RegisterForm onSubmit={handleSubmit} />
+            <RegisterForm onSubmit={handleSubmit} toLoginMode={toLoginMode}/>
             <Snackbar
                 open={open}
                 autoHideDuration={5000}

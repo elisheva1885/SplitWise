@@ -8,8 +8,14 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Snackbar from "@mui/material/Snackbar";
 import { useUserContext } from "../store/use-user.context";
 
+type LoginPageProps = {
+    toRegisterMode: () => void,
+    toForgetPasswordMode: () => void,
+    setDialogOpen: (open: boolean) => void
 
-export const LoginPage = () => {
+}
+
+export const LoginPage = ({ toRegisterMode, toForgetPasswordMode,setDialogOpen }: LoginPageProps) => {
     const [error, setError] = useState<string>("");
     const [success, setSuccess] = useState<string>("");
     const [open, setOpen] = useState(false);
@@ -21,6 +27,7 @@ export const LoginPage = () => {
         try {
             const userData = await loginUser(data)
             setSuccess('Logged in succesfully');
+            setDialogOpen(false)
             setUser(userData);
         }
         catch (err: unknown) {
@@ -39,7 +46,7 @@ export const LoginPage = () => {
     }
     return (
         <>
-            <LoginForm onSubmit={handleSubmit} />
+            <LoginForm onSubmit={handleSubmit} toRegisterMode={toRegisterMode} toForgetPasswordMode={toForgetPasswordMode} />
             <Snackbar
                 open={open}
                 autoHideDuration={5000}
