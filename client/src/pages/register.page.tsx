@@ -10,8 +10,9 @@ import { useUserContext } from "../store/use-user.context";
 
 type RegisterPageProps = {
     toLoginMode: () => void,
+    setDialogOpen: (open: boolean) => void
 }
-export const RegisterPage = ({toLoginMode}: RegisterPageProps) => {
+export const RegisterPage = ({ toLoginMode, setDialogOpen }: RegisterPageProps) => {
     const [error, setError] = useState<string>("");
     const [success, setSuccess] = useState<string>("");
     const [open, setOpen] = useState(false);
@@ -21,9 +22,13 @@ export const RegisterPage = ({toLoginMode}: RegisterPageProps) => {
         setError('');
         setSuccess('');
         try {
-            const userData = await registerUser(data)
-            setSuccess('Register success');
+            const userData = await registerUser(data);
+            setSuccess("Register successfully!");
             setUser(userData);
+            setTimeout(() => {
+                setDialogOpen(false);
+            }, 450);
+
         }
         catch (err: unknown) {
             if (axios.isAxiosError(err)) {
@@ -41,7 +46,7 @@ export const RegisterPage = ({toLoginMode}: RegisterPageProps) => {
     }
     return (
         <>
-            <RegisterForm onSubmit={handleSubmit} toLoginMode={toLoginMode}/>
+            <RegisterForm onSubmit={handleSubmit} toLoginMode={toLoginMode} />
             <Snackbar
                 open={open}
                 autoHideDuration={5000}

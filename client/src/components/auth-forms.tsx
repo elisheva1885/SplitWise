@@ -1,12 +1,7 @@
 import { LoginPage } from "../pages/login.page";
 import type { AuthFormStatus } from "../types/auth.types";
-import { Navbar } from "./navnbar"
-import { Outlet } from "react-router";
-import { RegisterForm } from "./register-form";
-import { ForgetPasswordForm } from "./forget-password-form";
 import { RegisterPage } from "../pages/register.page";
 import { ForgetPasswordPage } from "../pages/forget-password.page";
-import Button from "@mui/material/Button";
 import { useState } from "react";
 
 type AuthFormsProps = {
@@ -26,7 +21,7 @@ export const AuthForms = ({setDialogOpen}: AuthFormsProps) => {
     }
     return (
         <>
-            {status === 'Login' ? <LoginPage toRegisterMode={toRegisterMode} toForgetPasswordMode={toForgetPasswordMode} setDialogOpen={setDialogOpen}/> : (status === 'Register' ? <RegisterPage toLoginMode={toLogindMode} /> : <ForgetPasswordPage toLoginMode={toLogindMode} />)}  
+            {status === 'Login' ? <LoginPage toRegisterMode={toRegisterMode} toForgetPasswordMode={toForgetPasswordMode} setDialogOpen={setDialogOpen}/> : (status === 'Register' ? <RegisterPage toLoginMode={toLogindMode}  setDialogOpen={setDialogOpen}/> : <ForgetPasswordPage toLoginMode={toLogindMode} />)}  
         </>
     )
 }

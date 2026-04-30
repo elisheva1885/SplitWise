@@ -56,8 +56,7 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
-    });    
-    return  { message: 'Loggedout successfully' };
+    });
+    return { message: 'Loggedout successfully' };
   }
-
 }

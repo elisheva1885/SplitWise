@@ -15,7 +15,7 @@ type LoginPageProps = {
 
 }
 
-export const LoginPage = ({ toRegisterMode, toForgetPasswordMode,setDialogOpen }: LoginPageProps) => {
+export const LoginPage = ({ toRegisterMode, toForgetPasswordMode, setDialogOpen }: LoginPageProps) => {
     const [error, setError] = useState<string>("");
     const [success, setSuccess] = useState<string>("");
     const [open, setOpen] = useState(false);
@@ -26,9 +26,12 @@ export const LoginPage = ({ toRegisterMode, toForgetPasswordMode,setDialogOpen }
         setSuccess('');
         try {
             const userData = await loginUser(data)
-            setSuccess('Logged in succesfully');
-            setDialogOpen(false)
+            setSuccess("Logged in successfully!");
             setUser(userData);
+            setTimeout(() => {
+                setDialogOpen(false);
+            }, 450);
+
         }
         catch (err: unknown) {
             if (axios.isAxiosError(err)) {
