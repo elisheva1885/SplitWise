@@ -1,4 +1,4 @@
-export class User  {
-username!: string;
-email!: string;
+export class UpdateUserDto  {
+username?: string;
+email?: string;
 }
