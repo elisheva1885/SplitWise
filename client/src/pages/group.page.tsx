@@ -1,9 +1,3 @@
-
 export const GroupPage = () => {
-    
-    return (
-        <>
-        GroupPage
-        </>
-    )
-}
+  return <>GroupPage</>;
+};
