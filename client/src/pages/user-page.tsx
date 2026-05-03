@@ -7,7 +7,6 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Alert from "@mui/material/Alert";
 import { deleteUser, updateUser } from "../api/user-api";
 import type { UpdateUserDto } from "../types/user.types";
-import { logoutUser } from "../api/auth-api";
 import { useNavigate } from "react-router";
 
 export const UserPage = () => {
@@ -42,7 +41,7 @@ export const UserPage = () => {
         setError('');
         setSuccess('');
         try {
-            const response = await deleteUser();;
+             await deleteUser();;
             setSuccess("delete successfully!");
             logout();
             navigate('/')
