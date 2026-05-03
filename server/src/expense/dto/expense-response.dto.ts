@@ -6,3 +6,14 @@ export class ExpenseResponseDto {
   paidOn!: number;
   groupId!: number;
 }
+
+export class UserDetails {
+  uuid!: number;
+  username!: string;
+}
+
+export class BalanceExpenseResponse {
+  paidByUser!: UserDetails;
+  paidOnUser!: UserDetails;
+  value!: number;
+}
