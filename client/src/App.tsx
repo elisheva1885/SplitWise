@@ -17,7 +17,7 @@ function App() {
         <RouterProvider router={router} />
         {/* <LoginPage />
         <RegisterPage /> */}
-        <Auth />
+        <Auth mode='login'/>
         <ForgetPasswordPage />
       </UserProvider>
     </ThemeProvider>

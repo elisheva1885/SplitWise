@@ -20,10 +20,10 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
         resolver: zodResolver(LoginSchema),
         mode: "onChange",
     });
-    const sendToOnSubmit = () => { };
+
     return (
         <form
-            onSubmit={handleSubmit(sendToOnSubmit)}
+            onSubmit={handleSubmit(onSubmit)}
             style={{ backgroundColor: "#2e3136" }}
         >
             <Typography sx={{ color: "white" }}>Login</Typography>

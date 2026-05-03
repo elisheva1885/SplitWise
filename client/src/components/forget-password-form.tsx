@@ -29,7 +29,7 @@ export const ForgetPasswordForm = ({ onSubmit }: ForgetPasswordProps) => {
       onSubmit={handleSubmit(onSubmit)}
       style={{ backgroundColor: "#2e3136" }}
     >
-      <Typography sx={{ color: "white" }}>Login</Typography>
+      <Typography sx={{ color: "white" }}>Forget Password</Typography>
       <InputLabel>Email</InputLabel>
       <TextField
         type="email"
