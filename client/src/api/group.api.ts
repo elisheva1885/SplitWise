@@ -1,10 +1,10 @@
 import type { CreateGroupDto, GroupData, UpdateGroupData, UpdateGroupMembersData } from "../types/group.types";
 import api from "./client.api";
 
-export async function CreateGroup(groupData: CreateGroupDto): Promise<GroupData> {
-    const { data } = await api.post('/group', groupData);
+export async function CreateGroup(groupData: CreateGroupDto){
+    const {data} = await api.post('/group', groupData);
+    console.log(data);
     return data;
-}
 }
 
 export async function getGroupDetails(groupId: number): Promise<GroupData> {
