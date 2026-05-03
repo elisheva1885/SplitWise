@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { registerUser } from "../api/auth-api";
+import { registerUser } from "../api/auth.api";
 import type { RegisterData } from "../schemas/auth-schemas";
 import axios from "axios";
 import Alert from '@mui/material/Alert';

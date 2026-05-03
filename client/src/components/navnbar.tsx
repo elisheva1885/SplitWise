@@ -31,6 +31,7 @@ export const Navbar = () => {
         }
 
     };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -75,24 +76,28 @@ export const Navbar = () => {
                     </Box>
 
                     <Box>
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={handleMenu}
-                            color="inherit"
-                        >
-                            <Typography variant="h6" component="div" sx={{  padding: '5px' , display: { xs: 'none', sm: 'block' },}}>
+                        <Box sx={{ display: 'flex' }}>
+
+                            <Typography variant="h6" component="div" sx={{ padding: '5px', display: { xs: 'none', sm: 'block' }, }}>
                                 {user ? 'Hello ' + user?.username : ''}
                             </Typography>
-                            <AccountCircle />
-                        </IconButton>
+                            <IconButton
+                                size="large"
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                onClick={handleMenu}
+                                color="inherit"
+                            >
+
+                                <AccountCircle />
+                            </IconButton>
+                        </Box>
                         <Menu
                             id="menu-appbar"
                             anchorEl={anchorEl}
                             anchorOrigin={{
-                                vertical: 'top',
+                                vertical: 'bottom',
                                 horizontal: 'right',
                             }}
                             keepMounted
@@ -100,10 +105,13 @@ export const Navbar = () => {
                                 vertical: 'top',
                                 horizontal: 'right',
                             }}
+                            sx={{
+                                
+                            }}
                             open={Boolean(anchorEl)}
                             onClose={handleClose}
                         >
-                            <Box aria-disabled={user ? true : false}>
+                            <Box >
                                 <MenuItem onClick={handleProfile}>Profile</MenuItem>
                                 <MenuItem onClick={handleLogout}><LogoutIcon /> Logout</MenuItem>
                             </Box>

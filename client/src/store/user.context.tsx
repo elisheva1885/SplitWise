@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { UserContext } from "../types/user-context.types";
 import type { UserData } from "../types/auth.types";
-import { logoutUser } from "../api/auth-api";
+import { logoutUser } from "../api/auth.api";
 
 
 

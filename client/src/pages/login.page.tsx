@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LoginForm } from "../components/login-form"
-import { loginUser } from "../api/auth-api";
+import { loginUser } from "../api/auth.api";
 import type { LoginData } from "../schemas/auth-schemas";
 import axios from "axios";
 import Alert from '@mui/material/Alert';
