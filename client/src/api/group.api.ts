@@ -1,16 +1,38 @@
-import type { RegisterUserDto, UserData } from "../types/auth.types";
+import type { CreateGroupDto, GroupData, UpdateGroupData, UpdateGroupMembersData } from "../types/group.types";
 import api from "./client.api";
-import {UpdateUserDto} from "../types/user.types"
 
+export async function CreateGroup(groupData: CreateGroupDto): Promise<GroupData> {
+    const { data } = await api.post('/group', groupData);
+    return data;
+}
+}
 
-export async function updateUser(userData: UpdateUserDto): Promise<UserData> {
-    const { data } = await api.patch('/user', userData);
+export async function getGroupDetails(groupId: number): Promise<GroupData> {
+    const { data } = await api.get(`/group/${groupId}`);
     console.log(data);
     return data;
-} 
+}
 
-export async function deleteUser():Promise<number>{
-    const res = await api.delete('/user');
+export async function updateGroup(groupId: number): Promise<UpdateGroupData> {
+    const { data } = await api.patch(`/group/${groupId}`);
+    console.log(data);
+    return data;
+}
+
+export async function deleteGroup(groupId: number): Promise<number> {
+    const res = await api.delete(`/group/${groupId}`);
     console.log(res);
     return res.status;
+}
+
+export async function addUserToGroup(groupId: number, userId: number): Promise<UpdateGroupMembersData> {
+    const { data } = await api.post(`/group/${groupId}/${userId}`);
+    console.log(data);
+    return data;
+}
+
+export async function deleteUserFromGroup(groupId: number, userId: number): Promise<UpdateGroupMembersData> {
+    const { data } = await api.delete(`/group/${groupId}/${userId}`);
+    console.log(data);
+    return data;
 } 
