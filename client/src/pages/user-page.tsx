@@ -1,25 +1,28 @@
 import { useState } from "react";
 import { UpdateUserForm } from "../components/update-user-form"
 import { useUserContext } from "../store/use-user.context";
-import type { UpdateUserDto } from "../types/user";
 import axios from "axios";
-import { updateUser } from "../api/auth-api";
 import Snackbar from "@mui/material/Snackbar";
 import AlertTitle from "@mui/material/AlertTitle";
 import Alert from "@mui/material/Alert";
+import { deleteUser, updateUser } from "../api/user-api";
+import type { UpdateUserDto } from "../types/user.types";
+import { logoutUser } from "../api/auth-api";
+import { useNavigate } from "react-router";
 
 export const UserPage = () => {
     const [error, setError] = useState<string>("");
     const [success, setSuccess] = useState<string>("");
     const [open, setOpen] = useState(false);
-    const { setUser } = useUserContext();
+    const { setUser, logout } = useUserContext();
+    const navigate = useNavigate();
 
     const handleSubmit = async (data: UpdateUserDto) => {
         setError('');
         setSuccess('');
         try {
             const userData = await updateUser(data);
-            setSuccess("Register successfully!");
+            setSuccess("Updated successfully!");
             setUser(userData);
         }
         catch (err: unknown) {
@@ -35,8 +38,24 @@ export const UserPage = () => {
     const handleClose = () => {
         setOpen(false)
     }
-    const handleDeleteUser=async()=>{
-        alert('delete')
+    const handleDeleteUser = async () => {
+        setError('');
+        setSuccess('');
+        try {
+            const response = await deleteUser();;
+            setSuccess("delete successfully!");
+            logout();
+            navigate('/')
+        }
+        catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                const message = err.response?.data?.message || err.message;
+                setError(message);
+            } else {
+                setError("Something went wrong");
+            }
+        }
+        setOpen(true);
     }
     return (
         <>

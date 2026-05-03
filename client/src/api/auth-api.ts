@@ -1,5 +1,4 @@
 import type { LoginUserDto, RegisterUserDto, UserData } from "../types/auth.types";
-import type { UpdateUserDto } from "../types/user";
 import api from "./client-api";
 
 export async function loginUser(userData: LoginUserDto): Promise<UserData> {
@@ -20,8 +19,3 @@ export  function logoutUser(): void {
     console.log(response);
 } 
 
-export async function updateUser(userData: UpdateUserDto): Promise<UserData> {
-    const { data } = await api.patch('/user', userData);
-    console.log(data);
-    return data;
-} 

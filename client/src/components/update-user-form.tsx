@@ -8,10 +8,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { RegisterSchema, type RegisterData } from '../schemas/auth-schemas';
 import type { RegisterFormData } from '../types/auth.types';
 import { useUserContext } from '../store/use-user.context';
-import { updateUser } from '../api/auth-api';
-import type { UpdateUserDto } from '../types/user';
 import { UpdateUserSchema, type UpdateUserSchemaData } from '../schemas/user.schema';
 import DeleteIcon from '@mui/icons-material/Delete';
+import type { UpdateUserDto } from '../types/user.types';
 
 type UpdateUserFormProps = {
     onSubmit: (data: UpdateUserDto) => void,
