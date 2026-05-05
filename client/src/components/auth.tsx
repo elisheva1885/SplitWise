@@ -7,6 +7,7 @@ import Snackbar from "@mui/material/Snackbar";
 import { RegisterForm } from "../components/register-form";
 import { useUserContext } from "../store/use-user.context";
 import { LoginForm } from "./login-form";
+import type { LoginData, RegisterData } from "../schemas/auth-schemas";
 type AuthMode = "register" | "login";
 
 
@@ -16,21 +17,19 @@ export const Auth = ({ mode }: { mode: AuthMode }) => {
     const [open, setOpen] = useState<boolean>(false);
     const { setUser } = useUserContext();
 
-    const handleSubmit = async (data: any) => {
+    const handleSubmit = async (data: LoginData | RegisterData) => {
         setError("");
         setSuccess("");
         try {
-            const userData =
-                mode === "login"
-                    ? await loginUser(data)
-                    : await registerUser(data);
-
-            setUser(userData);
-            setSuccess(
-                mode === "login"
-                    ? "Logged in successfully"
-                    : "Registered successfully"
-            );
+            if (mode === "login") {
+                const userData = await loginUser(data as LoginData);
+                setUser(userData);
+                setSuccess("Logged in successfully");
+            } else {
+                const userData = await registerUser(data as RegisterData);
+                setUser(userData);
+                setSuccess("Registered successfully");
+            }
         } catch (err: unknown) {
             if (axios.isAxiosError(err)) {
                 const message = err.response?.data?.message || err.message;

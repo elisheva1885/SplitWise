@@ -7,18 +7,16 @@ import { UserProvider } from "./store/user.context";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "./theme/theme";
 import CssBaseline from "@mui/material/CssBaseline";
-import { ForgetPasswordPage } from "./pages/forget-password.page";
 import { Auth } from "./components/auth";
+import { ForgetPasswordForm } from "./components/forget-password-form";
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <UserProvider>
         <RouterProvider router={router} />
-        {/* <LoginPage />
-        <RegisterPage /> */}
-        <Auth mode='login'/>
-        <ForgetPasswordPage />
+        <Auth mode='register'/>
+        <ForgetPasswordForm />
       </UserProvider>
     </ThemeProvider>
   );

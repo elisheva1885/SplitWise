@@ -8,13 +8,41 @@ import {
   ForgetPasswordSchema,
   type ForgetPasswordData,
 } from "../schemas/auth-schemas";
-import type { ForgetPasswordFormData } from "../types/auth.types";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import axios from "axios";
+import { useState } from "react";
 
-type ForgetPasswordProps = {
-  onSubmit: (data: ForgetPasswordFormData) => void;
-};
+// type ForgetPasswordProps = {
+//   onSubmit: (data: ForgetPasswordFormData) => void;
+// };
 
-export const ForgetPasswordForm = ({ onSubmit }: ForgetPasswordProps) => {
+export const ForgetPasswordForm = () => {
+ const [error, setError] = useState<string>("");
+   const [success, setSuccess] = useState<string>("");
+   const [open, setOpen] = useState<boolean>(false);
+ 
+   const onSubmit = async (data: ForgetPasswordData) => {
+     setError("");
+     setSuccess("");
+     try {
+       //add a call to the server
+       setSuccess(`send message to your email ${data.email}`);
+     } catch (err: unknown) {
+       if (axios.isAxiosError(err)) {
+         const message = err.response?.data?.message || err.message;
+         setError(message);
+       } else {
+         setError("Something went wrong");
+       }
+     }
+     setOpen(true);
+   };
+   const handleClose = () => {
+     setOpen(false);
+   };
+ 
   const {
     register,
     handleSubmit,
@@ -25,6 +53,7 @@ export const ForgetPasswordForm = ({ onSubmit }: ForgetPasswordProps) => {
   });
 
   return (
+    <>
     <form
       onSubmit={handleSubmit(onSubmit)}
       style={{ backgroundColor: "#2e3136" }}
@@ -43,5 +72,20 @@ export const ForgetPasswordForm = ({ onSubmit }: ForgetPasswordProps) => {
         SUBMIT
       </Button>
     </form>
+      <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+         {success ? (
+           <Alert severity="success">
+             <AlertTitle>Success</AlertTitle>
+             {success}{" "}
+           </Alert>
+         ) : (
+           <Alert severity="error">
+             <AlertTitle>Error</AlertTitle>
+             {error}{" "}
+           </Alert>
+         )}
+       </Snackbar>
+    </>
+
   );
 };
