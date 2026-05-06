@@ -1,21 +1,24 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Res,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import type { Response } from 'express';
+import type { Response, Request } from 'express';
 import { JwtPayload } from 'src/types/express';
 import { AuthResponseDto } from './dto/auth.dto';
 
 @Controller('user')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   async signUp(
@@ -59,4 +62,19 @@ export class AuthController {
     });
     return { message: 'Loggedout successfully' };
   }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('status')
+  userStatus(@Req() req: Request): {
+    loggedIn: boolean, message: string
+  } {
+    const access_token = req.cookies['access_token'];
+    if (!access_token)
+      throw new UnauthorizedException();
+    
+  return {
+  loggedIn: true,
+  message: 'userConneted'
+};
+}
 }

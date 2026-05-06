@@ -16,3 +16,8 @@ export async function registerUser(
   const { data } = await api.post("/user/register", userData);
   return data;
 }
+
+export async function userStatus(): Promise<UserData> {
+  const { data } = await api.get("/user/status");
+  return data;
+}
