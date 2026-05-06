@@ -1,4 +1,4 @@
-import type { CreateGroupDto, GroupData, UpdateGroupData, UpdateGroupMembersData } from "../types/group.types";
+import type { CreateGroupDto, GroupData, GroupDataWithOwner, UpdateGroupMembersData } from "../types/group.types";
 import api from "./client.api";
 
 export async function CreateGroup(groupData: CreateGroupDto){
@@ -13,7 +13,7 @@ export async function getGroupDetails(groupId: number): Promise<GroupData> {
     return data;
 }
 
-export async function updateGroup(groupId: number): Promise<UpdateGroupData> {
+export async function updateGroup(groupId: number): Promise<GroupDataWithOwner> {
     const { data } = await api.patch(`/group/${groupId}`);
     console.log(data);
     return data;
@@ -25,7 +25,7 @@ export async function deleteGroup(groupId: number): Promise<number> {
     return res.status;
 }
 
-export async function addUserToGroup(groupId: number, userId: number): Promise<UpdateGroupMembersData> {
+export async function addUserToGroup(groupId: number, userId: number): Promise<GroupData> {
     const { data } = await api.post(`/group/${groupId}/${userId}`);
     console.log(data);
     return data;

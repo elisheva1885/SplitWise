@@ -11,6 +11,7 @@ import {
   GetUserResponseDto,
   UpdateUserDto,
   UpdateUserResponseDto,
+  UsersResponseDto,
 } from './dto/user.dto';
 
 @Injectable()
@@ -18,7 +19,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async findByUsernameOrEmail(
     username: string,
@@ -72,53 +73,68 @@ export class UserService {
       groups: user?.groups?.map((group) => ({
         id: group.uuid,
         name: group.name,
-        owner: { uuid: group.owner.uuid, username: group.owner.username },
+        owner: { id: group.owner.uuid, username: group.owner.username },
       })),
     };
     return userDto;
   }
 
-  async updateUser(
-    userId: number,
-    userData: UpdateUserDto,
-  ): Promise<UpdateUserResponseDto> {
-    const user = await this.findByUuid(userId);
-    if (!user) {
+  async getUsers(userId: number): Promise<UsersResponseDto[]> {
+    const users = await this.userRepository.find({
+    });
+
+    if (!users) {
       throw new NotFoundException();
     }
-    if (userData.username && userData.username !== user.username) {
-      const existUser = await this.findByUsername(userData.username);
-      if (existUser) {
-        throw new ConflictException('user name is already exist');
-      }
-      user.username = userData.username;
-    }
-    if (userData.email && userData.email !== user.email) {
-      const existUser = await this.findByEmail(userData.email);
-      if (existUser) {
-        throw new ConflictException('email is already exist');
-      }
-      user.email = userData.email;
-    }
-    const updatedUser = await this.userRepository.save(user);
-    const updateUserResponse: UpdateUserResponseDto = {
-      email: updatedUser?.email,
-      username: updatedUser?.username,
-    };
-    return updateUserResponse;
+    const userDto: UsersResponseDto[] = users.map((user) => ({
+      id: user.uuid,
+        username: user?.username
+    }))
+
+    return userDto;
   }
 
-  async deleteUser(userId: number): Promise<{ message: string }> {
-    const user = await this.findByUuid(userId);
-    if (!user) {
-      throw new NotFoundException();
-    }
+  async updateUser(
+      userId: number,
+      userData: UpdateUserDto,
+    ): Promise < UpdateUserResponseDto > {
+      const user = await this.findByUuid(userId);
+      if(!user) {
+        throw new NotFoundException();
+      }
+    if(userData.username && userData.username !== user.username) {
+  const existUser = await this.findByUsername(userData.username);
+  if (existUser) {
+    throw new ConflictException('user name is already exist');
+  }
+  user.username = userData.username;
+}
+if (userData.email && userData.email !== user.email) {
+  const existUser = await this.findByEmail(userData.email);
+  if (existUser) {
+    throw new ConflictException('email is already exist');
+  }
+  user.email = userData.email;
+}
+const updatedUser = await this.userRepository.save(user);
+const updateUserResponse: UpdateUserResponseDto = {
+  email: updatedUser?.email,
+  username: updatedUser?.username,
+};
+return updateUserResponse;
+  }
+
+  async deleteUser(userId: number): Promise < { message: string } > {
+  const user = await this.findByUuid(userId);
+  if(!user) {
+    throw new NotFoundException();
+  }
     //TODO: check if the user have any expense on this group
     //if he has to throw BadRequestException
     user.groups = [];
-    user.expensesPaid = [];
-    await this.userRepository.save(user);
-    await this.userRepository.remove(user);
-    return { message: 'user deleted successfully' };
-  }
+  user.expensesPaid = [];
+  await this.userRepository.save(user);
+  await this.userRepository.remove(user);
+  return { message: 'user deleted successfully' };
+}
 }

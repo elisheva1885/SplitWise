@@ -7,7 +7,11 @@ export class UserResponseDto {
   email!: string;
   username!: string;
 }
+export class UsersResponseDto {
+  id!: number;
+  username!: string;
 
+}
 export class GetUserResponseDto {
   user!: UserResponseDto;
   groups?: GroupResponseDto[];

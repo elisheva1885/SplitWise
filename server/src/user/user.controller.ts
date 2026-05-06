@@ -12,6 +12,8 @@ import {
   GetUserResponseDto,
   UpdateUserDto,
   UpdateUserResponseDto,
+  UserResponseDto,
+  UsersResponseDto,
 } from './dto/user.dto';
 import { CurrentUser } from './current-user.decorator';
 import type { JwtPayload } from 'src/types/express';
@@ -27,7 +29,12 @@ export class UserController {
   ): Promise<GetUserResponseDto> {
     return await this.userService.getUserInfoAndGroups(user.id);
   }
-
+  @Get('/all')
+  async getUsers(
+    @CurrentUser() user: JwtPayload,
+  ): Promise<UsersResponseDto[]> {
+    return await this.userService.getUsers(user.id);
+  }
   @Patch()
   async updateUser(
     @CurrentUser() user: JwtPayload,

@@ -17,12 +17,11 @@ export type CreateGroupDto = {
     description: string,
 }
 
-export type UpdateGroupData = {
+export type GroupDataWithOwner = {
     id: number,
     name: string,
     description: string,
     owner: UserInGroup,
-
 }
 
 
