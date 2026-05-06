@@ -1,11 +1,14 @@
 import { useState, type ReactNode } from "react";
 import { UserContext } from "../types/user-context.types";
 import type { UserData } from "../types/auth.types";
+import { logoutUser } from "../api/auth.api";
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUserState] = useState<UserData | null>(null);
-  const setUser = (user: UserData) => setUserState(user);
-  const logout = () => setUserState(null);
+  const setUser = (user: UserData | null) => setUserState(user);
+   const logout = () => {
+        logoutUser();
+        setUserState(null)};
 
   return (
     <UserContext.Provider value={{ user, setUser, logout }}>

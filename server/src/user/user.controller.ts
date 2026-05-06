@@ -44,12 +44,9 @@ export class UserController {
     return await this.userService.deleteUser(user.id);
   }
 
-  
   @UseGuards(AuthGuard)
   @Get('status')
-  userStatus(@CurrentUser() user: JwtPayload): 
-    AuthResponseDto
-   {
-    return {username: user.username, email: user.email};
+  userStatus(@CurrentUser() user: JwtPayload): AuthResponseDto {
+    return { username: user.username, email: user.email };
   }
 }

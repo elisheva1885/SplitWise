@@ -1,28 +1,21 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Post,
-  Req,
   Res,
-  UnauthorizedException,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import type { Response } from 'express';
 import { JwtPayload } from 'src/types/express';
-import type { JwtPayload as payload } from 'src/types/express';
 import { AuthResponseDto } from './dto/auth.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from 'src/user/current-user.decorator';
 
 @Controller('user')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   async signUp(
@@ -36,7 +29,6 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
-      path: '/'
     });
     return { username, email };
   }
@@ -53,7 +45,6 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
-      path: '/'
     });
     return { username, email };
   }
@@ -65,9 +56,7 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
-      path: '/'
     });
     return { message: 'Loggedout successfully' };
   }
-
 }
