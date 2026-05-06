@@ -21,7 +21,6 @@ export const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
     mode: "onChange",
   });
   return (
-    <>
       <form
         onSubmit={handleSubmit(onSubmit)}
         style={{ backgroundColor: "#2e3136" }}
@@ -58,6 +57,5 @@ export const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         <br />
         <Button type="submit">Register</Button>
       </form>
-    </>
   );
 };

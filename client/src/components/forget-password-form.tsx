@@ -49,7 +49,6 @@ export const ForgetPasswordForm = () => {
   });
 
   return (
-    <>
       <form
         onSubmit={handleSubmit(onSubmit)}
         style={{ backgroundColor: "#2e3136" }}
@@ -67,8 +66,7 @@ export const ForgetPasswordForm = () => {
         <Button type="submit" variant="contained">
           SUBMIT
         </Button>
-      </form>
-      <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+          <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
         {success ? (
           <Alert severity="success">
             <AlertTitle>Success</AlertTitle>
@@ -81,6 +79,6 @@ export const ForgetPasswordForm = () => {
           </Alert>
         )}
       </Snackbar>
-    </>
+      </form>
   );
 };
