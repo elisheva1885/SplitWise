@@ -8,13 +8,17 @@ import {
   Req,
   Res,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import type { Response, Request } from 'express';
-import { JwtPayload } from 'src/types/express';
+import type { Response } from 'express';
+import  { JwtPayload } from 'src/types/express';
+import  type{ JwtPayload as payload} from 'src/types/express';
 import { AuthResponseDto } from './dto/auth.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { CurrentUser } from 'src/user/current-user.decorator';
 
 @Controller('user')
 export class AuthController {
@@ -63,18 +67,4 @@ export class AuthController {
     return { message: 'Loggedout successfully' };
   }
 
-  @HttpCode(HttpStatus.OK)
-  @Get('status')
-  userStatus(@Req() req: Request): {
-    loggedIn: boolean, message: string
-  } {
-    const access_token = req.cookies['access_token'];
-    if (!access_token)
-      throw new UnauthorizedException();
-    
-  return {
-  loggedIn: true,
-  message: 'userConneted'
-};
-}
 }

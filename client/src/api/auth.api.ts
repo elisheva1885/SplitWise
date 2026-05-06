@@ -17,7 +17,7 @@ export async function registerUser(
   return data;
 }
 
-export async function userStatus(): Promise<UserData> {
+export async function getUserStatus(): Promise<UserData> {
   const { data } = await api.get("/user/status");
   return data;
 }
