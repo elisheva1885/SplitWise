@@ -14,10 +14,6 @@ import AlertTitle from "@mui/material/AlertTitle";
 import axios from "axios";
 import { useState } from "react";
 
-// type ForgetPasswordProps = {
-//   onSubmit: (data: ForgetPasswordFormData) => void;
-// };
-
 export const ForgetPasswordForm = () => {
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
