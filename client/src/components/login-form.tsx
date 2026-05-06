@@ -54,7 +54,7 @@ export const LoginForm = ({
       <br />
       <Button onClick={toForgetPasswordMode}>ForgetPassword</Button>
       <Button onClick={toRegisterMode}>Register</Button>
-      <Button type="submit">Login</Button>
+      <Button type="submit">Submit</Button>
     </form>
   );
 };

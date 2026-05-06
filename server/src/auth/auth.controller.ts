@@ -14,8 +14,8 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import type { Response } from 'express';
-import  { JwtPayload } from 'src/types/express';
-import  type{ JwtPayload as payload} from 'src/types/express';
+import { JwtPayload } from 'src/types/express';
+import type { JwtPayload as payload } from 'src/types/express';
 import { AuthResponseDto } from './dto/auth.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/user/current-user.decorator';
@@ -34,8 +34,9 @@ export class AuthController {
     const token = this.authService.generateToken(payload);
     res.cookie('access_token', token, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: 'strict',
+      path: '/'
     });
     return { username, email };
   }
@@ -52,6 +53,7 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
+      path: '/'
     });
     return { username, email };
   }
@@ -63,6 +65,7 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
+      path: '/'
     });
     return { message: 'Loggedout successfully' };
   }

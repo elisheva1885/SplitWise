@@ -22,7 +22,6 @@ export const RegisterForm = ({ onSubmit, toLoginMode }: RegisterFormProps) => {
     mode: "onChange",
   });
   return (
-    <>
       <form
         onSubmit={handleSubmit(onSubmit)}
         style={{ backgroundColor: "#2e3136" }}
@@ -58,8 +57,7 @@ export const RegisterForm = ({ onSubmit, toLoginMode }: RegisterFormProps) => {
         />
         <br />
         <Button onClick={toLoginMode}>Login</Button>
-        <Button type="submit">Register</Button>
+        <Button type="submit">Submit</Button>
       </form>
-    </>
   );
 };
