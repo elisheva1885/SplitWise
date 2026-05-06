@@ -1,35 +1,32 @@
 export interface RegisterUserDto {
-    username: string;
-    email: string;
-    password: string;
+  username: string;
+  email: string;
+  password: string;
 }
 
-
 export interface LoginUserDto {
-    username: string;
-    password: string;
+  username: string;
+  password: string;
 }
 
 export type LoginFormData = {
-    username: string,
-    password: string
-}
-
+  username: string;
+  password: string;
+};
 
 export type RegisterFormData = {
-    username: string,
-    email:string,
-    password: string
-}
+  username: string;
+  email: string;
+  password: string;
+};
 
 export type ForgetPasswordFormData = {
-    email:string,
-}
+  email: string;
+};
 export type UserData = {
-      username: string;
-    email: string;
-}
+  username: string;
+  email: string;
+};
 
-export type AuthFormStatus = 'Login' | 'Register' | 'ForgetPassword';
-
-
+export type AuthFormStatus = "Register" | "ForgetPassword" | "Login";
+export type AuthPagemMode = "Register" | "Login";

@@ -1,137 +1,145 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import LogoutIcon from '@mui/icons-material/Logout';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import { useUserContext } from '../store/use-user.context';
-import { useNavigate } from 'react-router';
-import { AuthForms } from './auth-forms';
-import CloseIcon from '@mui/icons-material/Close';
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+import LogoutIcon from "@mui/icons-material/Logout";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import { useUserContext } from "../store/use-user.context";
+import { useNavigate } from "react-router";
+import { AuthForms } from "./auth-forms";
+import CloseIcon from "@mui/icons-material/Close";
 
 export const Navbar = () => {
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const { user, logout } = useUserContext();
-    const navigate = useNavigate();
-    const [open, setOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { user, logout } = useUserContext();
+  const navigate = useNavigate();
+  const [open, setOpen] = React.useState(false);
 
-
-    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-        if (!user) {
-            setOpen(true);
-        }
-        else {
-            setAnchorEl(event.currentTarget);
-        }
-
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-
-    const handleCloseDialog = () => {
-        setOpen(false);
-    };
-
-    const toGroups = () => {
-        navigate('/groups')
-    };
-
-    const handleLogout = () => {
-        logout();
-        navigate('/')
-        setAnchorEl(null);
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    if (!user) {
+      setOpen(true);
+    } else {
+      setAnchorEl(event.currentTarget);
     }
-    const handleProfile = () => {
-        navigate('/user')
-        setAnchorEl(null);
+  };
 
-    }
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-    return (
-        <>
+  const handleCloseDialog = () => {
+    setOpen(false);
+  };
 
-            <AppBar position="static" style={{ backgroundColor: '#182720' }}>
-                <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+  const toGroups = () => {
+    navigate("/groups");
+  };
 
-                        <Box component={'img'} src='splitwise2.png' sx={{ maxHeight: 40 }}></Box>
-                        {user ? <Button
-                            sx={{
-                                display: { sm: 'inline-flex' }
-                            }}
-                            onClick={toGroups}
-                        >
-                            My Groups
-                        </Button>
-                            : <></>}
-                    </Box>
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+    setAnchorEl(null);
+  };
+  const handleProfile = () => {
+    navigate("/user");
+    setAnchorEl(null);
+  };
 
-                    <Box>
-                        <Box sx={{ display: 'flex' }}>
+  return (
+    <>
+      <AppBar position="static" style={{ backgroundColor: "#182720" }}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box
+              component={"img"}
+              src="splitwise2.png"
+              sx={{ maxHeight: 40 }}
+            ></Box>
+            {user ? (
+              <Button
+                sx={{
+                  display: { sm: "inline-flex" },
+                }}
+                onClick={toGroups}
+              >
+                My Groups
+              </Button>
+            ) : (
+              <></>
+            )}
+          </Box>
 
-                            <Typography variant="h6" component="div" sx={{ padding: '5px', display: { xs: 'none', sm: 'block' }, }}>
-                                {user ? 'Hello ' + user?.username : ''}
-                            </Typography>
-                            <IconButton
-                                size="large"
-                                aria-label="account of current user"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
-                                onClick={handleMenu}
-                                color="inherit"
-                            >
-
-                                <AccountCircle />
-                            </IconButton>
-                        </Box>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorEl}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            sx={{
-                                
-                            }}
-                            open={Boolean(anchorEl)}
-                            onClose={handleClose}
-                        >
-                            <Box >
-                                <MenuItem onClick={handleProfile}>Profile</MenuItem>
-                                <MenuItem onClick={handleLogout}><LogoutIcon /> Logout</MenuItem>
-                            </Box>
-                        </Menu>
-                    </Box>
-
-                </Toolbar>
-            </AppBar>
-            <React.Fragment>
-                <Dialog open={open} onClose={handleCloseDialog} >
-                    <Box style={{ backgroundColor: '#2e3136' }}>
-                        <CloseIcon onClick={handleCloseDialog} sx={{ backgroundColor: '#2e3136', color: 'white', position: 'absolute', insetInlineEnd: 3 }} />
-                        <br />
-                        <Box sx={{ textAlign: 'center', padding: '8px' }}>
-                            <AuthForms setDialogOpen={setOpen} />
-                        </Box>
-                    </Box>
-                </Dialog>
-            </React.Fragment>
-
-        </>
-    );
-}
+          <Box>
+            <Box sx={{ display: "flex" }}>
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{ padding: "5px", display: { xs: "none", sm: "block" } }}
+              >
+                {user ? "Hello " + user?.username : ""}
+              </Typography>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            </Box>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              sx={{}}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <Box>
+                <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                <MenuItem onClick={handleLogout}>
+                  <LogoutIcon /> Logout
+                </MenuItem>
+              </Box>
+            </Menu>
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <React.Fragment>
+        <Dialog open={open} onClose={handleCloseDialog}>
+          <Box style={{ backgroundColor: "#2e3136" }}>
+            <CloseIcon
+              onClick={handleCloseDialog}
+              sx={{
+                backgroundColor: "#2e3136",
+                color: "white",
+                position: "absolute",
+                insetInlineEnd: 3,
+              }}
+            />
+            <br />
+            <Box sx={{ textAlign: "center", padding: "8px" }}>
+              <AuthForms setDialogOpen={setOpen} />
+            </Box>
+          </Box>
+        </Dialog>
+      </React.Fragment>
+    </>
+  );
+};
