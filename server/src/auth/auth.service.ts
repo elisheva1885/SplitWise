@@ -3,7 +3,6 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
@@ -13,6 +12,7 @@ import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import zxcvbn from 'zxcvbn';
 import { JwtPayload } from 'src/types/express';
+import { LoginResponseDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -57,10 +57,10 @@ export class AuthService {
     return userResult;
   }
 
-  async signIn(signInInfo: LoginDto): Promise<string> {
+  async signIn(signInInfo: LoginDto): Promise<LoginResponseDto> {
     const user = await this.userService.findByUsername(signInInfo.username);
     if (!user) {
-      throw new NotFoundException('user not found');
+      throw new UnauthorizedException();
     }
     const isMatch = await bcrypt.compare(signInInfo.password, user.password);
     if (!isMatch) {
@@ -72,6 +72,11 @@ export class AuthService {
       email: user.email,
     };
     const token = this.generateToken(payload);
-    return token;
+    const userResult: LoginResponseDto = {
+      email: user.email,
+      username: user.username,
+      token: token,
+    };
+    return userResult;
   }
 }
