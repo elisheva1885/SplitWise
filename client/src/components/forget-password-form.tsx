@@ -19,30 +19,30 @@ import { useState } from "react";
 // };
 
 export const ForgetPasswordForm = () => {
- const [error, setError] = useState<string>("");
-   const [success, setSuccess] = useState<string>("");
-   const [open, setOpen] = useState<boolean>(false);
- 
-   const onSubmit = async (data: ForgetPasswordData) => {
-     setError("");
-     setSuccess("");
-     try {
-       //add a call to the server
-       setSuccess(`send message to your email ${data.email}`);
-     } catch (err: unknown) {
-       if (axios.isAxiosError(err)) {
-         const message = err.response?.data?.message || err.message;
-         setError(message);
-       } else {
-         setError("Something went wrong");
-       }
-     }
-     setOpen(true);
-   };
-   const handleClose = () => {
-     setOpen(false);
-   };
- 
+  const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
+  const [open, setOpen] = useState<boolean>(false);
+
+  const onSubmit = async (data: ForgetPasswordData) => {
+    setError("");
+    setSuccess("");
+    try {
+      //add a call to the server
+      setSuccess(`send message to your email ${data.email}`);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const message = err.response?.data?.message || err.message;
+        setError(message);
+      } else {
+        setError("Something went wrong");
+      }
+    }
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const {
     register,
     handleSubmit,
@@ -54,38 +54,37 @@ export const ForgetPasswordForm = () => {
 
   return (
     <>
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      style={{ backgroundColor: "#2e3136" }}
-    >
-      <Typography sx={{ color: "white" }}>Forget Password</Typography>
-      <InputLabel>Email</InputLabel>
-      <TextField
-        type="email"
-        size="small"
-        {...register("email")}
-        error={!!errors.email}
-        helperText={errors.email?.message}
-      />
-      <br />
-      <Button type="submit" variant="contained">
-        SUBMIT
-      </Button>
-    </form>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        style={{ backgroundColor: "#2e3136" }}
+      >
+        <Typography sx={{ color: "white" }}>Forget Password</Typography>
+        <InputLabel>Email</InputLabel>
+        <TextField
+          type="email"
+          size="small"
+          {...register("email")}
+          error={!!errors.email}
+          helperText={errors.email?.message}
+        />
+        <br />
+        <Button type="submit" variant="contained">
+          SUBMIT
+        </Button>
+      </form>
       <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
-         {success ? (
-           <Alert severity="success">
-             <AlertTitle>Success</AlertTitle>
-             {success}{" "}
-           </Alert>
-         ) : (
-           <Alert severity="error">
-             <AlertTitle>Error</AlertTitle>
-             {error}{" "}
-           </Alert>
-         )}
-       </Snackbar>
+        {success ? (
+          <Alert severity="success">
+            <AlertTitle>Success</AlertTitle>
+            {success}{" "}
+          </Alert>
+        ) : (
+          <Alert severity="error">
+            <AlertTitle>Error</AlertTitle>
+            {error}{" "}
+          </Alert>
+        )}
+      </Snackbar>
     </>
-
   );
 };

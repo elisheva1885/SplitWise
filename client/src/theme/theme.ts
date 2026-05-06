@@ -43,19 +43,17 @@ export const theme = createTheme({
     MuiTextField: {
       styleOverrides: {
         root: {
-          maxWidth: '247px'
-        }
-      }
+          maxWidth: "247px",
+        },
+      },
     },
     MuiFormHelperText: {
       styleOverrides: {
         root: {
-          maxWidth: '247px',
-          width:'auto',
-          
-        }
-      
-      }
-    }
+          maxWidth: "247px",
+          width: "auto",
+        },
+      },
+    },
   },
 });

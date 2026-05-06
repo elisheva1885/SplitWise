@@ -30,7 +30,7 @@ export const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         <br />
         <InputLabel>Username</InputLabel>
         <TextField
-        fullWidth
+          fullWidth
           type="text"
           size="small"
           variant="outlined"
@@ -40,7 +40,7 @@ export const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         />
         <InputLabel>Email</InputLabel>
         <TextField
-        fullWidth
+          fullWidth
           type="email"
           size="small"
           {...register("email")}
