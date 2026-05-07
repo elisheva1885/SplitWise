@@ -8,16 +8,16 @@ export const AddGroupSchema = z.object({
 export type AddGroupData = z.infer<typeof AddGroupSchema>;
 
 
-export const LoginSchema = z.object({
+export const UpdateGroupMemberSchema = z.object({
     username: z.string().min(3),
-    password: z.string().min(1)
+    email: z.email()
 })
 
-export type LoginData = z.infer<typeof LoginSchema>;
+export type UpdateGroupMemberData = z.infer<typeof UpdateGroupMemberSchema>;
 
 
-export const ForgetPasswordSchema = z.object({
-    email: z.email(),
-})
+// export const ForgetPasswordSchema = z.object({
+//     email: z.email(),
+// })
 
-export type ForgetPasswordData = z.infer<typeof ForgetPasswordSchema>;
+// export type ForgetPasswordData = z.infer<typeof ForgetPasswordSchema>;

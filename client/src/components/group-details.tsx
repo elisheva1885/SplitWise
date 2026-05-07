@@ -21,9 +21,12 @@ import axios from "axios";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from "@mui/material/IconButton";
-import { UpdateGroupMemberForm } from "./update-group-member-form";
+import { UpdateGroupMemberForm } from "./update-group-form";
 import type { UserInGroup } from "../types/user.types";
 import Typography from "@mui/material/Typography";
+import { handleApiError } from "../helpers/handle-api-error.helper";
+import { updateUser } from "../api/user-api";
+import { GroupMembersList } from "./group-members-list";
 export const GroupDetails = () => {
     const { id } = useParams();
     const [group, setGroup] = useState<GroupData | null>(null);
@@ -40,19 +43,15 @@ export const GroupDetails = () => {
             const data = await getGroupDetails(id);
             setGroup(data)
         }
-        catch (err: unknown) {
-            if (axios.isAxiosError(err)) {
-                const message = err.response?.data?.message || err.message;
-                setError(message);
-            } else {
-                setError("Something went wrong");
-            }
+        catch (err) {
+            setError(handleApiError(err));
             setOpenSnackbar(true);
         }
     }
 
     const handleCloseDialog = () => {
         setOpenAddUserDialog(false);
+        setUpdateUserDialog(false);
     };
     const handleClose = () => {
         setOpenSnackbar(false);
@@ -60,9 +59,10 @@ export const GroupDetails = () => {
     const addGroupMember = async (userId: number) => {
         setError("");
         setSuccess("");
-        if (group?.id == undefined) {
-            console.log(group?.id, group);
-            alert("no group")
+        if (!group?.id) {
+            setError("Group not loaded");
+            setOpenSnackbar(true);
+            return;
         }
         try {
             const data = await addUserToGroup(group.id, userId)
@@ -70,123 +70,46 @@ export const GroupDetails = () => {
             setSuccess("User added successfully");
             setOpenSnackbar(true);
         }
-        catch (err: unknown) {
-            if (axios.isAxiosError(err)) {
-                const message = err.response?.data?.message || err.message;
-                setError(message);
-            } else {
-                setError("Something went wrong");
-            }
+        catch (err) {
+            setError(handleApiError(err));
             setOpenSnackbar(true);
         }
     }
-    const deleteGroupMember = async (userId: number) => {
-        setError("");
-        setSuccess("");
-        if (group?.id == undefined) {
-            console.log(group?.id, group);
-            alert("no group")
-        }
-        try {
-            const data = await deleteUserFromGroup(group.id, userId)
-            setGroup(data);
-            setSuccess("User removed successfully");
-            setOpenSnackbar(true);
-        }
-        catch (err: unknown) {
-            if (axios.isAxiosError(err)) {
-                const message = err.response?.data?.message || err.message;
-                setError(message);
-            } else {
-                setError("Something went wrong");
-            }
-            setOpenSnackbar(true);
-        }
-    }
+
 
     const updateMemberInfo = (member: UserInGroup) => {
         setUpdateUserDialog(true);
         setUpdateMember(member);
     }
 
+
     useEffect(() => {
-        console.log('GroupDetails');
-        if (id) {
-            getGroupDetailsById(Number(id))
-        }
+        if (!id) return;
+        getGroupDetailsById(Number(id))
     }, [id])
 
     return (
         <>
             {group?.name}
-            <List sx={{
-                width: '100%',
-                bgcolor: 'background.paper',
-                display: 'flex',
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                gap: 1,
-            }}>
-                {group?.members.map((member) => (
-                    <Box
-                        key={member.id}
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 1,
-                            px: 1,
-                            py: 0.5,
-                            border: '1px solid #ddd',
-                            borderRadius: 2,
-                            fontSize: 13,
-                            width: 'fit-content',
-                        }}
-                    >
-                        <Avatar sx={{ width: 24, height: 24 }}>
-                            <PeopleAltIcon sx={{ fontSize: 16 }} />
-                        </Avatar>
-
-                        <Box sx={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
-                            <span style={{ fontSize: 13 }}>{member.username}</span>
-                            <span style={{ fontSize: 11, opacity: 0.6 }}>{member.email}</span>
-                        </Box>
-
-                        <IconButton
-                            onClick={() => updateMemberInfo(member)
-                            }
-                            sx={{
-                                backgroundColor: "white",
-                                padding: 0.2,
-                            }}
-                        >
-                            <EditIcon />
-                        </IconButton>
-                        <IconButton
-                            onClick={() => deleteGroupMember(member.id)}
-                            sx={{
-                                backgroundColor: "white",
-                                padding: 0.2,
-                            }}
-                        >
-                            <DeleteIcon />
-                        </IconButton>
-                    </Box>
-                ))}
-
-            </List >
-            <Button sx={{ backgroundColor: 'black' }} onClick={() => setOpenAddUserDialog(true)}><GroupAddIcon /></Button>
             <ListItem key={group?.owner.id} sx={{
-                width: 'auto',
-                flex: '0 0 auto',
+                display:"flex",
+                width: '100%',
                 padding: '4px 8px',
+                justifyContent: 'center',
+                alignItems: 'center'
             }}>
                 <ListItemAvatar>
-                    <Avatar sx={{backgroundColor: 'black'}}>
-                        <Typography sx={{ fontSize: 'x-small'}}>OWNER</Typography>
+                    <Avatar sx={{ backgroundColor: 'black' }}>
+                        <Typography sx={{ fontSize: 'x-small' }}>OWNER</Typography>
                     </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={group?.owner.username} />
+                {group?.owner && <ListItemText primary={group?.owner.username} />}
             </ListItem>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                <GroupMembersList groupMembers={group?.members} groupId={group?.id} />
+            </Box >
+            <Button sx={{ backgroundColor: 'black' }} onClick={() => setOpenAddUserDialog(true)} aria-label="Add group member"><GroupAddIcon /></Button>
+
             <Dialog open={openAddUserDialog} onClose={handleCloseDialog}>
                 <Box style={{ backgroundColor: "#2e3136" }}>
                     <CloseIcon
@@ -217,7 +140,7 @@ export const GroupDetails = () => {
                     />
                     <br />
                     <Box sx={{ textAlign: "center", padding: "8px" }}>
-                        <UpdateGroupMemberForm setDialogOpen={setUpdateUserDialog} onSubmit={addGroupMember} user={updateMember} />
+                        <UpdateGroupMemberForm setDialogOpen={setUpdateUserDialog} onSubmit={updateMemberInfo} user={updateMember} />
                     </Box>
                 </Box>
             </Dialog>

@@ -1,28 +1,35 @@
 
-import { useEffect, useState, type FormEvent } from 'react';
 import type { UserInGroup } from '../types/user.types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { UpdateGroupMemberSchema,  type UpdateGroupMemberData } from '../schemas/group-schemas';
+import { useForm } from 'react-hook-form';
+import Typography from '@mui/material/Typography';
+import InputLabel from '@mui/material/InputLabel';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 
 type AddGroupMemberFormProps = {
-    onSubmit: (userId: number) => void,
+    onSubmit: (member: UserInGroup) => void,
     setDialogOpen: (open: boolean) => void;
     user: UserInGroup | null
 }
 
-export const UpdateGroupMemberForm = ({ onSubmit, setDialogOpen }: AddGroupMemberFormProps) => {
-    const [user, setUser] = useState('');
+export const UpdateGroupMemberForm = ({ onSubmit, user}: AddGroupMemberFormProps) => {
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        onSubmit(Number(user));
-        setDialogOpen(false);
-    }
+     const {
+        register,
+        handleSubmit,
+        formState: { errors },
+      } = useForm<UpdateGroupMemberData>({
+        resolver: zodResolver(UpdateGroupMemberSchema),
+        mode: "onChange",
+      });
 
-    useEffect(() => {
-    })
+
     return (
         <>
-           {/* <form  onSubmit={handleSubmit} style={{ backgroundColor: '#405a4e' }}>
+           <form  style={{ backgroundColor: '#405a4e' }}>
                 <Typography sx={{ color: 'white' }}>Register</Typography>
                 <br />
                 <InputLabel >Username</InputLabel>
@@ -35,7 +42,7 @@ export const UpdateGroupMemberForm = ({ onSubmit, setDialogOpen }: AddGroupMembe
                     helperText={errors.email?.message} defaultValue={user?.email}/>
                 <br />
                 <Button type='submit'>Save Changes</Button>
-            </form> */}
+            </form>
         </>
     )
 
