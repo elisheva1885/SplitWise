@@ -8,7 +8,6 @@ import { theme } from './theme/theme'
 import CssBaseline from '@mui/material/CssBaseline'
 import { GroupProvider } from './store/groups.context'
 function App() {
-
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -23,4 +22,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

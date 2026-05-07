@@ -175,15 +175,14 @@ export const GroupDetails = () => {
 
             </List >
             <Button sx={{ backgroundColor: 'black' }} onClick={() => setOpenAddUserDialog(true)}><GroupAddIcon /></Button>
-            <Typography sx={{alignItems:'left'}}>OWNER</Typography>
             <ListItem key={group?.owner.id} sx={{
                 width: 'auto',
                 flex: '0 0 auto',
                 padding: '4px 8px',
             }}>
                 <ListItemAvatar>
-                    <Avatar>
-                        <PeopleAltIcon />
+                    <Avatar sx={{backgroundColor: 'black'}}>
+                        <Typography sx={{ fontSize: 'x-small'}}>OWNER</Typography>
                     </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary={group?.owner.username} />

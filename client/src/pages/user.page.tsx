@@ -1,9 +1,3 @@
-
 export const UserPage = () => {
-    
-    return (
-        <>
-        UserPage
-        </>
-    )
-}
+  return <>UserPage</>;
+};

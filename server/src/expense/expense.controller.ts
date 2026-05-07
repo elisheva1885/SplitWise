@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
@@ -12,8 +13,11 @@ import { ExpenseService } from './expense.service';
 import type { JwtPayload } from 'src/types/express';
 import { CreateExpenseDto, UpdateExpenseDto } from './dto/expense.dto';
 import { CurrentUser } from 'src/user/current-user.decorator';
-import { ApiCookieAuth } from '@nestjs/swagger';
-import { ExpenseResponseDto } from './dto/expense-response.dto';
+import { ApiCookieAuth, ApiParam } from '@nestjs/swagger';
+import {
+  BalanceExpenseResponse,
+  ExpenseResponseDto,
+} from './dto/expense-response.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 @ApiCookieAuth()
 @UseGuards(AuthGuard)
@@ -44,5 +48,14 @@ export class ExpenseController {
     @Param('eid', ParseIntPipe) eid: number,
   ): Promise<{ message: string }> {
     return await this.expenseService.deleteExpense(eid, user.id);
+  }
+
+  @ApiParam({ name: 'gid', type: 'number', example: 1 })
+  @Get(':gid')
+  async getGroupdetails(
+    @CurrentUser() user: JwtPayload,
+    @Param('gid', ParseIntPipe) gid: number,
+  ): Promise<BalanceExpenseResponse[]> {
+    return await this.expenseService.getGroupExpense(gid, user.id);
   }
 }

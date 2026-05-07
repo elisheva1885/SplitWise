@@ -12,6 +12,9 @@ export class ExpenseValidator {
   constructor(private readonly userService: UserService) {}
 
   validateUsersInGroup(group: Group, userIds: number[]): void {
+    if (!group.members)
+      throw new NotFoundException('not found members on the group');
+
     const members = new Set(group.members.map((m) => m.uuid));
     userIds.forEach((userId) => {
       if (!members.has(userId)) {
