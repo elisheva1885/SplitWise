@@ -25,6 +25,7 @@ export const GroupMembersList = ({ groupMembers, groupId, setGroup }: GroupMembe
     const [error, setError] = useState<string>("");
     const [success, setSuccess] = useState<string>("");
     const [openSnackbar, setOpenSnackbar] = useState(false);
+    
     const deleteGroupMember = async (userId: number) => {
         setError("");
         setSuccess("");

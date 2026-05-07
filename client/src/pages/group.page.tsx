@@ -24,8 +24,11 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import type { AddGroupData } from '../schemas/group-schemas';
+import { useUserContext } from '../store/use-user.context';
 export const GroupPage = () => {
     const { groups, setGroups } = useGroupContext();
+    const {user} = useUserContext();
+    const [isOwner, setiIsOwner] = useState<Boolean>(false);
     const [open, setOpen] = useState(false);
     const [error, setError] = useState<string>("");
     const [success, setSuccess] = useState<string>("");
