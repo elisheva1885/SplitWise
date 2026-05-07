@@ -6,7 +6,8 @@ export type GroupState = {
 };
 
 export type GroupContextType = GroupState & {
-    setGroups: (group: GroupData[]) => void,
+    setGroups: (groups: GroupData[]) => void,
+    setGroup: (group: GroupData) => void,
     // addGroup: (group: CreateGroupDto) => void,
     // updateGroup: (groupId: number, groupData: UpdateGroupDto) => void,
     // deleteGroup: (groupId: number) => void,

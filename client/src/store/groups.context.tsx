@@ -8,9 +8,17 @@ import { GroupContext } from "../types/group-context.types";
 export const GroupProvider = ({ children }: { children: ReactNode }) => {
     const [groups, setGroupsState] = useState<GroupData[] | []>([]);
     const setGroups = (groups: GroupData[]) => setGroupsState(groups);
+    const setGroup = (updatedGroup: GroupData) => {
+    setGroupsState(prev =>
+        prev.map(group =>
+            group.id === updatedGroup.id ? updatedGroup : group
+        )
+    );
+};
+
     return (
         <GroupContext.Provider value={{
-            groups, setGroups
+            groups, setGroups, setGroup
 
         }}>
             {children}

@@ -1,10 +1,6 @@
 import type { UserInGroup } from "../types/user.types"
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import IconButton from "@mui/material/IconButton";
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import Avatar from '@mui/material/Avatar';
-import Box from "@mui/material/Box"
 import { useState } from "react";
 import { deleteUserFromGroup } from "../api/group.api";
 import type { GroupData } from "../types/group.types";
@@ -16,17 +12,19 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 
 type GroupMembersListProps = {
     groupMembers: UserInGroup[] | undefined,
-    groupId: number | undefined
+    groupId: number | undefined,
+    setGroup: (group: GroupData) => void
 }
-export const GroupMembersList = ({ groupMembers, groupId }: GroupMembersListProps) => {
+export const GroupMembersList = ({ groupMembers, groupId, setGroup }: GroupMembersListProps) => {
     const [error, setError] = useState<string>("");
     const [success, setSuccess] = useState<string>("");
     const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [group, setGroup] = useState<GroupData | null>(null);
-
     const deleteGroupMember = async (userId: number) => {
         setError("");
         setSuccess("");
@@ -46,6 +44,9 @@ export const GroupMembersList = ({ groupMembers, groupId }: GroupMembersListProp
             setOpenSnackbar(true);
         }
     }
+    const handleClose = () => {
+        setOpenSnackbar(false);
+    };
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -81,6 +82,20 @@ export const GroupMembersList = ({ groupMembers, groupId }: GroupMembersListProp
                     ))}
                 </TableBody>
             </Table>
+            <Snackbar open={openSnackbar} autoHideDuration={5000} onClose={handleClose}>
+                {success ? (
+                    <Alert severity="success">
+                        <AlertTitle>Success</AlertTitle>
+                        {success}{" "}
+                    </Alert>
+                ) : (
+                    <Alert severity="error">
+                        <AlertTitle>Error</AlertTitle>
+                        {error}{" "}
+                    </Alert>
+                )}
+            </Snackbar>
         </TableContainer>
+
     )
 }

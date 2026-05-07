@@ -2,30 +2,24 @@ import Box from "@mui/material/Box"
 import type { GroupData } from "../types/group.types"
 import { useEffect, useState } from "react"
 import { useParams } from 'react-router'
-import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import { addUserToGroup, deleteUserFromGroup, getGroupDetails } from "../api/group.api"
+import { addUserToGroup, getGroupDetails } from "../api/group.api"
 import Button from "@mui/material/Button"
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import EditIcon from '@mui/icons-material/Edit';
 import Dialog from "@mui/material/Dialog"
 import CloseIcon from "@mui/icons-material/Close";
 import { AddGroupMemberForm } from "./add-group-member-form"
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import axios from "axios";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import IconButton from "@mui/material/IconButton";
 import { UpdateGroupMemberForm } from "./update-group-form";
 import type { UserInGroup } from "../types/user.types";
 import Typography from "@mui/material/Typography";
 import { handleApiError } from "../helpers/handle-api-error.helper";
-import { updateUser } from "../api/user-api";
 import { GroupMembersList } from "./group-members-list";
 export const GroupDetails = () => {
     const { id } = useParams();
@@ -77,7 +71,7 @@ export const GroupDetails = () => {
     }
 
 
-    const updateMemberInfo = (member: UserInGroup) => {
+    const updateGroupInfo = () => {
         setUpdateUserDialog(true);
         setUpdateMember(member);
     }
@@ -90,23 +84,35 @@ export const GroupDetails = () => {
 
     return (
         <>
+
             {group?.name}
-            <ListItem key={group?.owner.id} sx={{
-                display:"flex",
-                width: '100%',
-                padding: '4px 8px',
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}>
-                <ListItemAvatar>
-                    <Avatar sx={{ backgroundColor: 'black' }}>
-                        <Typography sx={{ fontSize: 'x-small' }}>OWNER</Typography>
-                    </Avatar>
-                </ListItemAvatar>
-                {group?.owner && <ListItemText primary={group?.owner.username} />}
-            </ListItem>
+            <EditIcon onClick={updateGroupInfo}/>
+            <Box
+                sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    mt: 2,
+                    mb: 2,
+                }}
+            >
+                <ListItem key={group?.owner.id} sx={{
+                    width: "fit-content",
+                    borderRadius: 2,
+                    px: 2,
+                    py: 1,
+                    backgroundColor: "#f5f5f5",
+                }}>
+                    <ListItemAvatar>
+                        <Avatar sx={{ backgroundColor: 'black' }}>
+                            <Typography sx={{ fontSize: 'x-small' }}>OWNER</Typography>
+                        </Avatar>
+                    </ListItemAvatar>
+                    {group?.owner && <ListItemText primary={group?.owner.username} />}
+                </ListItem>
+            </Box>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                <GroupMembersList groupMembers={group?.members} groupId={group?.id} />
+                <GroupMembersList groupMembers={group?.members} groupId={group?.id} setGroup={setGroup} />
             </Box >
             <Button sx={{ backgroundColor: 'black' }} onClick={() => setOpenAddUserDialog(true)} aria-label="Add group member"><GroupAddIcon /></Button>
 
