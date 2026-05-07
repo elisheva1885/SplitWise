@@ -8,6 +8,7 @@ export type User = {
 export type UserInGroup = {
     id: number,
     username: string,
+    email:string
 }
 
 export type UpdateUserDto = {

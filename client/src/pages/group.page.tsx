@@ -16,7 +16,7 @@ import { useEffect } from 'react';
 import { useGroupContext } from '../store/use-group.context';
 import { getUserDetails } from '../api/user-api';
 import { useNavigate } from 'react-router';
-import {Outlet} from 'react-router'
+import { Outlet } from 'react-router'
 export const GroupPage = () => {
     const { groups, setGroups } = useGroupContext();
     const navigate = useNavigate();
@@ -62,9 +62,9 @@ export const GroupPage = () => {
                 >
                     {DrawerList}
                 </Drawer>
-                                           <div style={{ marginLeft: 260, padding: 16 }}>
-                <Outlet />
-            </div>
+                <div style={{ marginLeft: 260, padding: 16 }}>
+                    <Outlet />
+                </div>
 
             </div>
 

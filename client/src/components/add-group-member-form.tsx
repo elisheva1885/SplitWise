@@ -1,14 +1,9 @@
 
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ForgetPasswordSchema, type ForgetPasswordData } from '../schemas/auth-schemas';
-import type { ForgetPasswordFormData } from '../types/auth.types';
 import { getAllUsers } from '../api/user-api';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import type { UserToAdd } from '../types/user.types';
 import FormControl from '@mui/material/FormControl';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
@@ -28,7 +23,12 @@ export const AddGroupMemberForm = ({ onSubmit, setDialogOpen }: AddGroupMemberFo
     const handleChange = (event: SelectChangeEvent) => {
         setUser(event.target.value as string);
     };
-   
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        onSubmit(Number(user));
+        setDialogOpen(false);
+    }
+
     const getUsers = async () => {
         const data = await getAllUsers();
         console.log("users ", data);
@@ -36,10 +36,10 @@ export const AddGroupMemberForm = ({ onSubmit, setDialogOpen }: AddGroupMemberFo
     }
     useEffect(() => {
         getUsers()
-    }, [])
+    })
     return (
         <>
-            <form onSubmit={onSubmit} style={{ backgroundColor: '#2e3136' }}>
+            <form onSubmit={handleSubmit} style={{ backgroundColor: '#2e3136' }}>
                 <Typography sx={{ color: 'white' }}>Add User</Typography>
                 <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">User</InputLabel>

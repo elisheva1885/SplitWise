@@ -2,51 +2,105 @@ import Box from "@mui/material/Box"
 import type { GroupData } from "../types/group.types"
 import { useEffect, useState } from "react"
 import { useParams } from 'react-router'
-import { useGroupContext } from "../store/use-group.context"
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-import ImageIcon from '@mui/icons-material/Image';
-import WorkIcon from '@mui/icons-material/Work';
-import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import { addUserToGroup, getGroupDetails } from "../api/group.api"
+import { addUserToGroup, deleteUserFromGroup, getGroupDetails } from "../api/group.api"
 import Button from "@mui/material/Button"
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import Dialog from "@mui/material/Dialog"
 import CloseIcon from "@mui/icons-material/Close";
 import { AddGroupMemberForm } from "./add-group-member-form"
-
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import axios from "axios";
+import Divider from "@mui/material/Divider";
+import GroupRemoveIcon from '@mui/icons-material/GroupRemove';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from "@mui/material/IconButton";
 export const GroupDetails = () => {
     const { id } = useParams();
     const [group, setGroup] = useState<GroupData | null>(null);
     const [open, setOpen] = useState(false);
-
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [error, setError] = useState<string>("");
+    const [success, setSuccess] = useState<string>("");
     const getGroupDetailsById = async (id: number) => {
-        const data = await getGroupDetails(id);
-        console.log("the full group: ", data);
-        setGroup(data)
+        setError("");
+        setSuccess("");
+        try {
+            const data = await getGroupDetails(id);
+            setGroup(data)
+        }
+        catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                const message = err.response?.data?.message || err.message;
+                setError(message);
+            } else {
+                setError("Something went wrong");
+            }
+            setOpenSnackbar(true);
+        }
     }
 
     const handleCloseDialog = () => {
         setOpen(false);
     };
-    const addGroup = () => {
-
-    }
+    const handleClose = () => {
+        setOpenSnackbar(false);
+    };
     const addGroupMember = async (userId: number) => {
-        console.log( group);
-
+        setError("");
+        setSuccess("");
         if (group?.id == undefined) {
             console.log(group?.id, group);
-
             alert("no group")
         }
-        const data = await addUserToGroup(group?.id, userId)
-        setGroup(data);
+        try {
+            const data = await addUserToGroup(group.id, userId)
+            setGroup(data);
+            setSuccess("User added successfully");
+            setOpenSnackbar(true);
+        }
+        catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                const message = err.response?.data?.message || err.message;
+                setError(message);
+            } else {
+                setError("Something went wrong");
+            }
+            setOpenSnackbar(true);
+        }
     }
+    const deleteGroupMember = async (userId: number) => {
+        setError("");
+        setSuccess("");
+        if (group?.id == undefined) {
+            console.log(group?.id, group);
+            alert("no group")
+        }
+        try {
+            const data = await deleteUserFromGroup(group.id, userId)
+            setGroup(data);
+            setSuccess("User removed successfully");
+            setOpenSnackbar(true);
+        }
+        catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                const message = err.response?.data?.message || err.message;
+                setError(message);
+            } else {
+                setError("Something went wrong");
+            }
+            setOpenSnackbar(true);
+        }
+    }
+
     useEffect(() => {
         console.log('GroupDetails');
         if (id) {
@@ -57,19 +111,73 @@ export const GroupDetails = () => {
     return (
         <>
             {group?.name}
-            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', display: 'flex', flexFlow: 'row warp'}}>
+            <List sx={{
+                width: '100%',
+                bgcolor: 'background.paper',
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                gap: 1,
+            }}>
                 {group?.members.map((member) => (
-                    <ListItem key={member.id}>
-                        <ListItemAvatar>
-                            <Avatar>
-                                <PeopleAltIcon />
-                            </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText primary={member.username} secondary={member.email} />
-                    </ListItem>
+                    <Box
+                        key={member.id}
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                            px: 1,
+                            py: 0.5,
+                            border: '1px solid #ddd',
+                            borderRadius: 2,
+                            fontSize: 13,
+                            width: 'fit-content',
+                        }}
+                    >
+                        <Avatar sx={{ width: 24, height: 24 }}>
+                            <PeopleAltIcon sx={{ fontSize: 16 }} />
+                        </Avatar>
+
+                        <Box sx={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
+                            <span style={{ fontSize: 13 }}>{member.username}</span>
+                            <span style={{ fontSize: 11, opacity: 0.6 }}>{member.email}</span>
+                        </Box>
+
+                        <IconButton
+                            onClick={() => setOpen(true)}
+                            sx={{
+                                backgroundColor: "white",
+                                padding: 0.2,
+                            }}
+                        >
+                            <EditIcon />
+                        </IconButton>
+                        <IconButton
+                            onClick={() => deleteGroupMember(member.id)}
+                            sx={{
+                                backgroundColor: "white",
+                                padding: 0.2,
+                            }}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    </Box>
                 ))}
-                <Button sx={{ backgroundColor: 'black' }} onClick={() => setOpen(true)}><GroupAddIcon /></Button>
-            </List>
+
+            </List >
+            <Button sx={{ backgroundColor: 'black' }} onClick={() => setOpen(true)}><GroupAddIcon /></Button>
+            <ListItem key={group?.owner.id} sx={{
+                width: 'auto',
+                flex: '0 0 auto',
+                padding: '4px 8px',
+            }}>
+                <ListItemAvatar>
+                    <Avatar>
+                        <PeopleAltIcon />
+                    </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary={group?.owner.username} />
+            </ListItem>
             <Dialog open={open} onClose={handleCloseDialog}>
                 <Box style={{ backgroundColor: "#2e3136" }}>
                     <CloseIcon
@@ -87,6 +195,19 @@ export const GroupDetails = () => {
                     </Box>
                 </Box>
             </Dialog>
+            <Snackbar open={openSnackbar} autoHideDuration={5000} onClose={handleClose}>
+                {success ? (
+                    <Alert severity="success">
+                        <AlertTitle>Success</AlertTitle>
+                        {success}{" "}
+                    </Alert>
+                ) : (
+                    <Alert severity="error">
+                        <AlertTitle>Error</AlertTitle>
+                        {error}{" "}
+                    </Alert>
+                )}
+            </Snackbar>
         </>
     )
 }

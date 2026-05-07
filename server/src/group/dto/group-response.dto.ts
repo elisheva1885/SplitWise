@@ -5,6 +5,8 @@ export class UserInGroupDto {
   id!: number;
   @Expose()
   username!: string;
+  @Expose()
+  email!: string;
 }
 
 export class ExpenseInGroupDto {

@@ -31,8 +31,8 @@ export async function addUserToGroup(groupId: number, userId: number): Promise<G
     return data;
 }
 
-export async function deleteUserFromGroup(groupId: number, userId: number): Promise<UpdateGroupMembersData> {
-    const { data } = await api.delete(`/group/${groupId}/${userId}`);
+export async function deleteUserFromGroup(groupId: number, userId: number): Promise<GroupData> {
+    const { data } = await api.patch(`/group/${groupId}/${userId}`);
     console.log(data);
     return data;
 } 

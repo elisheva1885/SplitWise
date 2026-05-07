@@ -73,7 +73,7 @@ export class UserService {
       groups: user?.groups?.map((group) => ({
         id: group.uuid,
         name: group.name,
-        owner: { id: group.owner.uuid, username: group.owner.username },
+        owner: { id: group.owner.uuid, username: group.owner.username ,email: group.owner.email},
       })),
     };
     return userDto;

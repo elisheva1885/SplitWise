@@ -1,4 +1,4 @@
-import type { RegisterUserDto, UserData } from "../types/auth.types";
+import type {  UserData } from "../types/auth.types";
 import api from "./client.api";
 import type {UpdateUserDto, UserDetails, UserToAdd} from "../types/user.types"
 

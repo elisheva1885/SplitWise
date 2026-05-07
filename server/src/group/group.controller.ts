@@ -75,4 +75,9 @@ export class GroupController {
   ): Promise<FullGroupResponseDto> {
     return await this.groupService.removeUserFromGroup(user.id, gid, uid);
   }
+
+
+
+
 }
+
