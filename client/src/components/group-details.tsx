@@ -18,15 +18,18 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import axios from "axios";
-import Divider from "@mui/material/Divider";
-import GroupRemoveIcon from '@mui/icons-material/GroupRemove';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from "@mui/material/IconButton";
+import { UpdateGroupMemberForm } from "./update-group-member-form";
+import type { UserInGroup } from "../types/user.types";
+import Typography from "@mui/material/Typography";
 export const GroupDetails = () => {
     const { id } = useParams();
     const [group, setGroup] = useState<GroupData | null>(null);
-    const [open, setOpen] = useState(false);
+    const [updateMember, setUpdateMember] = useState<UserInGroup | null>(null);
+    const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
+    const [updateUserDialog, setUpdateUserDialog] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [error, setError] = useState<string>("");
     const [success, setSuccess] = useState<string>("");
@@ -49,7 +52,7 @@ export const GroupDetails = () => {
     }
 
     const handleCloseDialog = () => {
-        setOpen(false);
+        setOpenAddUserDialog(false);
     };
     const handleClose = () => {
         setOpenSnackbar(false);
@@ -101,6 +104,11 @@ export const GroupDetails = () => {
         }
     }
 
+    const updateMemberInfo = (member: UserInGroup) => {
+        setUpdateUserDialog(true);
+        setUpdateMember(member);
+    }
+
     useEffect(() => {
         console.log('GroupDetails');
         if (id) {
@@ -144,7 +152,8 @@ export const GroupDetails = () => {
                         </Box>
 
                         <IconButton
-                            onClick={() => setOpen(true)}
+                            onClick={() => updateMemberInfo(member)
+                            }
                             sx={{
                                 backgroundColor: "white",
                                 padding: 0.2,
@@ -165,7 +174,8 @@ export const GroupDetails = () => {
                 ))}
 
             </List >
-            <Button sx={{ backgroundColor: 'black' }} onClick={() => setOpen(true)}><GroupAddIcon /></Button>
+            <Button sx={{ backgroundColor: 'black' }} onClick={() => setOpenAddUserDialog(true)}><GroupAddIcon /></Button>
+            <Typography sx={{alignItems:'left'}}>OWNER</Typography>
             <ListItem key={group?.owner.id} sx={{
                 width: 'auto',
                 flex: '0 0 auto',
@@ -178,7 +188,7 @@ export const GroupDetails = () => {
                 </ListItemAvatar>
                 <ListItemText primary={group?.owner.username} />
             </ListItem>
-            <Dialog open={open} onClose={handleCloseDialog}>
+            <Dialog open={openAddUserDialog} onClose={handleCloseDialog}>
                 <Box style={{ backgroundColor: "#2e3136" }}>
                     <CloseIcon
                         onClick={handleCloseDialog}
@@ -191,7 +201,24 @@ export const GroupDetails = () => {
                     />
                     <br />
                     <Box sx={{ textAlign: "center", padding: "8px" }}>
-                        <AddGroupMemberForm setDialogOpen={setOpen} onSubmit={addGroupMember} />
+                        <AddGroupMemberForm setDialogOpen={setOpenAddUserDialog} onSubmit={addGroupMember} />
+                    </Box>
+                </Box>
+            </Dialog>
+            <Dialog open={updateUserDialog} onClose={handleCloseDialog}>
+                <Box style={{ backgroundColor: "#2e3136" }}>
+                    <CloseIcon
+                        onClick={handleCloseDialog}
+                        sx={{
+                            backgroundColor: "#2e3136",
+                            color: "white",
+                            position: "absolute",
+                            insetInlineEnd: 3,
+                        }}
+                    />
+                    <br />
+                    <Box sx={{ textAlign: "center", padding: "8px" }}>
+                        <UpdateGroupMemberForm setDialogOpen={setUpdateUserDialog} onSubmit={addGroupMember} user={updateMember} />
                     </Box>
                 </Box>
             </Dialog>

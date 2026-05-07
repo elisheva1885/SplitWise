@@ -21,7 +21,6 @@ export const RegisterForm = ({ onSubmit , toLoginMode}: RegisterFormProps) => {
     } = useForm<RegisterData>({
         resolver: zodResolver(RegisterSchema),
           mode: 'onChange',
-
     });
     return (
         <>
