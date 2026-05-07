@@ -73,7 +73,6 @@ export const GroupDetails = () => {
 
     const updateGroupInfo = () => {
         setUpdateUserDialog(true);
-        setUpdateMember(member);
     }
 
 
@@ -146,7 +145,7 @@ export const GroupDetails = () => {
                     />
                     <br />
                     <Box sx={{ textAlign: "center", padding: "8px" }}>
-                        <UpdateGroupMemberForm setDialogOpen={setUpdateUserDialog} onSubmit={updateMemberInfo} user={updateMember} />
+                        <UpdateGroupMemberForm setDialogOpen={setUpdateUserDialog} onSubmit={updateGroupInfo} user={updateMember} />
                     </Box>
                 </Box>
             </Dialog>

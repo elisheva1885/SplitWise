@@ -30,14 +30,14 @@ export const UpdateGroupMemberForm = ({ onSubmit, user}: AddGroupMemberFormProps
     return (
         <>
            <form  style={{ backgroundColor: '#405a4e' }}>
-                <Typography sx={{ color: 'white' }}>Register</Typography>
+                <Typography sx={{ color: 'white' }}>Update Group</Typography>
                 <br />
-                <InputLabel >Username</InputLabel>
+                <InputLabel >Group Name</InputLabel>
                 <TextField type='text' size='small' variant="outlined"
                     {...register('username')} error={!!errors.username}
                     helperText={errors.username?.message} defaultValue={user?.username}
                 />
-                <InputLabel >Email</InputLabel>
+                <InputLabel >Description</InputLabel>
                 <TextField type='email' size='small'  {...register('email')} error={!!errors.email}
                     helperText={errors.email?.message} defaultValue={user?.email}/>
                 <br />
