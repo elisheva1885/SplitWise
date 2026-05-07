@@ -21,6 +21,7 @@ import type { UserInGroup } from "../types/user.types";
 import Typography from "@mui/material/Typography";
 import { handleApiError } from "../helpers/handle-api-error.helper";
 import { GroupMembersList } from "./group-members-list";
+import { ExpensesList } from "./expenses-list";
 export const GroupDetails = () => {
     const { id } = useParams();
     const [group, setGroup] = useState<GroupData | null>(null);
@@ -85,7 +86,7 @@ export const GroupDetails = () => {
         <>
 
             {group?.name}
-            <EditIcon onClick={updateGroupInfo}/>
+            <EditIcon onClick={updateGroupInfo} />
             <Box
                 sx={{
                     width: "100%",
@@ -113,8 +114,11 @@ export const GroupDetails = () => {
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                 <GroupMembersList groupMembers={group?.members} groupId={group?.id} setGroup={setGroup} />
             </Box >
-            <Button sx={{ backgroundColor: 'black' }} onClick={() => setOpenAddUserDialog(true)} aria-label="Add group member"><GroupAddIcon /></Button>
 
+            <Button sx={{ backgroundColor: 'black' }} onClick={() => setOpenAddUserDialog(true)} aria-label="Add group member"><GroupAddIcon /></Button>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                <ExpensesList expenses={group?.expenses} groupId={group?.id} setGroup={setGroup} />
+            </Box >
             <Dialog open={openAddUserDialog} onClose={handleCloseDialog}>
                 <Box style={{ backgroundColor: "#2e3136" }}>
                     <CloseIcon
