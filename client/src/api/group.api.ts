@@ -1,3 +1,4 @@
+import type { UpdateGroupData } from "../schemas/group-schemas";
 import type { CreateGroupDto, GroupData, GroupDataWithOwner, UpdateGroupDto } from "../types/group.types";
 import api from "./client.api";
 
@@ -13,7 +14,7 @@ export async function getGroupDetails(groupId: number): Promise<GroupData> {
     return data;
 }
 
-export async function updateGroup(groupId: number, groupData:UpdateGroupDto): Promise<GroupDataWithOwner> {
+export async function updateGroup(groupId: number, groupData:UpdateGroupData): Promise<GroupData> {
     const { data } = await api.patch(`/group/${groupId}`,groupData);
     console.log(data);
     return data;

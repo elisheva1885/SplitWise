@@ -6,7 +6,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-import { addUserToGroup, getGroupDetails } from "../api/group.api"
+import { addUserToGroup, getGroupDetails, updateGroup } from "../api/group.api"
 import Button from "@mui/material/Button"
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import EditIcon from '@mui/icons-material/Edit';
@@ -16,11 +16,13 @@ import { AddGroupMemberForm } from "./add-group-member-form"
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import { UpdateGroupMemberForm } from "./update-group-form";
+import { UpdateGroupForm } from "./update-group-form";
 import type { UserInGroup } from "../types/user.types";
 import Typography from "@mui/material/Typography";
 import { handleApiError } from "../helpers/handle-api-error.helper";
 import { GroupMembersList } from "./group-members-list";
+import { useUserContext } from "../store/use-user.context";
+import type { UpdateGroupData } from "../schemas/group-schemas";
 export const GroupDetails = () => {
     const { id } = useParams();
     const [group, setGroup] = useState<GroupData | null>(null);
@@ -30,12 +32,16 @@ export const GroupDetails = () => {
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [error, setError] = useState<string>("");
     const [success, setSuccess] = useState<string>("");
+    const { user } = useUserContext();
+    const [isOwner, setIsOwner] = useState<Boolean>(false);
+
     const getGroupDetailsById = async (id: number) => {
         setError("");
         setSuccess("");
         try {
             const data = await getGroupDetails(id);
-            setGroup(data)
+            setGroup(data);
+            setIsOwner(user?.id === data.owner.id);
         }
         catch (err) {
             setError(handleApiError(err));
@@ -69,10 +75,30 @@ export const GroupDetails = () => {
             setOpenSnackbar(true);
         }
     }
-
+    const updateGroupDetails = async (groupData: UpdateGroupData) => {
+        setError("");
+        setSuccess("");
+        if (!group?.id) {
+            setError("Group not loaded");
+            setOpenSnackbar(true);
+            return;
+        }
+        try {
+            const data = await updateGroup(group?.id, groupData)
+            setGroup(data);
+            setSuccess("Group updated successfully");
+            setOpenSnackbar(true);
+        }
+        catch (err: unknown) {
+            setError(handleApiError(err));
+            setOpenSnackbar(true);
+        }
+        setUpdateUserDialog(false)
+    }
 
     const updateGroupInfo = () => {
         setUpdateUserDialog(true);
+
     }
 
 
@@ -85,7 +111,7 @@ export const GroupDetails = () => {
         <>
 
             {group?.name}
-            <EditIcon onClick={updateGroupInfo}/>
+            {isOwner && <EditIcon onClick={updateGroupInfo} />}
             <Box
                 sx={{
                     width: "100%",
@@ -111,7 +137,7 @@ export const GroupDetails = () => {
                 </ListItem>
             </Box>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                <GroupMembersList groupMembers={group?.members} groupId={group?.id} setGroup={setGroup} />
+                <GroupMembersList groupMembers={group?.members} groupId={group?.id} setGroup={setGroup} isOwner={isOwner} />
             </Box >
             <Button sx={{ backgroundColor: 'black' }} onClick={() => setOpenAddUserDialog(true)} aria-label="Add group member"><GroupAddIcon /></Button>
 
@@ -145,7 +171,7 @@ export const GroupDetails = () => {
                     />
                     <br />
                     <Box sx={{ textAlign: "center", padding: "8px" }}>
-                        <UpdateGroupMemberForm setDialogOpen={setUpdateUserDialog} onSubmit={updateGroupInfo} user={updateMember} />
+                        <UpdateGroupForm setDialogOpen={setUpdateUserDialog} onSubmit={updateGroupDetails} group={group} />
                     </Box>
                 </Box>
             </Dialog>

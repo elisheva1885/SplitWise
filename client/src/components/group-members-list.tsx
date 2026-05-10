@@ -15,17 +15,19 @@ import Paper from '@mui/material/Paper';
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
+import { boolean } from "zod";
 
 type GroupMembersListProps = {
     groupMembers: UserInGroup[] | undefined,
     groupId: number | undefined,
-    setGroup: (group: GroupData) => void
+    setGroup: (group: GroupData) => void,
+    isOwner : Boolean
 }
-export const GroupMembersList = ({ groupMembers, groupId, setGroup }: GroupMembersListProps) => {
+export const GroupMembersList = ({ groupMembers, groupId, setGroup , isOwner}: GroupMembersListProps) => {
     const [error, setError] = useState<string>("");
     const [success, setSuccess] = useState<string>("");
     const [openSnackbar, setOpenSnackbar] = useState(false);
-    
+
     const deleteGroupMember = async (userId: number) => {
         setError("");
         setSuccess("");
@@ -69,7 +71,7 @@ export const GroupMembersList = ({ groupMembers, groupId, setGroup }: GroupMembe
                             </TableCell>
                             <TableCell align="right">{member.email}</TableCell>
                             <TableCell align="right">
-                                <IconButton
+                                {isOwner &&<IconButton
                                     onClick={() => deleteGroupMember(member.id)}
                                     sx={{
                                         backgroundColor: "white",
@@ -77,7 +79,7 @@ export const GroupMembersList = ({ groupMembers, groupId, setGroup }: GroupMembe
                                     }}
                                 >
                                     <DeleteIcon />
-                                </IconButton>
+                                </IconButton>}
                             </TableCell>
                         </TableRow>
                     ))}

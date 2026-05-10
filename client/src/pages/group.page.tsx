@@ -34,6 +34,7 @@ export const GroupPage = () => {
     const [success, setSuccess] = useState<string>("");
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const navigate = useNavigate();
+ 
     const goToGroup = (id: number) => {
         navigate(`${id}`)
     }
