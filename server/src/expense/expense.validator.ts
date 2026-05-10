@@ -1,6 +1,8 @@
 import {
   BadRequestException,
   ForbiddenException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -9,9 +11,14 @@ import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 @Injectable()
 export class ExpenseValidator {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+        @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService) {}
 
   validateUsersInGroup(group: Group, userIds: number[]): void {
+    if (!group.members)
+      throw new NotFoundException('not found members on the group');
+
     const members = new Set(group.members.map((m) => m.uuid));
     userIds.forEach((userId) => {
       if (!members.has(userId)) {

@@ -1,5 +1,8 @@
 import {
+  BadRequestException,
   ConflictException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -12,13 +15,16 @@ import {
   UpdateUserDto,
   UpdateUserResponseDto,
 } from './dto/user.dto';
+import { ExpenseService } from 'src/expense/expense.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+    @Inject(forwardRef(() => ExpenseService))
+    private readonly expenseService: ExpenseService
+  ) { }
 
   async findByUsernameOrEmail(
     username: string,
@@ -26,6 +32,15 @@ export class UserService {
   ): Promise<User | null> {
     return await this.userRepository.findOne({
       where: [{ username }, { email }],
+    });
+  }
+  async findByIdWithRelations(
+    uuid: number,
+    relations: string[],
+  ): Promise<User | null> {
+    return await this.userRepository.findOne({
+      where: { uuid },
+      relations: relations,
     });
   }
 
@@ -109,16 +124,31 @@ export class UserService {
   }
 
   async deleteUser(userId: number): Promise<{ message: string }> {
-    const user = await this.findByUuid(userId);
+    const user = await this.findByIdWithRelations(userId, ['groups']);
     if (!user) {
       throw new NotFoundException();
+    }
+    console.log(user);
+    const groupsExpenses = await Promise.all(user.groups.map(async (group) => {
+      return await this.expenseService.getGroupExpense(group.uuid, user.uuid)
+    }))
+    console.log("expense: ", groupsExpenses);
+    const hasOpenDebts = groupsExpenses.some(groupResult =>
+      groupResult.some(expense =>
+        expense.paidByUser.uuid === userId || expense.paidOnUser.uuid === userId
+      )
+    );
+    console.log(hasOpenDebts);
+    if (hasOpenDebts) {
+      throw new BadRequestException('user still has open expenses')
     }
     //TODO: check if the user have any expense on this group
     //if he has to throw BadRequestException
     user.groups = [];
     user.expensesPaid = [];
+    user.expensesToPay = [];
     await this.userRepository.save(user);
     await this.userRepository.remove(user);
     return { message: 'user deleted successfully' };
   }
-}
+}    
