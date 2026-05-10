@@ -22,10 +22,10 @@ export class User {
   @Column({ nullable: false })
   password!: string;
 
-  @OneToMany(() => Expense, (expense) => expense.paidBy)
+  @OneToMany(() => Expense, (expense) => expense.paidBy, {cascade: true})
   expensesPaid!: Expense[];
 
-  @OneToMany(() => Expense, (expense) => expense.paidOn)
+  @OneToMany(() => Expense, (expense) => expense.paidOn, {cascade: true})
   expensesToPay!: Expense[];
 
   @ManyToMany(() => Group, (group) => group.members)
