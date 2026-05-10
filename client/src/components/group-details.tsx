@@ -118,6 +118,7 @@ export const GroupDetails = () => {
             <Button sx={{ backgroundColor: 'black' }} onClick={() => setOpenAddUserDialog(true)} aria-label="Add group member"><GroupAddIcon /></Button>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                 <ExpensesList expenses={group?.expenses} groupId={group?.id} setGroup={setGroup} />
+                <ExpensesList expenses={group?.expenses} groupId={group?.id} setGroup={setGroup} />
             </Box >
             <Dialog open={openAddUserDialog} onClose={handleCloseDialog}>
                 <Box style={{ backgroundColor: "#2e3136" }}>
