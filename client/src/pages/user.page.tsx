@@ -17,8 +17,6 @@ export const UserPage = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (data: UpdateUserDto) => {
-        setError('');
-        setSuccess('');
         try {
             const userData = await updateUser(data);
             setSuccess("Updated successfully!");
@@ -38,8 +36,6 @@ export const UserPage = () => {
         setOpen(false)
     }
     const handleDeleteUser = async () => {
-        setError('');
-        setSuccess('');
         try {
              await deleteUser();;
             setSuccess("delete successfully!");
