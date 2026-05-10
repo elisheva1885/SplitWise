@@ -22,6 +22,8 @@ import Typography from "@mui/material/Typography";
 import { handleApiError } from "../helpers/handle-api-error.helper";
 import { GroupMembersList } from "./group-members-list";
 import { ExpensesList } from "./expenses-list";
+import { OptimizedExpensesList } from "./optimized-expenses-list";
+import { getOptimizedExpenses } from "../api/expense.api";
 export const GroupDetails = () => {
     const { id } = useParams();
     const [group, setGroup] = useState<GroupData | null>(null);
@@ -52,8 +54,6 @@ export const GroupDetails = () => {
         setOpenSnackbar(false);
     };
     const addGroupMember = async (userId: number) => {
-        setError("");
-        setSuccess("");
         if (!group?.id) {
             setError("Group not loaded");
             setOpenSnackbar(true);
@@ -76,7 +76,14 @@ export const GroupDetails = () => {
         setUpdateUserDialog(true);
     }
 
-
+    const getGroupOptimizedExpense = ()=> {
+        if (!group?.id) {
+            setError("Group not loaded");
+            setOpenSnackbar(true);
+            return;
+        }
+        getOptimizedExpenses(group?.id)
+    }
     useEffect(() => {
         if (!id) return;
         getGroupDetailsById(Number(id))
@@ -118,7 +125,7 @@ export const GroupDetails = () => {
             <Button sx={{ backgroundColor: 'black' }} onClick={() => setOpenAddUserDialog(true)} aria-label="Add group member"><GroupAddIcon /></Button>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                 <ExpensesList expenses={group?.expenses} groupId={group?.id} setGroup={setGroup} />
-                <ExpensesList expenses={group?.expenses} groupId={group?.id} setGroup={setGroup} />
+                <OptimizedExpensesList expenses={group?.expenses} groupId={group?.id} setGroup={setGroup} />
             </Box >
             <Dialog open={openAddUserDialog} onClose={handleCloseDialog}>
                 <Box style={{ backgroundColor: "#2e3136" }}>

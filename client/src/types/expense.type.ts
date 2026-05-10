@@ -1,4 +1,4 @@
-import type { UserInGroup } from "./user.types"
+import type { UserInExpense, UserInGroup } from "./user.types"
 
 export type ExpenseInGroup = {
     id: number,
@@ -6,4 +6,11 @@ export type ExpenseInGroup = {
     value: number,
     paidBy: UserInGroup,
     paidOn: UserInGroup
+}
+
+
+export type OptimizedExpense = {
+        value: number,
+    paidBy: UserInExpense,
+    paidOn: UserInExpense
 }

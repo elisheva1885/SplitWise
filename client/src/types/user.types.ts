@@ -26,3 +26,8 @@ export type UserToAdd = {
     id:number,
     username: string
 }
+
+export type UserInExpense = {
+    id: number,
+    username: string,
+}
