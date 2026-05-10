@@ -4,11 +4,10 @@ import type { UserData } from "../types/auth.types";
 import { logoutUser } from "../api/auth.api";
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUserState] = useState<UserData | null>(null);
-  const setUser = (user: UserData | null) => setUserState(user);
+  const [user, setUser] = useState<UserData | null>(null);
   const logout = () => {
     logoutUser();
-    setUserState(null);
+    setUser(null);
   };
 
   return (

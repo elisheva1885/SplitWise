@@ -7,8 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterSchema, type RegisterData } from "../schemas/auth-schemas";
 import type { RegisterFormData } from "../types/auth.types";
 import Box from "@mui/material/Box";
-import zxcvbn from "zxcvbn"
-import { useState } from "react";
+
 type RegisterFormProps = {
   onSubmit: (data: RegisterFormData) => void;
   toLoginMode: () => void;
