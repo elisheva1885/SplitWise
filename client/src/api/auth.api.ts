@@ -17,9 +17,9 @@ export async function registerUser(
   return data;
 }
 
-export  function logoutUser(): void {
-   api.post('/user/logout');
-} 
+export function logoutUser(): void {
+  api.post("/user/logout");
+}
 
 export async function getUserStatus(): Promise<UserData> {
   const { data } = await api.get("/user/status");

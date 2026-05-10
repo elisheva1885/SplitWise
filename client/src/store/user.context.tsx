@@ -6,9 +6,10 @@ import { logoutUser } from "../api/auth.api";
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUserState] = useState<UserData | null>(null);
   const setUser = (user: UserData | null) => setUserState(user);
-   const logout = () => {
-        logoutUser();
-        setUserState(null)};
+  const logout = () => {
+    logoutUser();
+    setUserState(null);
+  };
 
   return (
     <UserContext.Provider value={{ user, setUser, logout }}>

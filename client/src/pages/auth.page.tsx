@@ -30,8 +30,6 @@ export const AuthPage = ({
   const { setUser } = useUserContext();
 
   const handleSubmit = async (data: LoginData | RegisterData) => {
-    setError("");
-    setSuccess("");
     try {
       if (mode === "Login") {
         const userData = await loginUser(data as LoginData);

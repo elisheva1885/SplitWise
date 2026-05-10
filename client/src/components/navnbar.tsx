@@ -37,10 +37,6 @@ export const Navbar = () => {
     setOpen(false);
   };
 
-  const toGroups = () => {
-    navigate("/groups");
-  };
-
   const handleLogout = () => {
     logout();
     navigate("/");
@@ -66,7 +62,7 @@ export const Navbar = () => {
                 sx={{
                   display: { sm: "inline-flex" },
                 }}
-                onClick={toGroups}
+                onClick={() => navigate("/groups")}
               >
                 My Groups
               </Button>
@@ -121,25 +117,26 @@ export const Navbar = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      <React.Fragment>
-        <Dialog open={open} onClose={handleCloseDialog}>
-          <Box style={{ backgroundColor: "#2e3136" }}>
-            <CloseIcon
-              onClick={handleCloseDialog}
-              sx={{
-                backgroundColor: "#2e3136",
-                color: "white",
-                position: "absolute",
-                insetInlineEnd: 3,
-              }}
-            />
-            <br />
-            <Box sx={{ textAlign: "center", padding: "8px" }}>
-              <AuthForms setDialogOpen={setOpen} />
-            </Box>
+      <Dialog open={open} onClose={handleCloseDialog}       >
+        <Box style={{ backgroundColor: "#2e3136", paddingBottom: '10px', paddingLeft: '15px', paddingRight: '15px'}}>
+          <CloseIcon
+            onClick={handleCloseDialog}
+            sx={{
+              backgroundColor: "#2e3136",
+              color: "white",
+              position: "absolute",
+              insetInlineEnd: 3,
+            }}
+          />
+          <br />
+          <Box sx={{
+            textAlign: "center", padding: "8px", display: "flex",
+            flexDirection: "column", gap: 2, justifyContent: 'space-between'
+          }}>
+            <AuthForms setDialogOpen={setOpen} />
           </Box>
-        </Dialog>
-      </React.Fragment>
+        </Box>
+      </Dialog>
     </>
   );
 };

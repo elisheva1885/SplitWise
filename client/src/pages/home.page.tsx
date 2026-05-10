@@ -8,13 +8,12 @@ export const HomePage = () => {
     try {
       const user = await getUserStatus();
       setUser(user);
-    }
-    catch  {
+    } catch {
       setUser(null);
     }
-  }
+  };
   useEffect(() => {
-    userStatus()
-  })
+    userStatus();
+  }, []);
   return <>HomePage</>;
 };

@@ -17,7 +17,6 @@ const router = createBrowserRouter([
       {
         element: <ProtectedRoutes />,
         children: [
-
           {
             path: "user",
             element: <UserPage />,
@@ -27,8 +26,8 @@ const router = createBrowserRouter([
             element: <GroupPage />,
           },
         ],
-      }
-    ]
-    }
-    ]);
+      },
+    ],
+  },
+]);
 export default router;

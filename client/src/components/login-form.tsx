@@ -33,7 +33,7 @@ export const LoginForm = ({
       style={{ backgroundColor: "#2e3136" }}
     >
       <Typography sx={{ color: "white" }}>Login</Typography>
-      <InputLabel>username</InputLabel>
+      <InputLabel sx={{ margin: '7px' }}>username</InputLabel>
       <TextField
         fullWidth
         type="text"
@@ -42,7 +42,7 @@ export const LoginForm = ({
         helperText={errors.username?.message}
         {...register("username")}
       />
-      <InputLabel>password</InputLabel>
+      <InputLabel sx={{ margin: '7px' }}>password</InputLabel>
       <TextField
         fullWidth
         type="password"
@@ -52,7 +52,7 @@ export const LoginForm = ({
         {...register("password")}
       />
       <br />
-      <Button onClick={toForgetPasswordMode}>ForgetPassword</Button>
+      <Button onClick={toForgetPasswordMode}>Forget password</Button>
       <Button onClick={toRegisterMode}>Register</Button>
       <Button type="submit">Submit</Button>
     </form>
