@@ -117,8 +117,15 @@ export const Navbar = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      <Dialog open={open} onClose={handleCloseDialog}       >
-        <Box style={{ backgroundColor: "#2e3136", paddingBottom: '10px', paddingLeft: '15px', paddingRight: '15px'}}>
+      <Dialog open={open} onClose={handleCloseDialog}>
+        <Box
+          style={{
+            backgroundColor: "#2e3136",
+            paddingBottom: "10px",
+            paddingLeft: "15px",
+            paddingRight: "15px",
+          }}
+        >
           <CloseIcon
             onClick={handleCloseDialog}
             sx={{
@@ -129,10 +136,16 @@ export const Navbar = () => {
             }}
           />
           <br />
-          <Box sx={{
-            textAlign: "center", padding: "8px", display: "flex",
-            flexDirection: "column", gap: 2, justifyContent: 'space-between'
-          }}>
+          <Box
+            sx={{
+              textAlign: "center",
+              padding: "8px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              justifyContent: "space-between",
+            }}
+          >
             <AuthForms setDialogOpen={setOpen} />
           </Box>
         </Box>

@@ -14,7 +14,6 @@ type RegisterFormProps = {
 };
 
 export const RegisterForm = ({ onSubmit, toLoginMode }: RegisterFormProps) => {
-
   const {
     register,
     handleSubmit,
@@ -25,13 +24,10 @@ export const RegisterForm = ({ onSubmit, toLoginMode }: RegisterFormProps) => {
   });
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Typography sx={{ color: "white" }}>Register</Typography>
       <br />
-      <InputLabel sx={{ margin: '7px' }}
-      >Username</InputLabel>
+      <InputLabel sx={{ margin: "7px" }}>Username</InputLabel>
       <TextField
         fullWidth
         type="text"
@@ -41,7 +37,7 @@ export const RegisterForm = ({ onSubmit, toLoginMode }: RegisterFormProps) => {
         error={!!errors.username}
         helperText={errors.username?.message}
       />
-      <InputLabel sx={{ margin: '7px' }}>Email</InputLabel>
+      <InputLabel sx={{ margin: "7px" }}>Email</InputLabel>
       <TextField
         fullWidth
         type="email"
@@ -50,7 +46,7 @@ export const RegisterForm = ({ onSubmit, toLoginMode }: RegisterFormProps) => {
         error={!!errors.email}
         helperText={errors.email?.message}
       />
-      <InputLabel sx={{ margin: '7px' }}>Password</InputLabel>
+      <InputLabel sx={{ margin: "7px" }}>Password</InputLabel>
       <TextField
         type="password"
         size="small"

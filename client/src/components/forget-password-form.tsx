@@ -63,7 +63,7 @@ export const ForgetPasswordForm = ({
       style={{ backgroundColor: "#2e3136" }}
     >
       <Typography sx={{ color: "white" }}>Forget Password</Typography>
-      <InputLabel sx={{ margin: '7px' }}>Email</InputLabel>
+      <InputLabel sx={{ margin: "7px" }}>Email</InputLabel>
       <TextField
         type="email"
         size="small"
