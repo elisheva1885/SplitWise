@@ -1,5 +1,5 @@
 import type { UpdateGroupData } from "../schemas/group-schemas";
-import type { CreateGroupDto, GroupData, GroupDataWithOwner, UpdateGroupDto } from "../types/group.types";
+import type { CreateGroupDto, GroupData} from "../types/group.types";
 import api from "./client.api";
 
 export async function createGroup(groupData: CreateGroupDto): Promise<GroupData> {
@@ -27,6 +27,8 @@ export async function deleteGroup(groupId: number): Promise<number> {
 }
 
 export async function addUserToGroup(groupId: number, userId: number): Promise<GroupData> {
+    console.log(groupId,userId);
+    
     const { data } = await api.post(`/group/${groupId}/${userId}`);
     console.log(data);
     return data;

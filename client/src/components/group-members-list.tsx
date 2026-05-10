@@ -15,13 +15,12 @@ import Paper from '@mui/material/Paper';
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import { boolean } from "zod";
 
 type GroupMembersListProps = {
     groupMembers: UserInGroup[] | undefined,
     groupId: number | undefined,
     setGroup: (group: GroupData) => void,
-    isOwner : Boolean
+    isOwner : boolean
 }
 export const GroupMembersList = ({ groupMembers, groupId, setGroup , isOwner}: GroupMembersListProps) => {
     const [error, setError] = useState<string>("");

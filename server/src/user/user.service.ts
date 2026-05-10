@@ -1,5 +1,7 @@
 import {
   ConflictException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -13,6 +15,7 @@ import {
   UpdateUserResponseDto,
   UsersResponseDto,
 } from './dto/user.dto';
+import { ExpenseService } from 'src/expense/expense.service';
 
 @Injectable()
 export class UserService {

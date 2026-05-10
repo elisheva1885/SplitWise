@@ -26,18 +26,15 @@ import type { UpdateGroupData } from "../schemas/group-schemas";
 export const GroupDetails = () => {
     const { id } = useParams();
     const [group, setGroup] = useState<GroupData | null>(null);
-    const [updateMember, setUpdateMember] = useState<UserInGroup | null>(null);
     const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
     const [updateUserDialog, setUpdateUserDialog] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [error, setError] = useState<string>("");
     const [success, setSuccess] = useState<string>("");
     const { user } = useUserContext();
-    const [isOwner, setIsOwner] = useState<Boolean>(false);
+    const [isOwner, setIsOwner] = useState<boolean>(false);
 
     const getGroupDetailsById = async (id: number) => {
-        setError("");
-        setSuccess("");
         try {
             const data = await getGroupDetails(id);
             setGroup(data);
@@ -57,8 +54,8 @@ export const GroupDetails = () => {
         setOpenSnackbar(false);
     };
     const addGroupMember = async (userId: number) => {
-        setError("");
-        setSuccess("");
+        console.log(userId);
+        
         if (!group?.id) {
             setError("Group not loaded");
             setOpenSnackbar(true);
@@ -70,14 +67,12 @@ export const GroupDetails = () => {
             setSuccess("User added successfully");
             setOpenSnackbar(true);
         }
-        catch (err) {
+        catch (err: unknown) {
             setError(handleApiError(err));
             setOpenSnackbar(true);
         }
     }
     const updateGroupDetails = async (groupData: UpdateGroupData) => {
-        setError("");
-        setSuccess("");
         if (!group?.id) {
             setError("Group not loaded");
             setOpenSnackbar(true);
@@ -139,7 +134,7 @@ export const GroupDetails = () => {
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                 <GroupMembersList groupMembers={group?.members} groupId={group?.id} setGroup={setGroup} isOwner={isOwner} />
             </Box >
-            <Button sx={{ backgroundColor: 'black' }} onClick={() => setOpenAddUserDialog(true)} aria-label="Add group member"><GroupAddIcon /></Button>
+            {isOwner &&<Button sx={{ backgroundColor: 'black' }} onClick={() => setOpenAddUserDialog(true)} aria-label="Add group member"><GroupAddIcon /></Button>}
 
             <Dialog open={openAddUserDialog} onClose={handleCloseDialog}>
                 <Box style={{ backgroundColor: "#2e3136" }}>
@@ -154,7 +149,7 @@ export const GroupDetails = () => {
                     />
                     <br />
                     <Box sx={{ textAlign: "center", padding: "8px" }}>
-                        <AddGroupMemberForm setDialogOpen={setOpenAddUserDialog} onSubmit={addGroupMember} />
+                         <AddGroupMemberForm setDialogOpen={setOpenAddUserDialog} onSubmit={addGroupMember} />
                     </Box>
                 </Box>
             </Dialog>

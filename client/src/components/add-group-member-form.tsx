@@ -18,25 +18,24 @@ type AddGroupMemberFormProps = {
 
 export const AddGroupMemberForm = ({ onSubmit, setDialogOpen }: AddGroupMemberFormProps) => {
     const [users, setUsers] = useState<UserToAdd[] | []>([]);
-    const [user, setUser] = useState('');
+    const [userId, setUserId] = useState('');
 
     const handleChange = (event: SelectChangeEvent) => {
-        setUser(event.target.value as string);
+        setUserId(event.target.value as string);
     };
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        onSubmit(Number(user));
+        onSubmit(Number(userId));
         setDialogOpen(false);
     }
 
     const getUsers = async () => {
         const data = await getAllUsers();
-        console.log("users ", data);
         setUsers(data)
     }
     useEffect(() => {
         getUsers()
-    })
+    },[users])
     return (
         <>
             <form onSubmit={handleSubmit} style={{ backgroundColor: '#2e3136' }}>
@@ -46,7 +45,7 @@ export const AddGroupMemberForm = ({ onSubmit, setDialogOpen }: AddGroupMemberFo
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={user}
+                        value={userId}
                         label="User"
                         onChange={handleChange}
                     >

@@ -23,6 +23,5 @@ export async function getUserDetails():Promise<UserDetails>{
 
 export async function getAllUsers():Promise<UserToAdd[]>{
     const {data} = await api.get('/user/all');
-    console.log(data);
     return data;
 } 
