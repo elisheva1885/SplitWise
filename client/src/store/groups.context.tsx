@@ -2,29 +2,29 @@ import { useState, type ReactNode } from "react";
 import type { GroupData } from "../types/group.types";
 import { GroupContext } from "../types/group-context.types";
 
-
-
-
 export const GroupProvider = ({ children }: { children: ReactNode }) => {
-    const [groups, setGroupsState] = useState<GroupData[] | []>([]);
-    const setGroups = (groups: GroupData[]) => setGroupsState(groups);
-    const setGroup = (updatedGroup: GroupData) => {
-    setGroupsState(prev =>
-        prev.map(group =>
-            group.id === updatedGroup.id ? updatedGroup : group
-        )
+  const [groups, setGroupsState] = useState<GroupData[] | []>([]);
+  const setGroups = (groups: GroupData[]) => setGroupsState(groups);
+  const setGroup = (updatedGroup: GroupData) => {
+    setGroupsState((prev) =>
+      prev.map((group) =>
+        group.id === updatedGroup.id ? updatedGroup : group,
+      ),
     );
+  };
+
+  return (
+    <GroupContext.Provider
+      value={{
+        groups,
+        setGroups,
+        setGroup,
+      }}
+    >
+      {children}
+    </GroupContext.Provider>
+  );
 };
-
-    return (
-        <GroupContext.Provider value={{
-            groups, setGroups, setGroup
-
-        }}>
-            {children}
-        </GroupContext.Provider>
-    )
-}
 //     const groupsReducer = (state: GroupState, action: Action): GroupState => {
 //         switch (action.type) {
 //             case 'ADD_GROUP': {
@@ -56,6 +56,4 @@ export const GroupProvider = ({ children }: { children: ReactNode }) => {
 //         }
 //     }
 
-
 // }
-

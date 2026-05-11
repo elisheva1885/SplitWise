@@ -1,7 +1,3 @@
-export const ExpensesPage = ()=> {
-    
-    return(
-        <>
-        </>
-    )
-}
+export const ExpensesPage = () => {
+  return <></>;
+};

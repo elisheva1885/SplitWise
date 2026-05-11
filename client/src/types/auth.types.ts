@@ -24,16 +24,10 @@ export type ForgetPasswordFormData = {
   email: string;
 };
 export type UserData = {
-<<<<<<< HEAD
-      username: string;
-    email: string;
-}
-
-export type AuthFormStatus = 'Login' | 'Register' | 'ForgetPassword';
-
-
-=======
+  id: number;
   username: string;
   email: string;
 };
->>>>>>> dev
+
+export type AuthFormStatus = "Register" | "ForgetPassword" | "Login";
+export type AuthPagemMode = "Register" | "Login";

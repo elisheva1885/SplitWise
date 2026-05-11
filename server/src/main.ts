@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 const port = process.env.APP_PORT ?? 3000;
-const clientUrl = process.env.CLIENT_URL ?? 'http://localhost:3000';
+const clientUrl = process.env.CLIENT_URL ?? 'http://localhost:5173';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

@@ -18,6 +18,7 @@ import {
 import { CurrentUser } from './current-user.decorator';
 import type { JwtPayload } from 'src/types/express';
 import { ApiCookieAuth } from '@nestjs/swagger';
+import { AuthResponseDto } from 'src/auth/dto/auth.dto';
 @ApiCookieAuth()
 @UseGuards(AuthGuard)
 @Controller('user')
@@ -48,5 +49,11 @@ export class UserController {
     @CurrentUser() user: JwtPayload,
   ): Promise<{ message: string }> {
     return await this.userService.deleteUser(user.id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('status')
+  userStatus(@CurrentUser() user: JwtPayload): AuthResponseDto {
+    return { username: user.username, email: user.email };
   }
 }

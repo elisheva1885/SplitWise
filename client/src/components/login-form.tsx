@@ -9,9 +9,15 @@ import type { LoginFormData } from "../types/auth.types";
 
 type LoginFormProps = {
   onSubmit: (data: LoginFormData) => void;
+  toRegisterMode: () => void;
+  toForgetPasswordMode: () => void;
 };
 
-export const LoginForm = ({ onSubmit }: LoginFormProps) => {
+export const LoginForm = ({
+  onSubmit,
+  toRegisterMode,
+  toForgetPasswordMode,
+}: LoginFormProps) => {
   const {
     register,
     handleSubmit,
@@ -27,7 +33,7 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
       style={{ backgroundColor: "#2e3136" }}
     >
       <Typography sx={{ color: "white" }}>Login</Typography>
-      <InputLabel>username</InputLabel>
+      <InputLabel sx={{ margin: "7px" }}>username</InputLabel>
       <TextField
         fullWidth
         type="text"
@@ -36,7 +42,7 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
         helperText={errors.username?.message}
         {...register("username")}
       />
-      <InputLabel>password</InputLabel>
+      <InputLabel sx={{ margin: "7px" }}>password</InputLabel>
       <TextField
         fullWidth
         type="password"
@@ -46,7 +52,9 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
         {...register("password")}
       />
       <br />
-      <Button type="submit">Login</Button>
+      <Button onClick={toForgetPasswordMode}>Forget password</Button>
+      <Button onClick={toRegisterMode}>Register</Button>
+      <Button type="submit">Submit</Button>
     </form>
   );
 };

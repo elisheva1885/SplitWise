@@ -2,21 +2,20 @@ import { createContext } from "react";
 import type { GroupData } from "./group.types";
 
 export type GroupState = {
-    groups: GroupData[] | []
+  groups: GroupData[] | [];
 };
 
 export type GroupContextType = GroupState & {
-    setGroups: (groups: GroupData[]) => void,
-    setGroup: (group: GroupData) => void,
-    // addGroup: (group: CreateGroupDto) => void,
-    // updateGroup: (groupId: number, groupData: UpdateGroupDto) => void,
-    // deleteGroup: (groupId: number) => void,
-    // getGroup: (groupId: number) => void,
-    // addUserToGroup: (groupId: number, userId: number) => void,
-    // deleteUserFromGroup: (groupId: number, userId: number) => void,
+  setGroups: (groups: GroupData[]) => void;
+  setGroup: (group: GroupData) => void;
+  // addGroup: (group: CreateGroupDto) => void,
+  // updateGroup: (groupId: number, groupData: UpdateGroupDto) => void,
+  // deleteGroup: (groupId: number) => void,
+  // getGroup: (groupId: number) => void,
+  // addUserToGroup: (groupId: number, userId: number) => void,
+  // deleteUserFromGroup: (groupId: number, userId: number) => void,
 };
 export const GroupContext = createContext<GroupContextType | null>(null);
-
 
 // export type GroupContextProviderProps = {
 //     children: ReactNode
@@ -33,7 +32,6 @@ export const GroupContext = createContext<GroupContextType | null>(null);
 //     DELETE_USER: 'DELETE_USER_FROM_GROUP'
 // } as const
 
-
 // export type AddGroupAction = {
 //     type: typeof ActionType.ADD,
 //     payload: CreateGroupDto
@@ -48,7 +46,6 @@ export const GroupContext = createContext<GroupContextType | null>(null);
 //     type: typeof ActionType.UPDATE,
 //     payload: { groupId: number, groupData: UpdateGroupDto }
 // }
-
 
 // export type GetGroupAction = {
 //     type: typeof ActionType.GET,
