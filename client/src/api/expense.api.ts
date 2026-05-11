@@ -1,6 +1,5 @@
 import type {
   CreateExpenseDto,
-  expenseData,
   ExpenseInGroup,
   OptimizedExpense,
 } from "../types/expense.type";

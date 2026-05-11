@@ -13,7 +13,6 @@ export class CreateExpenseDto {
   @ApiProperty({ example: 'Developers Team', required: false })
   @IsString()
   @Optional()
-  @MinLength(3)
   cause?: string;
 
   @ApiProperty({

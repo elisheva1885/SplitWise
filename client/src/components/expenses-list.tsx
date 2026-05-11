@@ -16,11 +16,6 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import { useUserContext } from "../store/use-user.context";
-import Button from "@mui/material/Button";
-import Select, { type SelectChangeEvent } from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
 import { AddExpensesFrom } from "./add-expense-form";
 import type { AddExpenseData } from "../schemas/expense-schema";
 import { createExpense } from "../api/expense.api";
@@ -38,17 +33,25 @@ export const ExpensesList = ({
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const { user } = useUserContext();
   
-    const AddExpenseToGroup = async(expenseData: AddExpenseData)=> {
+    const addExpenseToGroup = async(expenseData: AddExpenseData)=> {
          if (!group?.id) {
             setError("Group not loaded");
             setOpenSnackbar(true);
             return;
         }
+        if (!user?.id) {
+            setError("user not connected");
+            setOpenSnackbar(true);
+            return;
+        }
+        console.log({cause:expenseData.cause,value: expenseData.value, paidBy: user?.id,paidOn: expenseData.paidOn,groupId: group.id});
+        
         try {
-
             const data = await createExpense({cause:expenseData.cause,value: expenseData.value, paidBy: user?.id,paidOn: expenseData.paidOn,groupId: group.id});
-            setGroup(group.expenses.push(data));
-            setSuccess("User removed successfully");
+            const updatedExpenses = [...group.expenses, data ];
+            group.expenses = updatedExpenses;
+            setGroup(group);
+            setSuccess("New Expense added successfully");
             setOpenSnackbar(true);
         } catch (err) {
             setError(handleApiError(err));
@@ -93,7 +96,7 @@ export const ExpensesList = ({
     };
     return (
         <TableContainer component={Paper}>       
-        <AddExpensesFrom group={group} onSubmit={addUserToGroup}/>      
+        <AddExpensesFrom group={group} onSubmit={addExpenseToGroup}/>      
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
