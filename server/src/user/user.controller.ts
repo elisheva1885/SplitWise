@@ -12,13 +12,12 @@ import {
   GetUserResponseDto,
   UpdateUserDto,
   UpdateUserResponseDto,
-  UserResponseDto,
   UsersResponseDto,
 } from './dto/user.dto';
 import { CurrentUser } from './current-user.decorator';
 import type { JwtPayload } from 'src/types/express';
 import { ApiCookieAuth } from '@nestjs/swagger';
-import { AuthResponseDto } from 'src/auth/dto/auth.dto';
+import type { AuthResponseDto } from 'src/auth/dto/auth.dto';
 @ApiCookieAuth()
 @UseGuards(AuthGuard)
 @Controller('user')
@@ -54,6 +53,6 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Get('status')
   userStatus(@CurrentUser() user: JwtPayload): AuthResponseDto {
-    return { username: user.username, email: user.email };
+    return { id: user.id,username: user.username, email: user.email };
   }
 }

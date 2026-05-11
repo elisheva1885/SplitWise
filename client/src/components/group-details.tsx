@@ -16,7 +16,7 @@ import { AddGroupMemberForm } from "./add-group-member-form";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import { UpdateGroupMemberForm } from "./update-group-form";
+import { UpdateGroupForm } from "./update-group-form";
 import type { UserInGroup } from "../types/user.types";
 import Typography from "@mui/material/Typography";
 import { handleApiError } from "../helpers/handle-api-error.helper";
@@ -26,6 +26,7 @@ import { OptimizedExpensesList } from "./optimized-expenses-list";
 import { getOptimizedExpenses } from "../api/expense.api";
 import type { OptimizedExpense } from "../types/expense.type";
 import Divider from "@mui/material/Divider";
+import { useUserContext } from "../store/use-user.context";
 
 export const GroupDetails = () => {
   const { id } = useParams();
@@ -37,12 +38,16 @@ export const GroupDetails = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
+  const [isOwner, setIsOwner] = useState<boolean>(false);
+  const { user } = useUserContext();
+
   const getGroupDetailsById = async (id: number) => {
     setError("");
     setSuccess("");
     try {
       const data = await getGroupDetails(id);
       setGroup(data);
+      setIsOwner(user?.id === data.owner.id);
     } catch (err) {
       setError(handleApiError(err));
       setOpenSnackbar(true);
@@ -140,9 +145,10 @@ export const GroupDetails = () => {
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
         <GroupMembersList
-          groupMembers={group?.members}
-          groupId={group?.id}
+          group={group}
           setGroup={setGroup}
+          isOwner={isOwner}
+          setIsOwner={setIsOwner}
         />
       </Box>
 
@@ -155,8 +161,7 @@ export const GroupDetails = () => {
       </Button>
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
         <ExpensesList
-          expenses={group?.expenses}
-          groupId={group?.id}
+          group={group}
           setGroup={setGroup}
         />
 
@@ -199,10 +204,10 @@ export const GroupDetails = () => {
           />
           <br />
           <Box sx={{ textAlign: "center", padding: "8px" }}>
-            <UpdateGroupMemberForm
+            <UpdateGroupForm
               setDialogOpen={setUpdateUserDialog}
               onSubmit={updateGroupInfo}
-              user={updateMember}
+              group={group}
             />
           </Box>
         </Box>

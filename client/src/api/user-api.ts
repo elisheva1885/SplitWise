@@ -1,12 +1,8 @@
 import type { UserData } from "../types/auth.types";
 import api from "./client.api";
-import type {
-  UpdateUserDto,
-  UserDetails,
-  UserToAdd,
-} from "../types/user.types";
+import type { User, UserDetails, UserIdAndName } from "../types/user.types";
 
-export async function updateUser(userData: UpdateUserDto): Promise<UserData> {
+export async function updateUser(userData: User): Promise<UserData> {
   const { data } = await api.patch("/user", userData);
   console.log(data);
   return data;
@@ -24,8 +20,7 @@ export async function getUserDetails(): Promise<UserDetails> {
   return data;
 }
 
-export async function getAllUsers(): Promise<UserToAdd[]> {
+export async function getAllUsers(): Promise<UserIdAndName[]> {
   const { data } = await api.get("/user/all");
-  console.log(data);
   return data;
 }

@@ -1,37 +1,40 @@
-import type { UserInGroup } from "../types/user.types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  UpdateGroupMemberSchema,
-  type UpdateGroupMemberData,
-} from "../schemas/group-schemas";
 import { useForm } from "react-hook-form";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import type { GroupData } from "../types/group.types";
+import {
+  UpdateGroupSchema,
+  type UpdateGroupData,
+} from "../schemas/group-schemas";
 
 type AddGroupMemberFormProps = {
-  onSubmit: (member: UserInGroup) => void;
+  onSubmit: (data: UpdateGroupData) => void;
   setDialogOpen: (open: boolean) => void;
-  user: UserInGroup | null;
+  group: GroupData | null;
 };
 
-export const UpdateGroupMemberForm = ({
+export const UpdateGroupForm = ({
   onSubmit,
-  user,
+  group,
 }: AddGroupMemberFormProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<UpdateGroupMemberData>({
-    resolver: zodResolver(UpdateGroupMemberSchema),
+  } = useForm<UpdateGroupData>({
+    resolver: zodResolver(UpdateGroupSchema),
     mode: "onChange",
   });
 
   return (
     <>
-      <form style={{ backgroundColor: "#405a4e" }}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        style={{ backgroundColor: "#405a4e" }}
+      >
         <Typography sx={{ color: "white" }}>Update Group</Typography>
         <br />
         <InputLabel>Group Name</InputLabel>
@@ -39,19 +42,19 @@ export const UpdateGroupMemberForm = ({
           type="text"
           size="small"
           variant="outlined"
-          {...register("username")}
-          error={!!errors.username}
-          helperText={errors.username?.message}
-          defaultValue={user?.username}
+          {...register("name")}
+          error={!!errors.name}
+          helperText={errors.name?.message}
+          defaultValue={group?.name}
         />
         <InputLabel>Description</InputLabel>
         <TextField
-          type="email"
-          size="small"
-          {...register("email")}
-          error={!!errors.email}
-          helperText={errors.email?.message}
-          defaultValue={user?.email}
+          type="text"
+          size="medium"
+          {...register("description")}
+          error={!!errors.description}
+          helperText={errors.description?.message}
+          defaultValue={group?.description}
         />
         <br />
         <Button type="submit">Save Changes</Button>

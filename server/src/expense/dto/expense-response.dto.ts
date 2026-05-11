@@ -2,13 +2,12 @@ export class ExpenseResponseDto {
   id!: number;
   cause?: string;
   value!: number;
-  paidBy!: number;
-  paidOn!: number;
-  groupId!: number;
+  paidBy!: UserDetails;
+  paidOn!: UserDetails;
 }
 
 export class UserDetails {
-  uuid!: number;
+  id!: number;
   username!: string;
 }
 

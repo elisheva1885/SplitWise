@@ -1,4 +1,4 @@
-import type { UserInExpense, UserInGroup } from "./user.types";
+import type { UserIdAndName, UserInExpense, UserInGroup } from "./user.types";
 
 export type ExpenseInGroup = {
   id: number;
@@ -13,3 +13,19 @@ export type OptimizedExpense = {
   paidByUser: UserInExpense;
   paidOnUser: UserInExpense;
 };
+
+export type CreateExpenseDto = {
+  cause: string |undefined;
+  value: number;
+  paidBy: number;
+  paidOn: number;
+  groupId: number;
+};
+
+// export type expenseData = {
+//   cause: string;
+//   value: number;
+//   paidBy: UserIdAndName;
+//   paidOn: UserIdAndName;
+//   groupId: number;
+// };

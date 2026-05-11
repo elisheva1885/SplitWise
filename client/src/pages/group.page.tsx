@@ -29,6 +29,7 @@ export const GroupPage = () => {
   const [success, setSuccess] = useState<string>("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const navigate = useNavigate();
+
   const goToGroup = (id: number) => {
     navigate(`${id}`);
   };
@@ -70,8 +71,9 @@ export const GroupPage = () => {
         ))}
       </List>
       <Divider />
+      <br />
       <Button sx={{ background: "black" }} onClick={() => setOpen(true)}>
-        Add Group
+        + New Group
       </Button>
     </Box>
   );

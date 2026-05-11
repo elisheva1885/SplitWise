@@ -1,6 +1,9 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
+  forwardRef,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -12,14 +15,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
 import { FullGroupResponseDto } from './dto/group-response.dto';
 import { plainToInstance } from 'class-transformer';
+import { ExpenseService } from 'src/expense/expense.service';
 
 @Injectable()
 export class GroupService {
   constructor(
     @InjectRepository(Group)
     private readonly groupRepository: Repository<Group>,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
-  ) {}
+    @Inject(forwardRef(() => ExpenseService))
+    private readonly expenseService: ExpenseService
+  ) { }
 
   private toResponseDto(group: Group): FullGroupResponseDto {
     return plainToInstance(FullGroupResponseDto, group, {
@@ -106,7 +113,7 @@ export class GroupService {
   ): Promise<FullGroupResponseDto> {
     const group = await this.groupRepository.findOne({
       where: { uuid: groupId, owner: { uuid: userId } },
-      relations: ['owner'],
+      relations: ['owner','members','expenses'],
     });
     if (!group) {
       throw new NotFoundException('group not found');
@@ -185,8 +192,14 @@ export class GroupService {
         'please assign someone else to be the owner of the group and request him to remove you',
       );
     }
-    //TODO: check if the user have any expense on this group
-    //if he has to throw BadRequestException
+    const userExpenses = await this.expenseService.getGroupExpense(group.uuid, user.uuid)
+    const hasOpenDebts = userExpenses.some(expense =>
+      expense.paidByUser.id === user.uuid || expense.paidOnUser.id === user.uuid
+    )
+    console.log(userExpenses , hasOpenDebts);
+    if (hasOpenDebts) {
+      throw new BadRequestException('user still has open expenses')
+    }
     const members = group?.members.filter(
       (member) => member.uuid !== userToRemoveId,
     );
@@ -217,6 +230,7 @@ export class GroupService {
       throw new NotFoundException('user to add not found');
     }
     const isMember = group.members.some((member) => member.uuid == userToAddId);
+    
     if (isMember) {
       throw new ConflictException('user already in group');
     }

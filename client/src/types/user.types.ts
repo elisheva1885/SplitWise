@@ -8,12 +8,6 @@ export type User = {
 export type UserInGroup = {
   id: number;
   username: string;
-  email: string;
-};
-
-export type UpdateUserDto = {
-  username: string;
-  email: string;
 };
 
 export type UserDetails = {
@@ -22,7 +16,7 @@ export type UserDetails = {
   groups: GroupData[];
 };
 
-export type UserToAdd = {
+export type UserIdAndName = {
   id: number;
   username: string;
 };
