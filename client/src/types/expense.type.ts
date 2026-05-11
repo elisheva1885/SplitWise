@@ -11,6 +11,6 @@ export type ExpenseInGroup = {
 
 export type OptimizedExpense = {
         value: number,
-    paidBy: UserInExpense,
-    paidOn: UserInExpense
+    paidByUser: UserInExpense,
+    paidOnUser: UserInExpense
 }

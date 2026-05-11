@@ -1,10 +1,6 @@
-import type { UserInGroup } from "../types/user.types"
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from "@mui/material/IconButton";
+
 import { useState } from "react";
-import { deleteUserFromGroup } from "../api/group.api";
 import type { GroupData } from "../types/group.types";
-import { handleApiError } from "../helpers/handle-api-error.helper";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -15,10 +11,10 @@ import Paper from '@mui/material/Paper';
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import type { ExpenseInGroup } from "../types/expense.type";
+import type {  OptimizedExpense } from "../types/expense.type";
 
 type OptimizedExpensesListProps = {
-    expenses: ExpenseInGroup[] | undefined,
+    expenses: OptimizedExpense[] | undefined,
     groupId: number | undefined,
     setGroup: (group: GroupData) => void
 }
@@ -62,12 +58,11 @@ export const OptimizedExpensesList = ({ expenses, groupId, setGroup }: Optimized
                 <TableBody>
                     {expenses?.map((expense) => (
                         <TableRow
-                            key={expense.id}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell align="center">{expense.value}</TableCell>
-                            <TableCell align="center">{expense.paidOn.username}</TableCell>
-                            <TableCell align="center">{expense.paidOn.username}</TableCell>
+                            <TableCell align="center">{expense.paidByUser.username}</TableCell>
+                            <TableCell align="center">{expense.paidOnUser.username}</TableCell>
                             <TableCell align="center">
                                 {/* <IconButton
                                     onClick={() => deleteGroupMember(member.id)}
