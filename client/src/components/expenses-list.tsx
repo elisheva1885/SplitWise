@@ -18,7 +18,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import { useUserContext } from "../store/use-user.context";
 import { AddExpensesFrom } from "./add-expense-form";
 import type { AddExpenseData } from "../schemas/expense-schema";
-import { createExpense } from "../api/expense.api";
+import { createExpense, deleteExpense } from "../api/expense.api";
 
 type ExpensesListProps = {
     group: GroupData | null;
@@ -32,9 +32,9 @@ export const ExpensesList = ({
     const [success, setSuccess] = useState<string>("");
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const { user } = useUserContext();
-  
-    const addExpenseToGroup = async(expenseData: AddExpenseData)=> {
-         if (!group?.id) {
+
+    const addExpenseToGroup = async (expenseData: AddExpenseData) => {
+        if (!group?.id) {
             setError("Group not loaded");
             setOpenSnackbar(true);
             return;
@@ -44,30 +44,41 @@ export const ExpensesList = ({
             setOpenSnackbar(true);
             return;
         }
-        console.log({cause:expenseData.cause,value: expenseData.value, paidBy: user?.id,paidOn: expenseData.paidOn,groupId: group.id});
-        
+        console.log({ cause: expenseData.cause, value: expenseData.value, paidBy: user?.id, paidOn: expenseData.paidOn, groupId: group.id });
+
         try {
-            const data = await createExpense({cause:expenseData.cause,value: expenseData.value, paidBy: user?.id,paidOn: expenseData.paidOn,groupId: group.id});
-            const updatedExpenses = [...group.expenses, data ];
-            group.expenses = updatedExpenses;
+            const data = await createExpense({ cause: expenseData.cause, value: expenseData.value, paidBy: user?.id, paidOn: expenseData.paidOn, groupId: group.id });
+            console.log(data);
+
+            setGroup({
+                ...group,
+                expenses: [...group.expenses, data],
+            });
             setGroup(group);
             setSuccess("New Expense added successfully");
             setOpenSnackbar(true);
         } catch (err) {
+            setSuccess("");
             setError(handleApiError(err));
             setOpenSnackbar(true);
         }
     }
-    const deleteExpense = async (userId: number) => {
+    const deleteExpenseFromGroup = async (expenseId: number) => {
         if (!group?.id) {
             setError("Group not loaded");
             setOpenSnackbar(true);
             return;
         }
         try {
-            const data = await deleteUserFromGroup(group.id, userId);
-            setGroup(data);
-            setSuccess("User removed successfully");
+            const data = await deleteExpense(expenseId);
+            const filteredExpenses = group.expenses.filter(expense=> 
+                 expense.id!== expenseId 
+            )
+            setGroup({
+                ...group,
+                expenses: filteredExpenses,
+            });
+            setSuccess("Expense deleted successfully");
             setOpenSnackbar(true);
         } catch (err) {
             setError(handleApiError(err));
@@ -95,8 +106,8 @@ export const ExpensesList = ({
         setOpenSnackbar(false);
     };
     return (
-        <TableContainer component={Paper}>       
-        <AddExpensesFrom group={group} onSubmit={addExpenseToGroup}/>      
+        <TableContainer component={Paper}>
+            <AddExpensesFrom group={group} onSubmit={addExpenseToGroup} />
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
@@ -141,7 +152,7 @@ export const ExpensesList = ({
                                 {(expense.paidBy.id === user?.id ||
                                     expense.paidOn.id === user?.id) && (
                                         <IconButton
-                                            onClick={() => deleteExpense(expense.id)}
+                                            onClick={() => deleteExpenseFromGroup(expense.id)}
                                             sx={{
                                                 backgroundColor: "white",
                                                 padding: 0.2,

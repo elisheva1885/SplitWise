@@ -20,3 +20,12 @@ export async function createExpense(
   console.log(data);
   return data;
 }
+
+
+export async function deleteExpense(
+  expenseId: number,
+): Promise<{message: string}> {
+  const { data } = await api.delete(`/expense/${expenseId}`);
+  console.log(data);
+  return data;
+}

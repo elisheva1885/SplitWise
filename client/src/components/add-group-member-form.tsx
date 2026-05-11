@@ -42,7 +42,7 @@ export const AddGroupMemberForm = ({
           return { label: user.username, id: user.id };
         }),
       );
-    } catch (err: unknown) {
+    } catch (err: unknown) {        
       setError(handleApiError(err));
       setOpenSnackbar(true);
     }
