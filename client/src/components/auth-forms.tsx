@@ -1,27 +1,39 @@
-import { LoginPage } from "../pages/login.page";
 import type { AuthFormStatus } from "../types/auth.types";
-import { RegisterPage } from "../pages/register.page";
-import { ForgetPasswordPage } from "../pages/forget-password.page";
 import { useState } from "react";
+import { ForgetPasswordForm } from "./forget-password-form";
+import { AuthPage } from "../pages/auth.page";
 
 type AuthFormsProps = {
-    setDialogOpen:  (open: boolean) => void
-}
-export const AuthForms = ({setDialogOpen}: AuthFormsProps) => {
-    const [status,setStatus] = useState<AuthFormStatus>('Login');
+  setDialogOpen: (open: boolean) => void;
+};
+export const AuthForms = ({ setDialogOpen }: AuthFormsProps) => {
+  const [status, setStatus] = useState<AuthFormStatus>("Login");
 
-    const toRegisterMode = ()=> {
-        setStatus('Register');
-    }
-    const toForgetPasswordMode = ()=> {
-        setStatus('ForgetPassword'); 
-    }
-    const toLogindMode = ()=> {
-        setStatus('Login'); 
-    }
-    return (
-        <>
-            {status === 'Login' ? <LoginPage toRegisterMode={toRegisterMode} toForgetPasswordMode={toForgetPasswordMode} setDialogOpen={setDialogOpen}/> : (status === 'Register' ? <RegisterPage toLoginMode={toLogindMode}  setDialogOpen={setDialogOpen}/> : <ForgetPasswordPage toLoginMode={toLogindMode} />)}  
-        </>
-    )
-}
+  const toRegisterMode = () => {
+    setStatus("Register");
+  };
+  const toForgetPasswordMode = () => {
+    setStatus("ForgetPassword");
+  };
+  const toLogindMode = () => {
+    setStatus("Login");
+  };
+  return (
+    <>
+      {status === "ForgetPassword" ? (
+        <ForgetPasswordForm
+          toLoginMode={toLogindMode}
+          setDialogOpen={setDialogOpen}
+        />
+      ) : (
+        <AuthPage
+          mode={status}
+          toLoginMode={toLogindMode}
+          toForgetPasswordMode={toForgetPasswordMode}
+          toRegisterMode={toRegisterMode}
+          setDialogOpen={setDialogOpen}
+        />
+      )}
+    </>
+  );
+};

@@ -61,7 +61,7 @@ export const GroupPage = () => {
             <List>
                 <Typography>My Groups</Typography>
                 {groups.map((group) => (
-                    <ListItem key={group.id} disablePadding>
+                    <ListItem key={group.id} disablePadding >
                         <ListItemButton onClick={() => { goToGroup(group.id) }}>
                             <ListItemIcon>
                             </ListItemIcon>
@@ -71,7 +71,8 @@ export const GroupPage = () => {
                 ))}
             </List>
             <Divider />
-            <Button sx={{ background: 'black' }} onClick={() => setOpen(true)}>Add Group</Button>
+            <br/>
+            <Button sx={{ background: 'black' }} onClick={() => setOpen(true)}>+ New Group</Button>
         </Box>
 
     const handleCloseDialog = () => {
@@ -87,7 +88,7 @@ export const GroupPage = () => {
     };
     useEffect(() => {
         getGroups()
-    }, [groups])
+    }, [])
     return (
         <>
             <div>

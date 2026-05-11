@@ -10,13 +10,18 @@ export async function loginUser(userData: LoginUserDto): Promise<UserData> {
   return data;
 }
 
-export async function registerUser(userData: RegisterUserDto): Promise<UserData> {
-    const { data } = await api.post('/user/register', userData);
-    console.log(data);
-    return data;
-} 
+export async function registerUser(
+  userData: RegisterUserDto,
+): Promise<UserData> {
+  const { data } = await api.post("/user/register", userData);
+  return data;
+}
 
-export  function logoutUser(): void {
-    const response =  api.post('/user/logout');
-    console.log(response);
-} 
+export function logoutUser(): void {
+  api.post("/user/logout");
+}
+
+export async function getUserStatus(): Promise<UserData> {
+  const { data } = await api.get("/user/status");
+  return data;
+}

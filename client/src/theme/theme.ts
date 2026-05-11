@@ -27,11 +27,11 @@ export const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          backgroundColor: 'transparent',
-          color: 'white',
-          fontSize:'11px'
-        }
-      }
+          backgroundColor: "transparent",
+          color: "white",
+          fontSize: "11px",
+        },
+      },
     },
     MuiInputLabel: {
       styleOverrides: {

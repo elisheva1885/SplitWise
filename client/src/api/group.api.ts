@@ -20,6 +20,12 @@ export async function updateGroup(groupId: number, groupData:UpdateGroupData): P
     return data;
 }
 
+export async function updateGroupOwner(groupId: number, ownerId:number): Promise<GroupData> {
+    const { data } = await api.patch(`/group/${groupId}`,{ownerId});
+    console.log(data);
+    return data;
+}
+
 export async function deleteGroup(groupId: number): Promise<number> {
     const res = await api.delete(`/group/${groupId}`);
     console.log(res);

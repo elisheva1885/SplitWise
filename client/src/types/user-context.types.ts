@@ -6,7 +6,7 @@ export type UserState = {
 };
 
 export type UserContextType = UserState & {
-  setUser: (user: UserData) => void;
+  setUser: (user: UserData | null) => void;
   logout: () => void;
 };
 export const UserContext = createContext<UserContextType | null>(null);

@@ -45,7 +45,7 @@ export class GroupController {
     @CurrentUser() user: JwtPayload,
     @Param('gid', ParseIntPipe) gid: number,
     @Body() groupData: UpdateGroupDto,
-  ): Promise<FullGroupResponseDto> {
+  ): Promise<FullGroupResponseDto> {    
     return await this.groupService.updateGroup(gid, groupData, user.id);
   }
 

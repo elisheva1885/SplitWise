@@ -55,7 +55,7 @@ export const GroupDetails = () => {
     };
     const addGroupMember = async (userId: number) => {
         console.log(userId);
-        
+
         if (!group?.id) {
             setError("Group not loaded");
             setOpenSnackbar(true);
@@ -104,9 +104,8 @@ export const GroupDetails = () => {
 
     return (
         <>
-
-            {group?.name}
-            {isOwner && <EditIcon onClick={updateGroupInfo} />}
+            <Box sx= {{display: 'flex', justifyContent: 'center',alignItems: 'center', gap: 2}}> <Typography sx={{ fontSize: 'xx-large'}}>{group?.name}</Typography>
+                {isOwner && <EditIcon onClick={updateGroupInfo} />}</Box>
             <Box
                 sx={{
                     width: "100%",
@@ -132,9 +131,9 @@ export const GroupDetails = () => {
                 </ListItem>
             </Box>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                <GroupMembersList groupMembers={group?.members} groupId={group?.id} setGroup={setGroup} isOwner={isOwner} />
+                <GroupMembersList group={group} setGroup={setGroup} isOwner={isOwner} setIsOwner={setIsOwner} />
             </Box >
-            {isOwner &&<Button sx={{ backgroundColor: 'black' }} onClick={() => setOpenAddUserDialog(true)} aria-label="Add group member"><GroupAddIcon /></Button>}
+            {isOwner && <Button sx={{ backgroundColor: 'black' }} onClick={() => setOpenAddUserDialog(true)} aria-label="Add group member"><GroupAddIcon /></Button>}
 
             <Dialog open={openAddUserDialog} onClose={handleCloseDialog}>
                 <Box style={{ backgroundColor: "#2e3136" }}>
@@ -149,7 +148,7 @@ export const GroupDetails = () => {
                     />
                     <br />
                     <Box sx={{ textAlign: "center", padding: "8px" }}>
-                         <AddGroupMemberForm setDialogOpen={setOpenAddUserDialog} onSubmit={addGroupMember} />
+                        <AddGroupMemberForm setDialogOpen={setOpenAddUserDialog} onSubmit={addGroupMember} />
                     </Box>
                 </Box>
             </Dialog>
