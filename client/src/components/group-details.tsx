@@ -6,7 +6,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
-import { addUserToGroup, getGroupDetails } from "../api/group.api";
+import { addUserToGroup, getGroupDetails, updateGroup } from "../api/group.api";
 import Button from "@mui/material/Button";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import EditIcon from "@mui/icons-material/Edit";
@@ -17,40 +17,56 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import { UpdateGroupForm } from "./update-group-form";
-import type { UserInGroup } from "../types/user.types";
 import Typography from "@mui/material/Typography";
 import { handleApiError } from "../helpers/handle-api-error.helper";
 import { GroupMembersList } from "./group-members-list";
+import { useUserContext } from "../store/use-user.context";
+import type { UpdateGroupData } from "../schemas/group-schemas";
+import type { SnackbarState } from "../types/snackbar.types";
+import CircularProgress from "@mui/material/CircularProgress";
+import Card from "@mui/material/Card";
+import Fab from "@mui/material/Fab";
+import Chip from "@mui/material/Chip";
+import { getOptimizedExpenses } from "../api/expense.api";
 import { ExpensesList } from "./expenses-list";
 import { OptimizedExpensesList } from "./optimized-expenses-list";
-import { getOptimizedExpenses } from "../api/expense.api";
 import type { OptimizedExpense } from "../types/expense.type";
-import Divider from "@mui/material/Divider";
-import { useUserContext } from "../store/use-user.context";
 
 export const GroupDetails = () => {
   const { id } = useParams();
+
   const [group, setGroup] = useState<GroupData | null>(null);
   const [expenses, setExpenses] = useState<OptimizedExpense[] | null>(null);
-  const [updateMember, setUpdateMember] = useState<UserInGroup | null>(null);
+
   const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
   const [updateUserDialog, setUpdateUserDialog] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
-  const [isOwner, setIsOwner] = useState<boolean>(false);
+
   const { user } = useUserContext();
 
+  const [isOwner, setIsOwner] = useState<boolean>(false);
+
+  const [loading, setLoading] = useState(false);
+
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
+    open: false,
+    severity: "success",
+    message: "",
+  });
+
   const getGroupDetailsById = async (id: number) => {
-    setError("");
-    setSuccess("");
     try {
+      setLoading(true);
       const data = await getGroupDetails(id);
       setGroup(data);
       setIsOwner(user?.id === data.owner.id);
     } catch (err) {
-      setError(handleApiError(err));
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: handleApiError(err),
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,23 +74,81 @@ export const GroupDetails = () => {
     setOpenAddUserDialog(false);
     setUpdateUserDialog(false);
   };
-  const handleClose = () => {
-    setOpenSnackbar(false);
+
+  const handleCloseSnackbar = () => {
+    setSnackbar((prev) => ({
+      ...prev,
+      open: false,
+    }));
   };
+
   const addGroupMember = async (userId: number) => {
     if (!group?.id) {
-      setError("Group not loaded");
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: "Group not loaded",
+      });
+
       return;
     }
+
     try {
+      setLoading(true);
+
       const data = await addUserToGroup(group.id, userId);
+
       setGroup(data);
-      setSuccess("User added successfully");
-      setOpenSnackbar(true);
+
+      setSnackbar({
+        open: true,
+        severity: "success",
+        message: "User added successfully!",
+      });
     } catch (err) {
-      setError(handleApiError(err));
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: handleApiError(err),
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateGroupDetails = async (groupData: UpdateGroupData) => {
+    if (!group?.id) {
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: "Group not loaded",
+      });
+
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const data = await updateGroup(group.id, groupData);
+
+      setGroup(data);
+
+      setSnackbar({
+        open: true,
+        severity: "success",
+        message: "Group updated successfully!",
+      });
+
+      setUpdateUserDialog(false);
+    } catch (err) {
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: handleApiError(err),
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -84,27 +158,32 @@ export const GroupDetails = () => {
 
   const getGroupOptimizedExpense = async () => {
     if (!group?.id) {
-      console.log("data");
-      setError("Group not loaded");
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: "Group not loaded",
+      });
+
       return;
     }
     try {
+      setLoading(true);
       const data = await getOptimizedExpenses(group?.id);
       setExpenses(data);
-      console.log(data);
-
-      // setGroup(data);
-      // setSuccess("User added successfully");
-      // setOpenSnackbar(true);
     } catch (err) {
-      console.log("error");
-      setError(handleApiError(err));
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: handleApiError(err),
+      });
+    } finally {
+      setLoading(false);
     }
   };
+
   useEffect(() => {
     if (!id) return;
+
     getGroupDetailsById(Number(id));
   }, [id]);
   useEffect(() => {
@@ -112,58 +191,97 @@ export const GroupDetails = () => {
       getGroupOptimizedExpense();
     }
   }, [group?.id]);
-  return (
-    <>
-      {group?.name}
-      <EditIcon onClick={updateGroupInfo} />
+
+  if (loading && !group) {
+    return (
       <Box
         sx={{
-          width: "100%",
           display: "flex",
           justifyContent: "center",
-          mt: 2,
-          mb: 2,
+          mt: 5,
         }}
       >
-        <ListItem
-          key={group?.owner.id}
-          sx={{
-            width: "fit-content",
-            borderRadius: 2,
-            px: 2,
-            py: 1,
-            backgroundColor: "#f5f5f5",
-          }}
-        >
-          <ListItemAvatar>
-            <Avatar sx={{ backgroundColor: "black" }}>
-              <Typography sx={{ fontSize: "x-small" }}>OWNER</Typography>
-            </Avatar>
-          </ListItemAvatar>
-          {group?.owner && <ListItemText primary={group?.owner.username} />}
-        </ListItem>
+        <CircularProgress />
       </Box>
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+    );
+  }
+
+  return (
+    <>
+      <Card
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 2,
+        }}
+      >
+        <Typography sx={{ fontSize: "xx-large" }}>{group?.name}</Typography>
+
+        {isOwner && (
+          <EditIcon
+            onClick={updateGroupInfo}
+            sx={{
+              cursor: loading ? "default" : "pointer",
+              opacity: loading ? 0.5 : 1,
+            }}
+          />
+        )}
+      </Card>
+
+      {group?.owner && (
+        <Chip
+          avatar={
+            <Avatar
+              sx={{
+                backgroundColor: "black",
+                width: "70px",
+                height: "70px",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "x-small",
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                OWNER
+              </Typography>
+            </Avatar>
+          }
+          label={group?.owner.username}
+          sx={{
+            height: "44px",
+            px: 1,
+            "& .MuiChip-avatar": {
+              width: 38,
+              height: 38,
+              borderRadius: "16px",
+            },
+          }}
+          variant="outlined"
+        ></Chip>
+      )}
+  
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, justifyContent:'center' }}>
         <GroupMembersList
           group={group}
           setGroup={setGroup}
           isOwner={isOwner}
           setIsOwner={setIsOwner}
         />
-      </Box>
-
-      <Button
-        sx={{ backgroundColor: "black" }}
-        onClick={() => setOpenAddUserDialog(true)}
-        aria-label="Add group member"
-      >
-        <GroupAddIcon />
-      </Button>
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-        <ExpensesList
-          group={group}
-          setGroup={setGroup}
-        />
+        
+      {isOwner && (
+        <Fab
+          onClick={() => setOpenAddUserDialog(true)}
+          aria-label="Add group member"
+          disabled={loading}
+        >
+          {loading ? <CircularProgress size={20} /> : <GroupAddIcon />}
+        </Fab>
+      )}
+        <ExpensesList group={group} setGroup={setGroup} />
 
         <OptimizedExpensesList
           expenses={expenses}
@@ -171,6 +289,8 @@ export const GroupDetails = () => {
           setGroup={setGroup}
         />
       </Box>
+
+
       <Dialog open={openAddUserDialog} onClose={handleCloseDialog}>
         <Box style={{ backgroundColor: "#2e3136" }}>
           <CloseIcon
@@ -180,9 +300,12 @@ export const GroupDetails = () => {
               color: "white",
               position: "absolute",
               insetInlineEnd: 3,
+              cursor: "pointer",
             }}
           />
+
           <br />
+
           <Box sx={{ textAlign: "center", padding: "8px" }}>
             <AddGroupMemberForm
               setDialogOpen={setOpenAddUserDialog}
@@ -191,6 +314,7 @@ export const GroupDetails = () => {
           </Box>
         </Box>
       </Dialog>
+
       <Dialog open={updateUserDialog} onClose={handleCloseDialog}>
         <Box style={{ backgroundColor: "#2e3136" }}>
           <CloseIcon
@@ -200,34 +324,34 @@ export const GroupDetails = () => {
               color: "white",
               position: "absolute",
               insetInlineEnd: 3,
+              cursor: "pointer",
             }}
           />
+
           <br />
+
           <Box sx={{ textAlign: "center", padding: "8px" }}>
             <UpdateGroupForm
               setDialogOpen={setUpdateUserDialog}
-              onSubmit={updateGroupInfo}
+              onSubmit={updateGroupDetails}
               group={group}
             />
           </Box>
         </Box>
       </Dialog>
+
       <Snackbar
-        open={openSnackbar}
+        open={snackbar.open}
         autoHideDuration={5000}
-        onClose={handleClose}
+        onClose={handleCloseSnackbar}
       >
-        {success ? (
-          <Alert severity="success">
-            <AlertTitle>Success</AlertTitle>
-            {success}{" "}
-          </Alert>
-        ) : (
-          <Alert severity="error">
-            <AlertTitle>Error</AlertTitle>
-            {error}{" "}
-          </Alert>
-        )}
+        <Alert severity={snackbar.severity}>
+          <AlertTitle>
+            {snackbar.severity === "success" ? "Success" : "Error"}
+          </AlertTitle>
+
+          {snackbar.message}
+        </Alert>
       </Snackbar>
     </>
   );

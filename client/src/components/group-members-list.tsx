@@ -1,4 +1,3 @@
-import type { UserInGroup } from "../types/user.types";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import { useState } from "react";
@@ -17,6 +16,7 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import Typography from "@mui/material/Typography";
+import type { SnackbarState } from "../types/snackbar.types";
 type GroupMembersListProps = {
   group: GroupData | null;
   setGroup: (group: GroupData) => void;
@@ -29,48 +29,75 @@ export const GroupMembersList = ({
   isOwner,
   setIsOwner,
 }: GroupMembersListProps) => {
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-
+  const [loading, setLoading] = useState<boolean>(false);
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
+    open: false,
+    severity: "success",
+    message: "",
+  });
   const deleteGroupMember = async (userId: number) => {
-    if (!group?.id) {
-      setError("Group not loaded");
-      setOpenSnackbar(true);
-      return;
-    }
     try {
+      if (!group?.id) {
+        setSnackbar({
+          open: true,
+          severity: "error",
+          message: "Group not loaded",
+        });
+        return;
+      }
+      setLoading(true);
       const data = await deleteUserFromGroup(group?.id, userId);
+      setSnackbar({
+        open: true,
+        severity: "success",
+        message: "User removed successfully!",
+      });
       setGroup(data);
-      setSuccess("User removed successfully");
-      setOpenSnackbar(true);
     } catch (err) {
-      setError(handleApiError(err));
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: handleApiError(err),
+      });
+    } finally {
+      setLoading(false);
     }
   };
   const updateToGroupOwner = async (userId: number) => {
-    if (!group?.id) {
-      setError("Group not loaded");
-      setOpenSnackbar(true);
-      return;
-    }
     try {
-      const data = await updateGroupOwner(group?.id, userId);
-      if (userId !== group.owner.id) {
-        setIsOwner(false);
+      if (!group?.id) {
+        setSnackbar({
+          open: true,
+          severity: "error",
+          message: "Group not loaded",
+        });
+        return;
       }
+      setLoading(true);
 
+      const data = await updateGroupOwner(group?.id, userId);
+      setIsOwner(group.owner.id === userId);
       setGroup(data);
-      setSuccess("group admin updated successfully");
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        severity: "success",
+        message: "group admin updated successfully!",
+      });
     } catch (err) {
-      setError(handleApiError(err));
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: handleApiError(err),
+      });
+    } finally {
+      setLoading(false);
     }
   };
   const handleClose = () => {
-    setOpenSnackbar(false);
+    setSnackbar((prev) => ({
+      ...prev,
+      open: false,
+    }));
   };
   return (
     <TableContainer component={Paper}>
@@ -97,6 +124,7 @@ export const GroupMembersList = ({
                 {isOwner && (
                   <IconButton
                     onClick={() => deleteGroupMember(member.id)}
+                    disabled={loading}
                     sx={{
                       backgroundColor: "white",
                       padding: 0.2,
@@ -110,6 +138,7 @@ export const GroupMembersList = ({
                 {isOwner && (
                   <IconButton
                     onClick={() => updateToGroupOwner(member.id)}
+                    disabled={loading || member.id === group.owner.id}
                     sx={{
                       backgroundColor: "white",
                       padding: 0.2,
@@ -118,7 +147,7 @@ export const GroupMembersList = ({
                     <AdminPanelSettingsIcon />
                     <Typography sx={{ fontSize: "x-small" }}>
                       to Admin
-                    </Typography>{" "}
+                    </Typography>
                   </IconButton>
                 )}
               </TableCell>
@@ -127,21 +156,16 @@ export const GroupMembersList = ({
         </TableBody>
       </Table>
       <Snackbar
-        open={openSnackbar}
+        open={snackbar.open}
         autoHideDuration={5000}
         onClose={handleClose}
       >
-        {success ? (
-          <Alert severity="success">
-            <AlertTitle>Success</AlertTitle>
-            {success}{" "}
-          </Alert>
-        ) : (
-          <Alert severity="error">
-            <AlertTitle>Error</AlertTitle>
-            {error}{" "}
-          </Alert>
-        )}
+        <Alert severity={snackbar.severity}>
+          <AlertTitle>
+            {snackbar.severity === "success" ? "Success" : "Error"}
+          </AlertTitle>
+          {snackbar.message}
+        </Alert>
       </Snackbar>
     </TableContainer>
   );

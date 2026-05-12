@@ -21,10 +21,9 @@ export async function createExpense(
   return data;
 }
 
-
 export async function deleteExpense(
   expenseId: number,
-): Promise<{message: string}> {
+): Promise<{ message: string }> {
   const { data } = await api.delete(`/expense/${expenseId}`);
   console.log(data);
   return data;

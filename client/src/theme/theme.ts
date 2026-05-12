@@ -1,6 +1,11 @@
 import { createTheme } from "@mui/material/styles";
 
 export const theme = createTheme({
+  palette: {
+    background: {
+      default: "#6b9783",
+    },
+  },
   components: {
     MuiOutlinedInput: {
       styleOverrides: {
@@ -8,9 +13,9 @@ export const theme = createTheme({
           backgroundColor: "transparent",
           WebkitBorderBeforeColor: "#ffffff",
           borderColor: "#ffffff",
-          color: "white",
+          color: "black",
           "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#ffffff",
+            borderColor: "#000000",
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
             borderColor: "#12300a",

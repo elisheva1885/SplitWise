@@ -11,47 +11,51 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { useGroupContext } from "../store/use-group.context";
-import { getUserDetails } from "../api/user-api";
+import { getUserDetails } from "../api/user.api";
 import { useNavigate } from "react-router";
 import { Outlet } from "react-router";
 import { AddGroupForm } from "../components/add-group-form";
 import Dialog from "@mui/material/Dialog";
 import { createGroup } from "../api/group.api";
-import axios from "axios";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import type { AddGroupData } from "../schemas/group-schemas";
+import type { SnackbarState } from "../types/snackbar.types";
+import { handleApiError } from "../helpers/handle-api-error.helper";
 export const GroupPage = () => {
   const { groups, setGroups } = useGroupContext();
   const [open, setOpen] = useState(false);
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
+    open: false,
+    severity: "success",
+    message: "",
+  });
   const navigate = useNavigate();
 
   const goToGroup = (id: number) => {
     navigate(`${id}`);
   };
   const addGroup = async (groupData: AddGroupData) => {
-    setError("");
-    setSuccess("");
-
     try {
+      setLoading(true);
       const data = await createGroup(groupData);
       setGroups([...groups, data]);
-      setSuccess("Group created successfully");
-      setOpenSnackbar(true);
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const message = err.response?.data?.message || err.message;
-        setError(message);
-      } else {
-        setError("Something went wrong");
-      }
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        severity: "success",
+        message: "Group created successfully!",
+      });
+    } catch (err) {
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: handleApiError(err),
+      });
+    } finally {
+      setLoading(false);
     }
-    setOpen(false);
   };
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation">
@@ -72,7 +76,11 @@ export const GroupPage = () => {
       </List>
       <Divider />
       <br />
-      <Button sx={{ background: "black" }} onClick={() => setOpen(true)}>
+      <Button
+        sx={{ background: "black" }}
+        onClick={() => setOpen(true)}
+        disabled={loading}
+      >
         + New Group
       </Button>
     </Box>
@@ -87,7 +95,10 @@ export const GroupPage = () => {
     setGroups(data.groups);
   };
   const handleClose = () => {
-    setOpenSnackbar(false);
+    setSnackbar((prev) => ({
+      ...prev,
+      open: false,
+    }));
   };
   useEffect(() => {
     getGroups();
@@ -129,21 +140,16 @@ export const GroupPage = () => {
           </Box>
         </Dialog>
         <Snackbar
-          open={openSnackbar}
+          open={snackbar.open}
           autoHideDuration={5000}
           onClose={handleClose}
         >
-          {success ? (
-            <Alert severity="success">
-              <AlertTitle>Success</AlertTitle>
-              {success}{" "}
-            </Alert>
-          ) : (
-            <Alert severity="error">
-              <AlertTitle>Error</AlertTitle>
-              {error}{" "}
-            </Alert>
-          )}
+          <Alert severity={snackbar.severity}>
+            <AlertTitle>
+              {snackbar.severity === "success" ? "Success" : "Error"}
+            </AlertTitle>
+            {snackbar.message}
+          </Alert>
         </Snackbar>
       </div>
     </>

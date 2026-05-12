@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import type { UserIdAndName, UserInExpense, UserInGroup } from "./user.types";
+=======
+import type { UserInGroup } from "./user.types";
+>>>>>>> client/group-page
 
 export type ExpenseInGroup = {
   id: number;
@@ -7,6 +11,7 @@ export type ExpenseInGroup = {
   paidBy: UserInGroup;
   paidOn: UserInGroup;
 };
+<<<<<<< HEAD
 
 export type OptimizedExpense = {
   value: number;
@@ -29,3 +34,5 @@ export type CreateExpenseDto = {
 //   paidOn: UserIdAndName;
 //   groupId: number;
 // };
+=======
+>>>>>>> client/group-page
