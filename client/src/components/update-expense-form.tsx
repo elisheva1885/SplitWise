@@ -4,11 +4,6 @@ import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import type { GroupData } from "../types/group.types";
-import {
-    UpdateGroupSchema,
-    type UpdateGroupData,
-} from "../schemas/group-schemas";
 import type { ExpenseInGroup, UpdateExpenseData } from "../types/expense.type";
 import Box from "@mui/material/Box";
 import type { SelectChangeEvent } from "@mui/material/Select";

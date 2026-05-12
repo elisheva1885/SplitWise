@@ -17,15 +17,10 @@ import Snackbar from "@mui/material/Snackbar";
 import { useUserContext } from "../store/use-user.context";
 
 type LoginPageProps = {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> client/group-page
   toRegisterMode: () => void;
   toForgetPasswordMode: () => void;
   setDialogOpen: (open: boolean) => void;
 };
-<<<<<<< HEAD
 
 export const LoginPage = ({
   toRegisterMode,
@@ -172,4 +167,3 @@ export const LoginPage = ({
     </>
   );
 };
->>>>>>> client/group-page

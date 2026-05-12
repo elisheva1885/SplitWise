@@ -13,6 +13,7 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import axios from "axios";
 import { useState } from "react";
+import type { SnackbarState } from "../types/snackbar.types";
 
 type ForgetPasswordProps = {
   toLoginMode: () => void;
@@ -23,29 +24,48 @@ export const ForgetPasswordForm = ({
   toLoginMode,
   setDialogOpen,
 }: ForgetPasswordProps) => {
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
-  const [open, setOpen] = useState<boolean>(false);
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
+    open: false,
+    severity: "success",
+    message: "",
+  });
 
   const onSubmit = async (data: ForgetPasswordData) => {
     try {
       //add a call to the server
-      setSuccess(`send message to your email ${data.email}`);
+      setSnackbar({
+        open: true,
+        severity: "success",
+        message: `send message to your email ${data.email}`,
+      });
+
       setTimeout(() => {
         setDialogOpen(false);
       }, 450);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const message = err.response?.data?.message || err.message;
-        setError(message);
+
+        setSnackbar({
+          open: true,
+          severity: "error",
+          message,
+        });
       } else {
-        setError("Something went wrong");
+        setSnackbar({
+          open: true,
+          severity: "error",
+          message: "Something went wrong",
+        });
       }
     }
-    setOpen(true);
   };
+
   const handleClose = () => {
-    setOpen(false);
+    setSnackbar((prev) => ({
+      ...prev,
+      open: false,
+    }));
   };
 
   const {
@@ -62,8 +82,14 @@ export const ForgetPasswordForm = ({
       onSubmit={handleSubmit(onSubmit)}
       style={{ backgroundColor: "#2e3136" }}
     >
-      <Typography sx={{ color: "white" }}>Forget Password</Typography>
-      <InputLabel sx={{ margin: "7px" }}>Email</InputLabel>
+      <Typography sx={{ color: "white" }}>
+        Forget Password
+      </Typography>
+
+      <InputLabel sx={{ margin: "7px" }}>
+        Email
+      </InputLabel>
+
       <TextField
         type="email"
         size="small"
@@ -71,21 +97,27 @@ export const ForgetPasswordForm = ({
         error={!!errors.email}
         helperText={errors.email?.message}
       />
+
       <br />
+
       <Button onClick={toLoginMode}>Login</Button>
+
       <Button type="submit">SUBMIT</Button>
-      <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
-        {success ? (
-          <Alert severity="success">
-            <AlertTitle>Success</AlertTitle>
-            {success}{" "}
-          </Alert>
-        ) : (
-          <Alert severity="error">
-            <AlertTitle>Error</AlertTitle>
-            {error}{" "}
-          </Alert>
-        )}
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={5000}
+        onClose={handleClose}
+      >
+        <Alert severity={snackbar.severity}>
+          <AlertTitle>
+            {snackbar.severity === "success"
+              ? "Success"
+              : "Error"}
+          </AlertTitle>
+
+          {snackbar.message}
+        </Alert>
       </Snackbar>
     </form>
   );
