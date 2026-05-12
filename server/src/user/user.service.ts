@@ -1,13 +1,10 @@
 import {
-  ConflictException,
-  forwardRef,
-  Inject,
-  Injectable,
+  ConflictException,  Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { RegisterDto } from 'src/auth/dto/register.dto';
 import {
   GetUserResponseDto,
@@ -82,8 +79,10 @@ export class UserService {
     return userDto;
   }
 
-  async getUsers(userId: number): Promise<UsersResponseDto[]> {
+  async getUsers(userId: number, query: string): Promise<UsersResponseDto[]> {
     const users = await this.userRepository.find({
+      where: {username:ILike(`${query}%`) },
+      take:10
     });
 
     if (!users) {

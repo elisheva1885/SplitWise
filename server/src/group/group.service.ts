@@ -196,7 +196,6 @@ export class GroupService {
     const hasOpenDebts = userExpenses.some(expense =>
       expense.paidByUser.uuid === user.uuid || expense.paidOnUser.uuid === user.uuid
     )
-    console.log(userExpenses , hasOpenDebts);
     if (hasOpenDebts) {
       throw new BadRequestException('user still has open expenses')
     }

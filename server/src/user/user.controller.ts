@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Patch,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -31,9 +32,9 @@ export class UserController {
   }
   @Get('/all')
   async getUsers(
-    @CurrentUser() user: JwtPayload,
+    @CurrentUser() user: JwtPayload,@Query('query') query:string
   ): Promise<UsersResponseDto[]> {
-    return await this.userService.getUsers(user.id);
+    return await this.userService.getUsers(user.id, query);
   }
   @Patch()
   async updateUser(
