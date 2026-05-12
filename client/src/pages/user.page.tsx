@@ -70,7 +70,7 @@ export const UserPage = () => {
     }
   };
   return (
-    <Box >
+    <Box>
       <UpdateUserForm
         onSubmit={handleSubmit}
         onDelete={onDelete}

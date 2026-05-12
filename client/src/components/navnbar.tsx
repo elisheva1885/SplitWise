@@ -49,7 +49,10 @@ export const Navbar = () => {
 
   return (
     <>
-      <AppBar position="static" style={{ backgroundColor: "#182720" , marginBottom: '15px'}}>
+      <AppBar
+        position="static"
+        style={{ backgroundColor: "#182720", marginBottom: "15px" }}
+      >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Box
