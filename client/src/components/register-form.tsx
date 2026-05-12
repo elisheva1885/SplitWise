@@ -6,12 +6,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterSchema, type RegisterData } from "../schemas/auth-schemas";
 import type { RegisterFormData } from "../types/auth.types";
+import Box from "@mui/material/Box";
 
 type RegisterFormProps = {
   onSubmit: (data: RegisterFormData) => void;
+  toLoginMode: () => void;
 };
 
-export const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
+export const RegisterForm = ({ onSubmit, toLoginMode }: RegisterFormProps) => {
   const {
     register,
     handleSubmit,
@@ -20,42 +22,42 @@ export const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
     resolver: zodResolver(RegisterSchema),
     mode: "onChange",
   });
+
   return (
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        style={{ backgroundColor: "#2e3136" }}
-      >
-        <Typography sx={{ color: "white" }}>Register</Typography>
-        <br />
-        <InputLabel>Username</InputLabel>
-        <TextField
-          fullWidth
-          type="text"
-          size="small"
-          variant="outlined"
-          {...register("username")}
-          error={!!errors.username}
-          helperText={errors.username?.message}
-        />
-        <InputLabel>Email</InputLabel>
-        <TextField
-          fullWidth
-          type="email"
-          size="small"
-          {...register("email")}
-          error={!!errors.email}
-          helperText={errors.email?.message}
-        />
-        <InputLabel>Password</InputLabel>
-        <TextField
-          type="password"
-          size="small"
-          {...register("password")}
-          error={!!errors.password}
-          helperText={errors.password?.message}
-        />
-        <br />
-        <Button type="submit">Register</Button>
-      </form>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Typography sx={{ color: "white" }}>Register</Typography>
+      <br />
+      <InputLabel sx={{ margin: "7px" }}>Username</InputLabel>
+      <TextField
+        fullWidth
+        type="text"
+        size="small"
+        variant="outlined"
+        {...register("username")}
+        error={!!errors.username}
+        helperText={errors.username?.message}
+      />
+      <InputLabel sx={{ margin: "7px" }}>Email</InputLabel>
+      <TextField
+        fullWidth
+        type="email"
+        size="small"
+        {...register("email")}
+        error={!!errors.email}
+        helperText={errors.email?.message}
+      />
+      <InputLabel sx={{ margin: "7px" }}>Password</InputLabel>
+      <TextField
+        type="password"
+        size="small"
+        {...register("password")}
+        error={!!errors.password}
+        helperText={errors.password?.message}
+      />
+      <Box>
+        <Button onClick={toLoginMode}>Login</Button>
+        <Button type="submit">Submit</Button>
+      </Box>
+    </form>
   );
 };

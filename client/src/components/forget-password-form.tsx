@@ -14,17 +14,26 @@ import AlertTitle from "@mui/material/AlertTitle";
 import axios from "axios";
 import { useState } from "react";
 
-export const ForgetPasswordForm = () => {
+type ForgetPasswordProps = {
+  toLoginMode: () => void;
+  setDialogOpen: (open: boolean) => void;
+};
+
+export const ForgetPasswordForm = ({
+  toLoginMode,
+  setDialogOpen,
+}: ForgetPasswordProps) => {
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
 
   const onSubmit = async (data: ForgetPasswordData) => {
-    setError("");
-    setSuccess("");
     try {
       //add a call to the server
       setSuccess(`send message to your email ${data.email}`);
+      setTimeout(() => {
+        setDialogOpen(false);
+      }, 450);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const message = err.response?.data?.message || err.message;
@@ -49,24 +58,23 @@ export const ForgetPasswordForm = () => {
   });
 
   return (
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        style={{ backgroundColor: "#2e3136" }}
-      >
-        <Typography sx={{ color: "white" }}>Forget Password</Typography>
-        <InputLabel>Email</InputLabel>
-        <TextField
-          type="email"
-          size="small"
-          {...register("email")}
-          error={!!errors.email}
-          helperText={errors.email?.message}
-        />
-        <br />
-        <Button type="submit" variant="contained">
-          SUBMIT
-        </Button>
-          <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      style={{ backgroundColor: "#2e3136" }}
+    >
+      <Typography sx={{ color: "white" }}>Forget Password</Typography>
+      <InputLabel sx={{ margin: "7px" }}>Email</InputLabel>
+      <TextField
+        type="email"
+        size="small"
+        {...register("email")}
+        error={!!errors.email}
+        helperText={errors.email?.message}
+      />
+      <br />
+      <Button onClick={toLoginMode}>Login</Button>
+      <Button type="submit">SUBMIT</Button>
+      <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
         {success ? (
           <Alert severity="success">
             <AlertTitle>Success</AlertTitle>
@@ -79,6 +87,6 @@ export const ForgetPasswordForm = () => {
           </Alert>
         )}
       </Snackbar>
-      </form>
+    </form>
   );
 };

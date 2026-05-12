@@ -1,6 +1,11 @@
 import { createTheme } from "@mui/material/styles";
 
 export const theme = createTheme({
+  palette:{
+    background: {
+      default: '#6b9783'
+    }
+  },
   components: {
     MuiOutlinedInput: {
       styleOverrides: {
@@ -27,11 +32,11 @@ export const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          backgroundColor: 'transparent',
-          color: 'white',
-          fontSize: '11px'
-        }
-      }
+          backgroundColor: "transparent",
+          color: "white",
+          fontSize: "11px",
+        },
+      },
     },
     MuiInputLabel: {
       styleOverrides: {

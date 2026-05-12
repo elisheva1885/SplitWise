@@ -1,72 +1,94 @@
 import { useState } from "react";
-import { UpdateUserForm } from "../components/update-user-form"
+import { UpdateUserForm } from "../components/update-user-form";
 import { useUserContext } from "../store/use-user.context";
-import axios from "axios";
 import Snackbar from "@mui/material/Snackbar";
 import AlertTitle from "@mui/material/AlertTitle";
 import Alert from "@mui/material/Alert";
 import { deleteUser, updateUser } from "../api/user-api";
 import type { UpdateUserDto } from "../types/user.types";
 import { useNavigate } from "react-router";
+import { handleApiError } from "../helpers/handle-api-error.helper";
+import type { SnackbarState } from "../types/snackbar.types";
+import { Box } from "@mui/material";
 
 export const UserPage = () => {
-    const [error, setError] = useState<string>("");
-    const [success, setSuccess] = useState<string>("");
-    const [open, setOpen] = useState(false);
-    const { setUser, logout } = useUserContext();
-    const navigate = useNavigate();
+  const { setUser, logout } = useUserContext();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
+    open: false,
+    severity: "success",
+    message: "",
+  });
+  const handleSubmit = async (data: UpdateUserDto) => {
+    setLoading(true);
 
-    const handleSubmit = async (data: UpdateUserDto) => {
-        try {
-            const userData = await updateUser(data);
-            setSuccess("Updated successfully!");
-            setUser(userData);
-        }
-        catch (err: unknown) {
-            if (axios.isAxiosError(err)) {
-                const message = err.response?.data?.message || err.message;
-                setError(message);
-            } else {
-                setError("Something went wrong");
-            }
-        }
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false)
+    try {
+      const userData = await updateUser(data);
+      setSnackbar({
+        open: true,
+        severity: "success",
+        message: "Updated successfully!",
+      });
+      setUser(userData);
+    } catch (err: unknown) {
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: handleApiError(err),
+      });
+    } finally {
+      setLoading(false);
     }
-    const handleDeleteUser = async () => {
-        try {
-             await deleteUser();;
-            setSuccess("delete successfully!");
-            logout();
-            navigate('/')
-        }
-        catch (err: unknown) {
-            if (axios.isAxiosError(err)) {
-                const message = err.response?.data?.message || err.message;
-                setError(message);
-            } else {
-                setError("Something went wrong");
-            }
-        }
-        setOpen(true);
+  };
+  const handleClose = () => {
+    setSnackbar((prev) => ({
+      ...prev,
+      open: false,
+    }));
+  };
+  const onDelete = async () => {
+    setLoading(true);
+
+    try {
+      await deleteUser();
+      setSnackbar({
+        open: true,
+        severity: "success",
+        message: "Deleted successfully!",
+      });
+      logout();
+      navigate("/");
+    } catch (err: unknown) {
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: handleApiError(err),
+      });
+    } finally {
+      setLoading(false);
     }
-    return (
-        <>
-            <UpdateUserForm onSubmit={handleSubmit} handleDeleteUser={handleDeleteUser} />
-            <Snackbar
-                open={open}
-                autoHideDuration={5000}
-                onClose={handleClose}
-            >
-                {success ? (< Alert severity="success">
-                    <AlertTitle>Success</AlertTitle>
-                    {success}        </Alert >) :
-                    (< Alert severity="error">
-                        <AlertTitle>Error</AlertTitle>
-                        {error}        </Alert >)}
-            </Snackbar>
-        </>
-    )
-}
+  };
+  return (
+    <Box >
+      <UpdateUserForm
+        onSubmit={handleSubmit}
+        onDelete={onDelete}
+        loading={loading}
+      />
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={5000}
+        onClose={handleClose}
+      >
+        <Alert severity={snackbar.severity}>
+          <AlertTitle>
+            {" "}
+            {snackbar.severity === "success" ? "Success" : "Error"}
+          </AlertTitle>
+          {snackbar.message}{" "}
+        </Alert>
+      </Snackbar>
+    </Box>
+  );
+};
