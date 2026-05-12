@@ -8,15 +8,12 @@ export type User = {
 export type UserInGroup = {
   id: number;
   username: string;
-<<<<<<< HEAD
-=======
   email: string;
 };
 
 export type UpdateUserDto = {
   username: string;
   email: string;
->>>>>>> client/group-page
 };
 
 export type UserDetails = {
@@ -25,16 +22,12 @@ export type UserDetails = {
   groups: GroupData[];
 };
 
-<<<<<<< HEAD
 export type UserIdAndName = {
   id: number;
   username: string;
 };
 
 export type UserInExpense = {
-=======
-export type UserToAdd = {
->>>>>>> client/group-page
   id: number;
   username: string;
 };

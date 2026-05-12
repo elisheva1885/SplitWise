@@ -2,6 +2,7 @@ import type {
   CreateExpenseDto,
   ExpenseInGroup,
   OptimizedExpense,
+  UpdateExpenseData,
 } from "../types/expense.type";
 import api from "./client.api";
 
@@ -25,6 +26,16 @@ export async function deleteExpense(
   expenseId: number,
 ): Promise<{ message: string }> {
   const { data } = await api.delete(`/expense/${expenseId}`);
+  console.log(data);
+  return data;
+}
+
+
+export async function updateExpense(
+  expenseId: number,
+  expenseData: UpdateExpenseData
+): Promise<ExpenseInGroup> {
+  const { data } = await api.patch(`/expense/${expenseId}`, expenseData);
   console.log(data);
   return data;
 }

@@ -10,7 +10,7 @@ import {
   type UpdateGroupData,
 } from "../schemas/group-schemas";
 
-type AddGroupMemberFormProps = {
+type UpdateGroupFormProps = {
   onSubmit: (data: UpdateGroupData) => void;
   setDialogOpen: (open: boolean) => void;
   group: GroupData | null;
@@ -19,7 +19,7 @@ type AddGroupMemberFormProps = {
 export const UpdateGroupForm = ({
   onSubmit,
   group,
-}: AddGroupMemberFormProps) => {
+}: UpdateGroupFormProps) => {
   const {
     register,
     handleSubmit,

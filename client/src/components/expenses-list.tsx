@@ -18,9 +18,13 @@ import AlertTitle from "@mui/material/AlertTitle";
 import { useUserContext } from "../store/use-user.context";
 import { AddExpensesFrom } from "./add-expense-form";
 import type { AddExpenseData } from "../schemas/expense-schema";
-import { createExpense, deleteExpense } from "../api/expense.api";
+import { createExpense, deleteExpense, updateExpense } from "../api/expense.api";
 import CircularProgress from "@mui/material/CircularProgress";
 import Fab from "@mui/material/Fab";
+import Dialog from "@mui/material/Dialog";
+import Box from "@mui/material/Box";
+import { UpdateExpenseForm } from "./update-expense-form";
+import { type ExpenseInGroup, type UpdateExpenseData } from "../types/expense.type";
 
 type ExpensesListProps = {
   group: GroupData | null;
@@ -31,6 +35,8 @@ export const ExpensesList = ({ group, setGroup }: ExpensesListProps) => {
   const [success, setSuccess] = useState<string>("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const { user } = useUserContext();
+  const [updateExpenseDialog, setUpdateExpenseDialog] = useState(false);
+  const [expenseForUpdate, setExpenseForUpdate] = useState<ExpenseInGroup>();
 
   const addExpenseToGroup = async (expenseData: AddExpenseData) => {
     if (!group?.id) {
@@ -97,21 +103,30 @@ export const ExpensesList = ({ group, setGroup }: ExpensesListProps) => {
     }
   };
 
-  const updateExpense = async (userId: number) => {
+  const updateGroupExpense = async (expenseId: number,expenseData: UpdateExpenseData) => {
     if (!group?.id) {
       setError("Group not loaded");
       setOpenSnackbar(true);
       return;
     }
     try {
-      const data = await deleteUserFromGroup(group.id, userId);
-      setGroup(data);
+      const data = await updateExpense(expenseId, expenseData);
+      const filteredExpenses = group.expenses.filter(
+        (expense) => expense.id !== expenseId,
+      );
+      setGroup({
+        ...group,
+        expenses: [...filteredExpenses, data],
+      });
       setSuccess("User removed successfully");
       setOpenSnackbar(true);
-    } catch (err) {
+    } catch (err) {      
       setError(handleApiError(err));
       setOpenSnackbar(true);
     }
+  };
+    const handleCloseDialog = () => {
+    setUpdateExpenseDialog(false);
   };
   const handleClose = () => {
     setOpenSnackbar(false);
@@ -135,10 +150,6 @@ export const ExpensesList = ({ group, setGroup }: ExpensesListProps) => {
               key={expense.id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-              {/* {setExpenseOwner(
-                expense.paidBy.id === user?.id ||
-                  expense.paidOn.id === user?.id,
-              )}  */}
               <TableCell component="th" scope="member" align="center">
                 {expense.cause}
               </TableCell>
@@ -148,35 +159,60 @@ export const ExpensesList = ({ group, setGroup }: ExpensesListProps) => {
               <TableCell align="center">
                 {(expense.paidBy.id === user?.id ||
                   expense.paidOn.id === user?.id) && (
-                  <IconButton
-                    onClick={() => updateExpense(expense.id)}
-                    sx={{
-                      backgroundColor: "white",
-                      padding: 0.2,
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                )}
+                    <IconButton
+                      onClick={() => {setUpdateExpenseDialog(true); setExpenseForUpdate(expense)}}
+                      sx={{
+                        backgroundColor: "white",
+                        padding: 0.2,
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  )}
               </TableCell>
               <TableCell align="center">
                 {(expense.paidBy.id === user?.id ||
                   expense.paidOn.id === user?.id) && (
-                  <IconButton
-                    onClick={() => deleteExpenseFromGroup(expense.id)}
-                    sx={{
-                      backgroundColor: "white",
-                      padding: 0.2,
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                )}
+                    <IconButton
+                      onClick={() => deleteExpenseFromGroup(expense.id)}
+                      sx={{
+                        backgroundColor: "white",
+                        padding: 0.2,
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  )}
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <Dialog open={updateExpenseDialog} onClose={handleCloseDialog}>
+              <Box style={{ backgroundColor: "#2e3136" }}>
+                {/* <CloseIcon
+                  onClick={handleCloseDialog}
+                  sx={{
+                    backgroundColor: "#2e3136",
+                    color: "white",
+                    position: "absolute",
+                    insetInlineEnd: 3,
+                    cursor: "pointer",
+                  }}
+                /> */}
+      
+                <br />
+      
+                <Box sx={{ textAlign: "center", padding: "8px" }}>
+                  <UpdateExpenseForm
+                    setDialogOpen={setUpdateExpenseDialog}
+                    onSubmit={updateGroupExpense}
+                  expense={expenseForUpdate}
+                  groupMembers={group?.members}
+                  />
+                </Box>
+              </Box>
+            </Dialog>
       <Snackbar
         open={openSnackbar}
         autoHideDuration={5000}
