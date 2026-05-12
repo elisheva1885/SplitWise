@@ -1,0 +1,32 @@
+import type { UserData } from "../types/auth.types";
+import api from "./client.api";
+import type {
+  UpdateUserDto,
+  UserDetails,
+  UserToAdd,
+} from "../types/user.types";
+
+export async function updateUser(userData: UpdateUserDto): Promise<UserData> {
+  const { data } = await api.patch("/user", userData);
+  console.log(data);
+  return data;
+}
+
+export async function deleteUser(): Promise<number> {
+  const res = await api.delete("/user");
+  console.log(res);
+  return res.status;
+}
+
+export async function getUserDetails(): Promise<UserDetails> {
+  const { data } = await api.get(`/user`);
+  console.log(data);
+  return data;
+}
+
+export async function getAllUsers(startUsername: string): Promise<UserToAdd[]> {
+
+  const { data } = await api.get(`/user/all?query=${startUsername}`);
+  console.log(data);
+  return data;
+}

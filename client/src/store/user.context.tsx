@@ -5,18 +5,17 @@ import { logoutUser } from "../api/auth.api";
 import { useGroupContext } from "./use-group.context";
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const { setGroups } = useGroupContext()
+  const { setGroups } = useGroupContext();
   const [user, setUser] = useState<UserData | null>(null);
   const logout = () => {
     logoutUser();
     setUser(null);
-    setGroups([])
+    setGroups([]);
   };
 
   return (
     <UserContext.Provider value={{ user, setUser, logout }}>
       {children}
     </UserContext.Provider>
-  )
-
-}
+  );
+};

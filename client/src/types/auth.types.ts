@@ -24,7 +24,7 @@ export type ForgetPasswordFormData = {
   email: string;
 };
 export type UserData = {
-  id:number;
+  id: number;
   username: string;
   email: string;
 };

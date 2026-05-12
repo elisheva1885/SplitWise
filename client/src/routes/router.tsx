@@ -28,9 +28,9 @@ const router = createBrowserRouter([
             children: [
               {
                 path: ":id",
-                element: <GroupDetails />
-              }
-            ]
+                element: <GroupDetails />,
+              },
+            ],
           },
         ],
       },

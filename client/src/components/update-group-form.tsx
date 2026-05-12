@@ -1,50 +1,64 @@
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import Typography from '@mui/material/Typography';
-import InputLabel from '@mui/material/InputLabel';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import type { GroupData } from '../types/group.types';
-import { UpdateGroupSchema, type UpdateGroupData } from '../schemas/group-schemas';
-
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import Typography from "@mui/material/Typography";
+import InputLabel from "@mui/material/InputLabel";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import type { GroupData } from "../types/group.types";
+import {
+  UpdateGroupSchema,
+  type UpdateGroupData,
+} from "../schemas/group-schemas";
 
 type AddGroupMemberFormProps = {
-    onSubmit: (data: UpdateGroupData) => void,
-    setDialogOpen: (open: boolean) => void;
-    group: GroupData | null
-}
+  onSubmit: (data: UpdateGroupData) => void;
+  setDialogOpen: (open: boolean) => void;
+  group: GroupData | null;
+};
 
-export const UpdateGroupForm = ({ onSubmit, group}: AddGroupMemberFormProps) => {
+export const UpdateGroupForm = ({
+  onSubmit,
+  group,
+}: AddGroupMemberFormProps) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UpdateGroupData>({
+    resolver: zodResolver(UpdateGroupSchema),
+    mode: "onChange",
+  });
 
-     const {
-        register,
-        handleSubmit,
-        formState: { errors },
-      } = useForm<UpdateGroupData>({
-        resolver: zodResolver(UpdateGroupSchema),
-        mode: "onChange",
-      });
-
-
-    return (
-        <>
-           <form onSubmit={handleSubmit(onSubmit)} style={{ backgroundColor: '#405a4e' }}>
-                <Typography sx={{ color: 'white' }}>Update Group</Typography>
-                <br />
-                <InputLabel >Group Name</InputLabel>
-                <TextField type='text' size='small' variant="outlined"
-                    {...register('name')} error={!!errors.name}
-                    helperText={errors.name?.message} defaultValue={group?.name}
-                />
-                <InputLabel >Description</InputLabel>
-                <TextField type='text' size='medium'  {...register('description')} error={!!errors.description}
-                    helperText={errors.description?.message} defaultValue={group?.description}/>
-                <br />
-                <Button type='submit'>Save Changes</Button>
-            </form>
-        </>
-    )
-
-
-}
+  return (
+    <>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        style={{ backgroundColor: "#405a4e" }}
+      >
+        <Typography sx={{ color: "white" }}>Update Group</Typography>
+        <br />
+        <InputLabel>Group Name</InputLabel>
+        <TextField
+          type="text"
+          size="small"
+          variant="outlined"
+          {...register("name")}
+          error={!!errors.name}
+          helperText={errors.name?.message}
+          defaultValue={group?.name}
+        />
+        <InputLabel>Description</InputLabel>
+        <TextField
+          type="text"
+          size="medium"
+          {...register("description")}
+          error={!!errors.description}
+          helperText={errors.description?.message}
+          defaultValue={group?.description}
+        />
+        <br />
+        <Button type="submit">Save Changes</Button>
+      </form>
+    </>
+  );
+};
