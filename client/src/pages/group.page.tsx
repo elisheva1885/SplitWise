@@ -26,7 +26,9 @@ import { handleApiError } from "../helpers/handle-api-error.helper";
 export const GroupPage = () => {
   const { groups, setGroups } = useGroupContext();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [addLoading, setAddLoading] = useState<boolean>(false);
+  const [getLoading, setGetLoading] = useState<boolean>(false);
+
   const [snackbar, setSnackbar] = useState<SnackbarState>({
     open: false,
     severity: "success",
@@ -40,7 +42,7 @@ export const GroupPage = () => {
   const addGroup = async (groupData: AddGroupData) => {
 
     try {
-      setLoading(true)
+      setAddLoading(true)
       const data = await createGroup(groupData);
       setGroups([...groups, data]);
       setSnackbar({
@@ -55,7 +57,8 @@ export const GroupPage = () => {
         message: handleApiError(err),
       });
     } finally {
-      setLoading(false);
+      setAddLoading(false);
+      setOpen(false);
     }
   };
   const DrawerList = (
@@ -77,7 +80,7 @@ export const GroupPage = () => {
       </List>
       <Divider />
       <br />
-      <Button sx={{ background: "black" }} onClick={() => setOpen(true)} disabled={loading}>
+      <Button sx={{ background: "black" }} onClick={() => setOpen(true)} disabled={addLoading}>
         + New Group
       </Button>
     </Box>
@@ -87,9 +90,22 @@ export const GroupPage = () => {
     setOpen(false);
   };
   const getGroups = async () => {
-    const data = await getUserDetails();
-    console.log("groups ", data);
-    setGroups(data.groups);
+    try {
+      setGetLoading(true);
+      const data = await getUserDetails();
+      setGroups(data.groups);
+
+    }
+    catch (err) {
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: handleApiError(err),
+      });
+    } finally {
+      setGetLoading(false);
+      setOpen(false);
+    }
   };
   const handleClose = () => {
     setSnackbar((prev) => ({

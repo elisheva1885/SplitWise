@@ -6,7 +6,11 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
-import { addUserToGroup, getGroupDetails, updateGroup } from "../api/group.api";
+import {
+  addUserToGroup,
+  getGroupDetails,
+  updateGroup,
+} from "../api/group.api";
 import Button from "@mui/material/Button";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import EditIcon from "@mui/icons-material/Edit";
@@ -27,6 +31,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Card from "@mui/material/Card";
 import Fab from "@mui/material/Fab";
 import Chip from "@mui/material/Chip";
+import IconButton from "@mui/material/IconButton";
 
 export const GroupDetails = () => {
   const { id } = useParams();
@@ -40,7 +45,9 @@ export const GroupDetails = () => {
 
   const [isOwner, setIsOwner] = useState<boolean>(false);
 
-  const [loading, setLoading] = useState(false);
+  const [loadingGroup, setLoadingGroup] = useState(false);
+  const [loadingAddMember, setLoadingAddMember] = useState(false);
+  const [loadingUpdateGroup, setLoadingUpdateGroup] = useState(false);
 
   const [snackbar, setSnackbar] = useState<SnackbarState>({
     open: false,
@@ -50,7 +57,7 @@ export const GroupDetails = () => {
 
   const getGroupDetailsById = async (id: number) => {
     try {
-      setLoading(true);
+      setLoadingGroup(true);
 
       const data = await getGroupDetails(id);
 
@@ -63,7 +70,7 @@ export const GroupDetails = () => {
         message: handleApiError(err),
       });
     } finally {
-      setLoading(false);
+      setLoadingGroup(false);
     }
   };
 
@@ -91,7 +98,7 @@ export const GroupDetails = () => {
     }
 
     try {
-      setLoading(true);
+      setLoadingAddMember(true);
 
       const data = await addUserToGroup(group.id, userId);
 
@@ -109,7 +116,7 @@ export const GroupDetails = () => {
         message: handleApiError(err),
       });
     } finally {
-      setLoading(false);
+      setLoadingAddMember(false);
     }
   };
 
@@ -125,7 +132,7 @@ export const GroupDetails = () => {
     }
 
     try {
-      setLoading(true);
+      setLoadingUpdateGroup(true);
 
       const data = await updateGroup(group.id, groupData);
 
@@ -145,7 +152,7 @@ export const GroupDetails = () => {
         message: handleApiError(err),
       });
     } finally {
-      setLoading(false);
+      setLoadingUpdateGroup(false);
     }
   };
 
@@ -159,7 +166,7 @@ export const GroupDetails = () => {
     getGroupDetailsById(Number(id));
   }, [id]);
 
-  if (loading && !group) {
+  if (loadingGroup && !group) {
     return (
       <Box
         sx={{
@@ -186,44 +193,53 @@ export const GroupDetails = () => {
         <Typography sx={{ fontSize: "xx-large" }}>
           {group?.name}
         </Typography>
-
-        {isOwner && (
-          <EditIcon
-            onClick={updateGroupInfo}
-            sx={{
-              cursor: loading ? "default" : "pointer",
-              opacity: loading ? 0.5 : 1,
-            }}
-          />
-        )}
+        <IconButton>
+          {isOwner && (
+            <EditIcon
+              onClick={updateGroupInfo}
+              sx={{
+                cursor: loadingUpdateGroup ? "default" : "pointer",
+                opacity: loadingUpdateGroup ? 0.5 : 1,
+              }}
+            />
+          )}
+        </IconButton>
       </Card>
 
-
-      {group?.owner && <Chip
-        avatar={
-          <Avatar sx={{
-            backgroundColor: "black", width: '70px',height:'70px'
-          }}>
-            <Typography sx={{ fontSize: "x-small" , fontWeight: "bold",
-            color: 'white' }}>
-              OWNER
-            </Typography>
-          </Avatar>
-        }
-        label={group?.owner.username}
-        sx={{
-          height: '44px',
-          px: 1,
-           "& .MuiChip-avatar": {
-        width: 38,
-        height: 38,
-        borderRadius: "16px",
-
-      },
-        }}
-        variant="outlined"
-      >
-      </Chip>}
+      {group?.owner && (
+        <Chip
+          avatar={
+            <Avatar
+              sx={{
+                backgroundColor: "black",
+                width: "70px",
+                height: "70px",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "x-small",
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                OWNER
+              </Typography>
+            </Avatar>
+          }
+          label={group?.owner.username}
+          sx={{
+            height: "44px",
+            px: 1,
+            "& .MuiChip-avatar": {
+              width: 38,
+              height: 38,
+              borderRadius: "16px",
+            },
+          }}
+          variant="outlined"
+        ></Chip>
+      )}
 
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
         <GroupMembersList
@@ -238,9 +254,13 @@ export const GroupDetails = () => {
         <Fab
           onClick={() => setOpenAddUserDialog(true)}
           aria-label="Add group member"
-          disabled={loading}
+          disabled={loadingAddMember}
         >
-          {loading ? <CircularProgress size={20} /> : <GroupAddIcon />}
+          {loadingAddMember ? (
+            <CircularProgress size={20} />
+          ) : (
+            <GroupAddIcon />
+          )}
         </Fab>
       )}
 
@@ -256,8 +276,6 @@ export const GroupDetails = () => {
               cursor: "pointer",
             }}
           />
-
-          <br />
 
           <Box sx={{ textAlign: "center", padding: "8px" }}>
             <AddGroupMemberForm
@@ -280,9 +298,6 @@ export const GroupDetails = () => {
               cursor: "pointer",
             }}
           />
-
-          <br />
-
           <Box sx={{ textAlign: "center", padding: "8px" }}>
             <UpdateGroupForm
               setDialogOpen={setUpdateUserDialog}

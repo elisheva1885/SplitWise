@@ -65,8 +65,12 @@ export const AddGroupMemberForm = ({
     }));
   };
   useEffect(() => {
+  const timeout = setTimeout(() => {
     getUsers();
-  }, [inputValue]);
+  }, 300);
+
+  return () => clearTimeout(timeout);
+}, [inputValue]);
   return (
     <>
       <form onSubmit={handleSubmit} style={{ backgroundColor: "#2e3136" }}>

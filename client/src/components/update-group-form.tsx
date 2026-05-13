@@ -9,6 +9,7 @@ import {
   UpdateGroupSchema,
   type UpdateGroupData,
 } from "../schemas/group-schemas";
+import { useEffect } from "react";
 
 type AddGroupMemberFormProps = {
   onSubmit: (data: UpdateGroupData) => void;
@@ -28,7 +29,16 @@ export const UpdateGroupForm = ({
     resolver: zodResolver(UpdateGroupSchema),
     mode: "onChange",
   });
+  const { reset } = useForm();
 
+  useEffect(() => {
+    if (group) {
+      reset({
+        name: group.name,
+        description: group.description,
+      });
+    }
+  }, [group]);
   return (
     <>
       <form
@@ -45,7 +55,6 @@ export const UpdateGroupForm = ({
           {...register("name")}
           error={!!errors.name}
           helperText={errors.name?.message}
-          defaultValue={group?.name}
         />
         <InputLabel>Description</InputLabel>
         <TextField
@@ -54,7 +63,6 @@ export const UpdateGroupForm = ({
           {...register("description")}
           error={!!errors.description}
           helperText={errors.description?.message}
-          defaultValue={group?.description}
         />
         <br />
         <Button type="submit">Save Changes</Button>
