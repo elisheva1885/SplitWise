@@ -7,7 +7,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useGroupContext } from "../store/use-group.context";
 import { getUserDetails } from "../api/user.api";
 import { useNavigate } from "react-router";
@@ -41,7 +41,7 @@ export const GroupPage = () => {
   };
   const addGroup = async (groupData: AddGroupData) => {
     try {
-      setAddLoading(true)
+      setAddLoading(true);
       const data = await createGroup(groupData);
       setGroups([...groups, data]);
       setSnackbar({
@@ -65,24 +65,27 @@ export const GroupPage = () => {
       <List>
         <Typography>My Groups</Typography>
         {groups.map((group) => (
-          <ListItem key={group.id} >
-          <ListItemButton onClick={()=>goToGroup(group.id)} sx={{display: 'flex' , justifyContent: 'center'}}>
-          <Chip  label={group.name} >  
-          </Chip>
-          </ListItemButton>
+          <ListItem key={group.id}>
+            <ListItemButton
+              onClick={() => goToGroup(group.id)}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <Chip label={group.name}></Chip>
+            </ListItemButton>
           </ListItem>
         ))}
-
- 
       </List>
       <Divider />
       <br />
-      <Button sx={{ background: "black" }} onClick={() => setOpen(true)} disabled={addLoading}>
+      <Button
+        sx={{ background: "black" }}
+        onClick={() => setOpen(true)}
+        disabled={addLoading}
+      >
         + New Group
       </Button>
     </Box>
   );
-
 
   const handleCloseDialog = () => {
     setOpen(false);
@@ -94,29 +97,30 @@ export const GroupPage = () => {
       open: false,
     }));
   };
- useEffect(() => {
+  useEffect(() => {
     const getGroups = async () => {
-    try {
-      setGetLoading(true);
-      const data = await getUserDetails();
-      setGroups(data.groups);
-    }
-    catch (err) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: handleApiError(err),
-      });
-    } finally {
-      setGetLoading(false);
-    }
-  };
+      try {
+        setGetLoading(true);
+        const data = await getUserDetails();
+        setGroups(data.groups);
+      } catch (err) {
+        setSnackbar({
+          open: true,
+          severity: "error",
+          message: handleApiError(err),
+        });
+      } finally {
+        setGetLoading(false);
+      }
+    };
 
-  getGroups();
-},[setGroups]);
+    getGroups();
+  }, [setGroups]);
   return (
-      <Box>
-        {getLoading? <CircularProgress aria-label="Loading…" />:(
+    <Box>
+      {getLoading ? (
+        <CircularProgress aria-label="Loading…" />
+      ) : (
         <Drawer
           variant="permanent"
           sx={{
@@ -130,39 +134,39 @@ export const GroupPage = () => {
         >
           {DrawerList}
         </Drawer>
-        )}
-        <Box style={{ marginLeft: 260, padding: 16 }}>
-          <Outlet />
-        </Box>
-        <Dialog open={open} onClose={handleCloseDialog}>
-          <Box style={{ backgroundColor: "#2e3136" }}>
-            <CloseIcon
-              onClick={handleCloseDialog}
-              sx={{
-                backgroundColor: "#2e3136",
-                color: "white",
-                position: "absolute",
-                insetInlineEnd: 3,
-              }}
-            />
-            <br />
-            <Box sx={{ textAlign: "center", padding: "8px" }}>
-              <AddGroupForm onSubmit={addGroup} />
-            </Box>
-          </Box>
-        </Dialog>
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={5000}
-          onClose={handleClose}
-        >
-          <Alert severity={snackbar.severity}>
-            <AlertTitle>
-              {snackbar.severity === "success" ? "Success" : "Error"}
-            </AlertTitle>
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
+      )}
+      <Box style={{ marginLeft: 260, padding: 16 }}>
+        <Outlet />
       </Box>
+      <Dialog open={open} onClose={handleCloseDialog}>
+        <Box style={{ backgroundColor: "#2e3136" }}>
+          <CloseIcon
+            onClick={handleCloseDialog}
+            sx={{
+              backgroundColor: "#2e3136",
+              color: "white",
+              position: "absolute",
+              insetInlineEnd: 3,
+            }}
+          />
+          <br />
+          <Box sx={{ textAlign: "center", padding: "8px" }}>
+            <AddGroupForm onSubmit={addGroup} />
+          </Box>
+        </Box>
+      </Dialog>
+      <Snackbar
+        open={snackbar.open}
+autoHideDuration={2500}
+        onClose={handleClose}
+      >
+        <Alert severity={snackbar.severity}>
+          <AlertTitle>
+            {snackbar.severity === "success" ? "Success" : "Error"}
+          </AlertTitle>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </Box>
   );
 };

@@ -37,7 +37,7 @@ export const AddGroupMemberForm = ({
     setDialogOpen(false);
   };
 
-  const getUsers =useCallback(async () => {
+  const getUsers = useCallback(async () => {
     try {
       const data = await getAllUsers(inputValue);
       setUsers(data);
@@ -55,7 +55,7 @@ export const AddGroupMemberForm = ({
     } finally {
       setLoading(false);
     }
-  },[inputValue]);
+  }, [inputValue]);
   const handleClose = () => {
     setSnackbar((prev) => ({
       ...prev,
@@ -63,12 +63,12 @@ export const AddGroupMemberForm = ({
     }));
   };
   useEffect(() => {
-  const timeout = setTimeout(() => {
-    getUsers();
-  }, 300);
+    const timeout = setTimeout(() => {
+      getUsers();
+    }, 300);
 
-  return () => clearTimeout(timeout);
-}, [inputValue, getUsers]);
+    return () => clearTimeout(timeout);
+  }, [inputValue, getUsers]);
   return (
     <>
       <form onSubmit={handleSubmit} style={{ backgroundColor: "#2e3136" }}>
@@ -82,10 +82,12 @@ export const AddGroupMemberForm = ({
             setInputValue(newInputValue);
           }}
         />
-        <Button type="submit" disabled={loading}>Add</Button>
+        <Button type="submit" disabled={loading}>
+          Add
+        </Button>
         <Snackbar
           open={snackbar.open}
-          autoHideDuration={5000}
+  autoHideDuration={2500}
           onClose={handleClose}
         >
           <Alert severity={snackbar.severity}>

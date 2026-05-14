@@ -35,7 +35,7 @@ export const UpdateGroupForm = ({
     if (group) {
       reset({
         name: group.name,
-        description: group.description || '',
+        description: group.description || "",
       });
     }
   }, [group, reset]);

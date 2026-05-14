@@ -1,9 +1,7 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import { useState } from "react";
-import { deleteUserFromGroup, updateGroupOwner } from "../api/group.api";
 import type { GroupData } from "../types/group.types";
-import { handleApiError } from "../helpers/handle-api-error.helper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -16,167 +14,96 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import Typography from "@mui/material/Typography";
-import type { SnackbarState } from "../types/snackbar.types";
 import { useGroupDetails } from "../hooks/use-group-details";
 type GroupMembersListProps = {
-    group: GroupData | null;
-    // setGroup: (group: GroupData) => void;
-    isOwner: boolean;
+  group: GroupData | null;
+  // setGroup: (group: GroupData) => void;
+  isOwner: boolean;
 };
-export const GroupMembersList = ({
-    group,
-    // setGroup,
-    isOwner,
-}: GroupMembersListProps) => {
-    const [loading, setLoading] = useState<boolean>(false);
-    const [snackbar, setSnackbar] = useState<SnackbarState>({
-        open: false,
-        severity: "success",
-        message: "",
-    });
-      const { 
-        actions
-      } = useGroupDetails()
-    
-    // const deleteGroupMember = async (userId: number) => {
-    //     try {
-    //         if (!group?.id) {
-    //             setSnackbar({
-    //                 open: true,
-    //                 severity: "error",
-    //                 message: "Group not loaded",
-    //             });
-    //             return;
-    //         }
-    //         setLoading(true);
-    //         const data = await deleteUserFromGroup(group?.id, userId);
-    //         setSnackbar({
-    //             open: true,
-    //             severity: "success",
-    //             message: "User removed successfully!",
-    //         });
-    //         group = data;
-    //         // setGroup(data);
-    //     } catch (err) {
-    //         setSnackbar({
-    //             open: true,
-    //             severity: "error",
-    //             message: handleApiError(err),
-    //         });
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-    // const updateToGroupOwner = async (userId: number) => {
-    //     try {
-    //         if (!group?.id) {
-    //             setSnackbar({
-    //                 open: true,
-    //                 severity: "error",
-    //                 message: "Group not loaded",
-    //             });
-    //             return;
-    //         }
-    //         setLoading(true);
+export const GroupMembersList = ({ group, isOwner }: GroupMembersListProps) => {
+  const [loading] = useState<boolean>(false);
 
-    //         const data = await updateGroupOwner(group?.id, userId);
-    //         // setGroup(data);
-    //         group = data;
-    //         setSnackbar({
-    //             open: true,
-    //             severity: "success",
-    //             message: "group admin updated successfully!",
-    //         });
-    //     } catch (err) {
-    //         setSnackbar({
-    //             open: true,
-    //             severity: "error",
-    //             message: handleApiError(err),
-    //         });
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-    const handleClose = () => {
-        setSnackbar((prev) => ({
-            ...prev,
-            open: false,
-        }));
-    };
-    return (
-        <TableContainer component={Paper} sx={{
-            overflowX: 'auto'
-            , width: '100%'
-        }}>
-            <Table sx={{
-                minWidth: 650,
-            }}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell align="center">Username</TableCell>
-                        <TableCell align="center">email</TableCell>
-                        {isOwner && <TableCell align="center"></TableCell>}
-                        {isOwner && <TableCell align="center"></TableCell>}
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {group?.members?.map((member) => (
-                        <TableRow
-                            key={member.id}
-                            sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                        >
-                            <TableCell component="th" scope="member" align="center">
-                                {member.username}
-                            </TableCell>
-                            <TableCell align="center">{member.email}</TableCell>
-                            {isOwner && (<TableCell align="center">
+  const { snackbar,handleCloseSnackbar, actions } = useGroupDetails();
 
-                                <IconButton
-                                    onClick={() => actions.deleteGroupMember(member.id)}
-                                    disabled={loading}
-                                    sx={{
-                                        backgroundColor: "white",
-                                        padding: 0.2,
-                                    }}
-                                >
-                                    <DeleteIcon />
-                                </IconButton>
-
-                            </TableCell>
-                            )}
-                            {isOwner && (
-                                <TableCell align="center">
-                                    <IconButton
-                                        onClick={() => actions.updateToGroupOwner(member.id)}
-                                        disabled={loading || member.id === group?.owner.id}
-                                        sx={{
-                                            backgroundColor: "white",
-                                            padding: 0.2,
-                                        }}
-                                    >
-                                        <AdminPanelSettingsIcon />
-                                        <Typography sx={{ fontSize: "x-small" }}>
-                                            to Admin
-                                        </Typography>
-                                    </IconButton>
-                                </TableCell>
-                                )}
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            <Snackbar
-                open={snackbar.open}
-                autoHideDuration={5000}
-                onClose={handleClose}
+  
+  return (
+    <TableContainer
+      component={Paper}
+      sx={{
+        overflowX: "auto",
+        width: "100%",
+      }}
+    >
+      <Table
+        sx={{
+          minWidth: 650,
+        }}
+      >
+        <TableHead>
+          <TableRow>
+            <TableCell align="center">Username</TableCell>
+            <TableCell align="center">email</TableCell>
+            {isOwner && <TableCell align="center"></TableCell>}
+            {isOwner && <TableCell align="center"></TableCell>}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {group?.members?.map((member) => (
+            <TableRow
+              key={member.id}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-                <Alert severity={snackbar.severity}>
-                    <AlertTitle>
-                        {snackbar.severity === "success" ? "Success" : "Error"}
-                    </AlertTitle>
-                    {snackbar.message}
-                </Alert>
-            </Snackbar>
-        </TableContainer >
-    );
+              <TableCell component="th" scope="member" align="center">
+                {member.username}
+              </TableCell>
+              <TableCell align="center">{member.email}</TableCell>
+              {isOwner && (
+                <TableCell align="center">
+                  <IconButton
+                    onClick={() => actions.deleteGroupMember(member.id)}
+                    disabled={loading}
+                    sx={{
+                      backgroundColor: "white",
+                      padding: 0.2,
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              )}
+              {isOwner && (
+                <TableCell align="center">
+                  <IconButton
+                    onClick={() => actions.updateToGroupOwner(member.id)}
+                    disabled={loading || member.id === group?.owner.id}
+                    sx={{
+                      backgroundColor: "white",
+                      padding: 0.2,
+                    }}
+                  >
+                    <AdminPanelSettingsIcon />
+                    <Typography sx={{ fontSize: "x-small" }}>
+                      to Admin
+                    </Typography>
+                  </IconButton>
+                </TableCell>
+              )}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <Snackbar
+        open={snackbar.open}
+autoHideDuration={2500}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity={snackbar.severity}>
+          <AlertTitle>
+            {snackbar.severity === "success" ? "Success" : "Error"}
+          </AlertTitle>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </TableContainer>
+  );
 };

@@ -47,6 +47,8 @@ export async function deleteUserFromGroup(
   groupId: number,
   userId: number,
 ): Promise<GroupData> {
+  console.log(groupId, userId);
+
   const { data } = await api.patch(`/group/${groupId}/${userId}`);
   return data;
 }

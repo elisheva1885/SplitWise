@@ -20,32 +20,27 @@ import { useGroupDetails } from "../hooks/use-group-details";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
+import { useGroupContext } from "../store/use-group.context";
 
 export const GroupDetails = () => {
   const { id } = useParams();
+  const {group} = useGroupContext()
   const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
   const [updateUserDialog, setUpdateUserDialog] = useState(false);
-  const { snackbar, setSnackbar, group,
+  const {
+    snackbar,
+    handleCloseSnackbar,
     loadingGroup,
     loadingAddMember,
     loadingUpdateGroup,
     loadingDeleteGroup,
     isOwner,
-    actions
-
-  } = useGroupDetails()
-
+    actions,
+  } = useGroupDetails();
 
   const handleCloseDialog = () => {
     setOpenAddUserDialog(false);
     setUpdateUserDialog(false);
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar((prev) => ({
-      ...prev,
-      open: false,
-    }));
   };
 
 
@@ -58,7 +53,7 @@ export const GroupDetails = () => {
     const fetchGroup = async () => {
       await actions.getGroupDetailsById(Number(id));
     };
-    fetchGroup()
+    fetchGroup();
   }, [id]);
 
   if (loadingGroup && !group) {
@@ -75,27 +70,29 @@ export const GroupDetails = () => {
   }
 
   return (
-    <Box sx={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      gap: 2.5,
-      flexDirection: 'column',
-      width: '100%',
-    }}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 2.5,
+        flexDirection: "column",
+        width: "100%",
+      }}
+    >
       <Card
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           gap: 0.5,
-          textAlign: 'center'
+          textAlign: "center",
         }}
       >
-        <Typography sx={{ fontSize: "xx-large", padding: '8px' }}>
+        <Typography sx={{ fontSize: "xx-large", padding: "8px" }}>
           {group?.name}
         </Typography>
-        {isOwner &&
+        {isOwner && (
           <IconButton>
             <EditIcon
               onClick={updateGroupInfo}
@@ -105,8 +102,8 @@ export const GroupDetails = () => {
               }}
             />
           </IconButton>
-        }
-        {isOwner &&
+        )}
+        {isOwner && (
           <IconButton disabled={loadingDeleteGroup}>
             <DeleteIcon
               onClick={actions.deleteGroupData}
@@ -116,7 +113,7 @@ export const GroupDetails = () => {
               }}
             />
           </IconButton>
-        }
+        )}
       </Card>
 
       {group?.owner && (
@@ -154,7 +151,7 @@ export const GroupDetails = () => {
         ></Chip>
       )}
 
-      <Box sx={{ width: '100%' }}>
+      <Box sx={{ width: "100%" }}>
         <GroupMembersList
           group={group}
           // setGroup={setGroup}
@@ -168,11 +165,7 @@ export const GroupDetails = () => {
           aria-label="Add group member"
           disabled={loadingAddMember}
         >
-          {loadingAddMember ? (
-            <CircularProgress size={20} />
-          ) : (
-            <GroupAddIcon />
-          )}
+          {loadingAddMember ? <CircularProgress size={20} /> : <GroupAddIcon />}
         </Fab>
       )}
 
@@ -225,14 +218,12 @@ export const GroupDetails = () => {
 
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={5000}
+autoHideDuration={2500}
         onClose={handleCloseSnackbar}
       >
         <Alert severity={snackbar.severity}>
           <AlertTitle>
-            {snackbar.severity === "success"
-              ? "Success"
-              : "Error"}
+            {snackbar.severity === "success" ? "Success" : "Error"}
           </AlertTitle>
 
           {snackbar.message}
