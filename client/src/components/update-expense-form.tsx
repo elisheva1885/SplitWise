@@ -1,13 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import type { ExpenseInGroup, UpdateExpenseData } from "../types/expense.type";
 import Box from "@mui/material/Box";
-import type { SelectChangeEvent } from "@mui/material/Select";
-import { useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import type { UserInGroup } from "../types/user.types";
@@ -15,7 +13,7 @@ import { UpdateExpenseSchema } from "../schemas/expense-schema";
 
 type UpdateExpenseFormProps = {
     onSubmit: (expenseId: number, data: UpdateExpenseData) => void;
-      setDialogOpen: (open: boolean) => void;
+    setDialogOpen: (open: boolean) => void;
     expense: ExpenseInGroup | undefined;
     groupMembers: UserInGroup[] | undefined
 };
@@ -25,16 +23,8 @@ export const UpdateExpenseForm = ({
     expense,
     groupMembers
 }: UpdateExpenseFormProps) => {
-    const [paidBy, setPaidBy] = useState("");
-    const [paidOn, setPaidOn] = useState("");
-
-    const handleChangePaidBy = (event: SelectChangeEvent) => {
-        setPaidBy(event.target.value as string);
-    };
-    const handleChangePaidOn = (event: SelectChangeEvent) => {
-        setPaidOn(event.target.value as string);
-    };
     const {
+        control,
         register,
         handleSubmit,
         formState: { errors },
@@ -52,7 +42,10 @@ export const UpdateExpenseForm = ({
     return (
         <>
             <Box component='form'
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit((data)=>{
+                    if(!expense?.id) return
+                    onSubmit(expense?.id,data)
+                })}
                 style={{ backgroundColor: "#405a4e" }}
             >
                 <Typography sx={{ color: "white" }}>Update Group</Typography>
@@ -79,42 +72,50 @@ export const UpdateExpenseForm = ({
                 <br />
                 <Box sx={{ flex: 1, color: 'black' }}>
                     <InputLabel sx={{ color: 'black' }}>Paid By</InputLabel>
-                    <Select
-                        value={paidBy}
-                        {...register("paidBy")}
-                        label="Paid On"
-                        onChange={handleChangePaidBy}
-                        sx={{ width: "100%" }}
-                    >
-                        {groupMembers?.map((member) => {
-                            return (
-                                <MenuItem value={member.id} sx={{ color: 'black' }}
-                                >
-                                    {member.username}
-                                </MenuItem>
-                            );
-                        })}
-                    </Select>
+                    <Controller
+                        name="paidBy"
+                        control={control}
+                        render={({ field }) => (
+                            <Select
+                                {...field}
+                                label="Paid On"
+                                sx={{ width: "100%" }}
+                            >
+                                {groupMembers?.map((member) => {
+                                    return (
+                                        <MenuItem value={member.id} sx={{ color: 'black' }}
+                                        >
+                                            {member.username}
+                                        </MenuItem>
+                                    );
+                                })}
+                            </Select>
+                        )}
+                    />
                 </Box>
                 <br />
                 <Box sx={{ flex: 1, color: 'black' }}>
                     <InputLabel sx={{ color: 'black' }}>Paid On</InputLabel>
-                    <Select
-                        value={paidOn}
-                        {...register("paidOn")}
-                        label="Paid On"
-                        onChange={handleChangePaidOn}
-                        sx={{ width: "100%" }}
-                    >
-                        {groupMembers?.map((member) => {
-                            return (
-                                <MenuItem value={member.id} sx={{ color: 'black' }}
-                                >
-                                    {member.username}
-                                </MenuItem>
-                            );
-                        })}
-                    </Select>
+                    <Controller
+                        name="paidOn"
+                        control={control}
+                        render={({ field }) => (
+                            <Select
+                                {...field}
+                                label="Paid On"
+                                sx={{ width: "100%" }}
+                            >
+                                {groupMembers?.map((member) => {
+                                    return (
+                                        <MenuItem value={member.id} sx={{ color: 'black' }}
+                                        >
+                                            {member.username}
+                                        </MenuItem>
+                                    );
+                                })}
+                            </Select>
+                        )}
+                    />
                 </Box>
                 <Button type="submit">Save Changes</Button>
             </Box>
