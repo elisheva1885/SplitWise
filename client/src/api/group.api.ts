@@ -31,7 +31,7 @@ export async function updateGroupOwner(
 }
 
 export async function deleteGroup(groupId: number): Promise<number> {
-  const res = await api.delete(`/group/${groupId}`);
+  await api.delete(`/group/${groupId}`);
   return groupId;
 }
 

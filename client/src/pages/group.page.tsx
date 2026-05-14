@@ -5,8 +5,6 @@ import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import {  useEffect, useState } from "react";
@@ -25,7 +23,6 @@ import type { SnackbarState } from "../types/snackbar.types";
 import { handleApiError } from "../helpers/handle-api-error.helper";
 import CircularProgress from "@mui/material/CircularProgress";
 import Chip from "@mui/material/Chip";
-import IconButton from "@mui/material/IconButton";
 export const GroupPage = () => {
   const { groups, setGroups } = useGroupContext();
   const [open, setOpen] = useState(false);

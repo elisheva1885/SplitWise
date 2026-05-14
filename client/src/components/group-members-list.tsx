@@ -17,17 +17,16 @@ import AlertTitle from "@mui/material/AlertTitle";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import Typography from "@mui/material/Typography";
 import type { SnackbarState } from "../types/snackbar.types";
+import { useGroupDetails } from "../hooks/use-group-details";
 type GroupMembersListProps = {
     group: GroupData | null;
-    setGroup: (group: GroupData) => void;
+    // setGroup: (group: GroupData) => void;
     isOwner: boolean;
-    setIsOwner: (isOwner: boolean) => void;
 };
 export const GroupMembersList = ({
     group,
-    setGroup,
+    // setGroup,
     isOwner,
-    setIsOwner,
 }: GroupMembersListProps) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [snackbar, setSnackbar] = useState<SnackbarState>({
@@ -35,64 +34,69 @@ export const GroupMembersList = ({
         severity: "success",
         message: "",
     });
-    const deleteGroupMember = async (userId: number) => {
-        try {
-            if (!group?.id) {
-                setSnackbar({
-                    open: true,
-                    severity: "error",
-                    message: "Group not loaded",
-                });
-                return;
-            }
-            setLoading(true);
-            const data = await deleteUserFromGroup(group?.id, userId);
-            setSnackbar({
-                open: true,
-                severity: "success",
-                message: "User removed successfully!",
-            });
-            setGroup(data);
-        } catch (err) {
-            setSnackbar({
-                open: true,
-                severity: "error",
-                message: handleApiError(err),
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
-    const updateToGroupOwner = async (userId: number) => {
-        try {
-            if (!group?.id) {
-                setSnackbar({
-                    open: true,
-                    severity: "error",
-                    message: "Group not loaded",
-                });
-                return;
-            }
-            setLoading(true);
+      const { 
+        actions
+      } = useGroupDetails()
+    
+    // const deleteGroupMember = async (userId: number) => {
+    //     try {
+    //         if (!group?.id) {
+    //             setSnackbar({
+    //                 open: true,
+    //                 severity: "error",
+    //                 message: "Group not loaded",
+    //             });
+    //             return;
+    //         }
+    //         setLoading(true);
+    //         const data = await deleteUserFromGroup(group?.id, userId);
+    //         setSnackbar({
+    //             open: true,
+    //             severity: "success",
+    //             message: "User removed successfully!",
+    //         });
+    //         group = data;
+    //         // setGroup(data);
+    //     } catch (err) {
+    //         setSnackbar({
+    //             open: true,
+    //             severity: "error",
+    //             message: handleApiError(err),
+    //         });
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+    // const updateToGroupOwner = async (userId: number) => {
+    //     try {
+    //         if (!group?.id) {
+    //             setSnackbar({
+    //                 open: true,
+    //                 severity: "error",
+    //                 message: "Group not loaded",
+    //             });
+    //             return;
+    //         }
+    //         setLoading(true);
 
-            const data = await updateGroupOwner(group?.id, userId);
-            setIsOwner(group.owner.id === userId);
-            setGroup(data);
-            setSnackbar({
-                open: true,
-                severity: "success",
-                message: "group admin updated successfully!",
-            });
-        } catch (err) {
-            setSnackbar({
-                open: true,
-                severity: "error",
-                message: handleApiError(err),
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
+    //         const data = await updateGroupOwner(group?.id, userId);
+    //         // setGroup(data);
+    //         group = data;
+    //         setSnackbar({
+    //             open: true,
+    //             severity: "success",
+    //             message: "group admin updated successfully!",
+    //         });
+    //     } catch (err) {
+    //         setSnackbar({
+    //             open: true,
+    //             severity: "error",
+    //             message: handleApiError(err),
+    //         });
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
     const handleClose = () => {
         setSnackbar((prev) => ({
             ...prev,
@@ -128,7 +132,7 @@ export const GroupMembersList = ({
                             {isOwner && (<TableCell align="center">
 
                                 <IconButton
-                                    onClick={() => deleteGroupMember(member.id)}
+                                    onClick={() => actions.deleteGroupMember(member.id)}
                                     disabled={loading}
                                     sx={{
                                         backgroundColor: "white",
@@ -143,8 +147,8 @@ export const GroupMembersList = ({
                             {isOwner && (
                                 <TableCell align="center">
                                     <IconButton
-                                        onClick={() => updateToGroupOwner(member.id)}
-                                        disabled={loading || member.id === group.owner.id}
+                                        onClick={() => actions.updateToGroupOwner(member.id)}
+                                        disabled={loading || member.id === group?.owner.id}
                                         sx={{
                                             backgroundColor: "white",
                                             padding: 0.2,
