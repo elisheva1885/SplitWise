@@ -27,7 +27,7 @@ export class AuthController {
     const token = this.authService.generateToken(payload);
     res.cookie('access_token', token, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: 'strict',
     });
     return { username, email };

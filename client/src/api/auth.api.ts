@@ -3,7 +3,7 @@ import type {
   RegisterUserDto,
   UserData,
 } from "../types/auth.types";
-import api from "./client-api";
+import api from "./client.api";
 
 export async function loginUser(userData: LoginUserDto): Promise<UserData> {
   const { data } = await api.post("/user/login", userData);
@@ -14,5 +14,14 @@ export async function registerUser(
   userData: RegisterUserDto,
 ): Promise<UserData> {
   const { data } = await api.post("/user/register", userData);
+  return data;
+}
+
+export function logoutUser(): void {
+  api.post("/user/logout");
+}
+
+export async function getUserStatus(): Promise<UserData> {
+  const { data } = await api.get("/user/status");
   return data;
 }

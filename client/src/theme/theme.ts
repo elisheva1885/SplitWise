@@ -29,6 +29,7 @@ export const theme = createTheme({
         root: {
           backgroundColor: "transparent",
           color: "white",
+          fontSize: "11px",
         },
       },
     },

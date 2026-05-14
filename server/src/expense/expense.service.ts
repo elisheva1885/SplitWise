@@ -198,8 +198,8 @@ export class ExpenseService {
           if (result[k][i] > 0) {
             const min = Math.min(result[k][i], result[i][j]);
             if (j !== k) {
-  result[k][j] += min;
-}
+              result[k][j] += min;
+            }
             result[i][j] -= min;
             result[k][i] -= min;
 
