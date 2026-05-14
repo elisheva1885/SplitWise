@@ -8,10 +8,13 @@ import { GroupModule } from 'src/group/group.module';
 import { ExpenseValidator } from './expense.validator';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Expense]), forwardRef(() => UserModule),
-     forwardRef(() => GroupModule)],
+  imports: [
+    TypeOrmModule.forFeature([Expense]),
+    forwardRef(() => UserModule),
+    forwardRef(() => GroupModule),
+  ],
   controllers: [ExpenseController],
   providers: [ExpenseService, ExpenseValidator],
   exports: [ExpenseService],
 })
-export class ExpenseModule { }
+export class ExpenseModule {}

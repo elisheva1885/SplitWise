@@ -23,8 +23,8 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @Inject(forwardRef(() => ExpenseService))
-    private readonly expenseService: ExpenseService
-  ) { }
+    private readonly expenseService: ExpenseService,
+  ) {}
 
   async findByUsernameOrEmail(
     username: string,
@@ -128,27 +128,22 @@ export class UserService {
     if (!user) {
       throw new NotFoundException();
     }
-    console.log(user);
-    const groupsExpenses = await Promise.all(user.groups.map(async (group) => {
-      return await this.expenseService.getGroupExpense(group.uuid, user.uuid)
-    }))
-    console.log("expense: ", groupsExpenses);
-    const hasOpenDebts = groupsExpenses.some(groupResult =>
-      groupResult.some(expense =>
-        expense.paidByUser.uuid === userId || expense.paidOnUser.uuid === userId
-      )
+    const groupsExpenses = await Promise.all(
+      user.groups.map(async (group) => {
+        return await this.expenseService.getGroupExpense(group.uuid, user.uuid);
+      }),
     );
-    console.log(hasOpenDebts);
+    const hasOpenDebts = groupsExpenses.some((groupResult) =>
+      groupResult.some(
+        (expense) =>
+          expense.paidByUser.uuid === userId ||
+          expense.paidOnUser.uuid === userId,
+      ),
+    );
     if (hasOpenDebts) {
-      throw new BadRequestException('user still has open expenses')
+      throw new BadRequestException('user still has open expenses');
     }
-    //TODO: check if the user have any expense on this group
-    //if he has to throw BadRequestException
-    user.groups = [];
-    user.expensesPaid = [];
-    user.expensesToPay = [];
-    await this.userRepository.save(user);
     await this.userRepository.remove(user);
     return { message: 'user deleted successfully' };
   }
-}    
+}

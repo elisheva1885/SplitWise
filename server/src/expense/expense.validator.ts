@@ -12,8 +12,9 @@ import { UserService } from 'src/user/user.service';
 @Injectable()
 export class ExpenseValidator {
   constructor(
-        @Inject(forwardRef(() => UserService))
-    private readonly userService: UserService) {}
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
+  ) {}
 
   validateUsersInGroup(group: Group, userIds: number[]): void {
     if (!group.members)

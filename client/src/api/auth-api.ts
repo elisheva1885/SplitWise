@@ -14,11 +14,9 @@ export async function registerUser(
   userData: RegisterUserDto,
 ): Promise<UserData> {
   const { data } = await api.post("/user/register", userData);
-  console.log(data);
   return data;
 }
 
 export function logoutUser(): void {
-  const response = api.post("/user/logout");
-  console.log(response);
+  api.post("/user/logout");
 }
