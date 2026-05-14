@@ -32,7 +32,8 @@ export class UserController {
   }
   @Get('/all')
   async getUsers(
-    @CurrentUser() user: JwtPayload,@Query('query') query:string
+    @CurrentUser() user: JwtPayload,
+    @Query('query') query: string,
   ): Promise<UsersResponseDto[]> {
     return await this.userService.getUsers(user.id, query);
   }
@@ -54,6 +55,6 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Get('status')
   userStatus(@CurrentUser() user: JwtPayload): AuthResponseDto {
-    return { id: user.id,username: user.username, email: user.email };
+    return { id: user.id, username: user.username, email: user.email };
   }
 }
