@@ -24,12 +24,12 @@ export const UpdateGroupForm = ({
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<UpdateGroupData>({
     resolver: zodResolver(UpdateGroupSchema),
     mode: "onChange",
   });
-  const { reset } = useForm();
 
   useEffect(() => {
     if (group) {
@@ -38,7 +38,7 @@ export const UpdateGroupForm = ({
         description: group.description,
       });
     }
-  }, [group]);
+  }, [group, reset]);
   return (
     <>
       <form

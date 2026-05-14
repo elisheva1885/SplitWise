@@ -1,17 +1,13 @@
 import Box from "@mui/material/Box";
 import type { GroupData } from "../types/group.types";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import {
   addUserToGroup,
   getGroupDetails,
   updateGroup,
 } from "../api/group.api";
-import Button from "@mui/material/Button";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import EditIcon from "@mui/icons-material/Edit";
 import Dialog from "@mui/material/Dialog";
@@ -24,7 +20,6 @@ import { UpdateGroupForm } from "./update-group-form";
 import Typography from "@mui/material/Typography";
 import { handleApiError } from "../helpers/handle-api-error.helper";
 import { GroupMembersList } from "./group-members-list";
-import { useUserContext } from "../store/use-user.context";
 import type { UpdateGroupData } from "../schemas/group-schemas";
 import type { SnackbarState } from "../types/snackbar.types";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -35,16 +30,10 @@ import IconButton from "@mui/material/IconButton";
 
 export const GroupDetails = () => {
   const { id } = useParams();
-
   const [group, setGroup] = useState<GroupData | null>(null);
-
   const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
   const [updateUserDialog, setUpdateUserDialog] = useState(false);
-
-  const { user } = useUserContext();
-
   const [isOwner, setIsOwner] = useState<boolean>(false);
-
   const [loadingGroup, setLoadingGroup] = useState(false);
   const [loadingAddMember, setLoadingAddMember] = useState(false);
   const [loadingUpdateGroup, setLoadingUpdateGroup] = useState(false);
@@ -55,14 +44,12 @@ export const GroupDetails = () => {
     message: "",
   });
 
-  const getGroupDetailsById = async (id: number) => {
+  const getGroupDetailsById = useCallback(async (id: number) => {
     try {
       setLoadingGroup(true);
-
       const data = await getGroupDetails(id);
-
       setGroup(data);
-      setIsOwner(user?.id === data.owner.id);
+      setIsOwner(id === data.owner.id);
     } catch (err) {
       setSnackbar({
         open: true,
@@ -72,7 +59,7 @@ export const GroupDetails = () => {
     } finally {
       setLoadingGroup(false);
     }
-  };
+  }, []);
 
   const handleCloseDialog = () => {
     setOpenAddUserDialog(false);
@@ -93,17 +80,12 @@ export const GroupDetails = () => {
         severity: "error",
         message: "Group not loaded",
       });
-
       return;
     }
-
     try {
       setLoadingAddMember(true);
-
       const data = await addUserToGroup(group.id, userId);
-
       setGroup(data);
-
       setSnackbar({
         open: true,
         severity: "success",
@@ -130,20 +112,15 @@ export const GroupDetails = () => {
 
       return;
     }
-
     try {
       setLoadingUpdateGroup(true);
-
       const data = await updateGroup(group.id, groupData);
-
       setGroup(data);
-
       setSnackbar({
         open: true,
         severity: "success",
         message: "Group updated successfully!",
       });
-
       setUpdateUserDialog(false);
     } catch (err) {
       setSnackbar({
@@ -162,9 +139,11 @@ export const GroupDetails = () => {
 
   useEffect(() => {
     if (!id) return;
-
-    getGroupDetailsById(Number(id));
-  }, [id]);
+      const fetchGroup = async () => {
+    await getGroupDetailsById(Number(id));
+  };
+  fetchGroup()
+  }, [id, getGroupDetailsById]);
 
   if (loadingGroup && !group) {
     return (
@@ -172,7 +151,6 @@ export const GroupDetails = () => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          mt: 5,
         }}
       >
         <CircularProgress />

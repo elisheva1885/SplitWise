@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { getAllUsers } from "../api/user.api";
-import { useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
 import type { UserToAdd } from "../types/user.types";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
@@ -20,7 +20,7 @@ export const AddGroupMemberForm = ({
   onSubmit,
   setDialogOpen,
 }: AddGroupMemberFormProps) => {
-  const [users, setUsers] = useState<UserToAdd[] | []>([]);
+  const [, setUsers] = useState<UserToAdd[] | []>([]);
   const [userId, setUserId] = useState<number>(0);
   const [options, setOptions] = useState<{ label: string; id: number }[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -37,10 +37,8 @@ export const AddGroupMemberForm = ({
     setDialogOpen(false);
   };
 
-  const getUsers = async () => {
+  const getUsers =useCallback(async () => {
     try {
-      console.log(users, userId, inputValue);
-
       const data = await getAllUsers(inputValue);
       setUsers(data);
       setOptions(
@@ -57,7 +55,7 @@ export const AddGroupMemberForm = ({
     } finally {
       setLoading(false);
     }
-  };
+  },[inputValue]);
   const handleClose = () => {
     setSnackbar((prev) => ({
       ...prev,
@@ -70,7 +68,7 @@ export const AddGroupMemberForm = ({
   }, 300);
 
   return () => clearTimeout(timeout);
-}, [inputValue]);
+}, [inputValue, getUsers]);
   return (
     <>
       <form onSubmit={handleSubmit} style={{ backgroundColor: "#2e3136" }}>
@@ -84,7 +82,7 @@ export const AddGroupMemberForm = ({
             setInputValue(newInputValue);
           }}
         />
-        <Button type="submit">Add</Button>
+        <Button type="submit" disabled={loading}>Add</Button>
         <Snackbar
           open={snackbar.open}
           autoHideDuration={5000}

@@ -9,7 +9,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { useGroupContext } from "../store/use-group.context";
 import { getUserDetails } from "../api/user.api";
 import { useNavigate } from "react-router";
@@ -23,6 +23,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import type { AddGroupData } from "../schemas/group-schemas";
 import type { SnackbarState } from "../types/snackbar.types";
 import { handleApiError } from "../helpers/handle-api-error.helper";
+import CircularProgress from "@mui/material/CircularProgress";
 export const GroupPage = () => {
   const { groups, setGroups } = useGroupContext();
   const [open, setOpen] = useState(false);
@@ -40,7 +41,6 @@ export const GroupPage = () => {
     navigate(`${id}`);
   };
   const addGroup = async (groupData: AddGroupData) => {
-
     try {
       setAddLoading(true)
       const data = await createGroup(groupData);
@@ -89,12 +89,19 @@ export const GroupPage = () => {
   const handleCloseDialog = () => {
     setOpen(false);
   };
-  const getGroups = async () => {
+
+  const handleClose = () => {
+    setSnackbar((prev) => ({
+      ...prev,
+      open: false,
+    }));
+  };
+ useEffect(() => {
+    const getGroups = async () => {
     try {
       setGetLoading(true);
       const data = await getUserDetails();
       setGroups(data.groups);
-
     }
     catch (err) {
       setSnackbar({
@@ -104,21 +111,14 @@ export const GroupPage = () => {
       });
     } finally {
       setGetLoading(false);
-      setOpen(false);
     }
   };
-  const handleClose = () => {
-    setSnackbar((prev) => ({
-      ...prev,
-      open: false,
-    }));
-  };
-  useEffect(() => {
-    getGroups();
-  }, []);
+
+  getGroups();
+},[setGroups]);
   return (
-    <>
-      <div>
+      <Box>
+        {getLoading? <CircularProgress aria-label="Loading…" />:(
         <Drawer
           variant="permanent"
           sx={{
@@ -132,9 +132,10 @@ export const GroupPage = () => {
         >
           {DrawerList}
         </Drawer>
-        <div style={{ marginLeft: 260, padding: 16 }}>
+        )}
+        <Box style={{ marginLeft: 260, padding: 16 }}>
           <Outlet />
-        </div>
+        </Box>
         <Dialog open={open} onClose={handleCloseDialog}>
           <Box style={{ backgroundColor: "#2e3136" }}>
             <CloseIcon
@@ -164,7 +165,6 @@ export const GroupPage = () => {
             {snackbar.message}
           </Alert>
         </Snackbar>
-      </div>
-    </>
+      </Box>
   );
 };
