@@ -37,7 +37,7 @@ export const GroupDetails = () => {
     isOwner,
     actions,
   } = useGroupDetails();
-
+const getGroupDetailsById = actions.getGroupDetailsById;
   const handleCloseDialog = () => {
     setOpenAddUserDialog(false);
     setUpdateUserDialog(false);
@@ -51,10 +51,10 @@ export const GroupDetails = () => {
   useEffect(() => {
     if (!id) return;
     const fetchGroup = async () => {
-      await actions.getGroupDetailsById(Number(id));
+      await getGroupDetailsById(Number(id));
     };
     fetchGroup();
-  }, [id]);
+  }, [id, getGroupDetailsById]);
 
   if (loadingGroup && !group) {
     return (
@@ -154,8 +154,11 @@ export const GroupDetails = () => {
       <Box sx={{ width: "100%" }}>
         <GroupMembersList
           group={group}
-          // setGroup={setGroup}
           isOwner={isOwner}
+          deleteGroupMember = {actions.deleteGroupMember}
+          updateToGroupOwner = {actions.updateToGroupOwner}
+          snackbar={snackbar}
+          handleCloseSnackbar= {handleCloseSnackbar}
         />
       </Box>
 

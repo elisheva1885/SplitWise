@@ -1,16 +1,9 @@
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { useGroupContext } from "../store/use-group.context";
 import { getUserDetails } from "../api/user.api";
-import { useNavigate } from "react-router";
 import { Outlet } from "react-router";
 import { AddGroupForm } from "../components/add-group-form";
 import Dialog from "@mui/material/Dialog";
@@ -22,7 +15,7 @@ import type { AddGroupData } from "../schemas/group-schemas";
 import type { SnackbarState } from "../types/snackbar.types";
 import { handleApiError } from "../helpers/handle-api-error.helper";
 import CircularProgress from "@mui/material/CircularProgress";
-import Chip from "@mui/material/Chip";
+import { GroupDrawerList } from "../components/group-drawer";
 export const GroupPage = () => {
   const { groups, setGroups } = useGroupContext();
   const [open, setOpen] = useState(false);
@@ -34,11 +27,8 @@ export const GroupPage = () => {
     severity: "success",
     message: "",
   });
-  const navigate = useNavigate();
 
-  const goToGroup = (id: number) => {
-    navigate(`${id}`);
-  };
+
   const addGroup = async (groupData: AddGroupData) => {
     try {
       setAddLoading(true);
@@ -60,32 +50,7 @@ export const GroupPage = () => {
       setOpen(false);
     }
   };
-  const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation">
-      <List>
-        <Typography>My Groups</Typography>
-        {groups.map((group) => (
-          <ListItem key={group.id}>
-            <ListItemButton
-              onClick={() => goToGroup(group.id)}
-              sx={{ display: "flex", justifyContent: "center" }}
-            >
-              <Chip label={group.name}></Chip>
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <br />
-      <Button
-        sx={{ background: "black" }}
-        onClick={() => setOpen(true)}
-        disabled={addLoading}
-      >
-        + New Group
-      </Button>
-    </Box>
-  );
+
 
   const handleCloseDialog = () => {
     setOpen(false);
@@ -132,7 +97,7 @@ export const GroupPage = () => {
           }}
           ModalProps={{ disablePortal: true }}
         >
-          {DrawerList}
+          <GroupDrawerList groups= {groups} setOpen= {setOpen} addLoading= {addLoading} />
         </Drawer>
       )}
       <Box style={{ marginLeft: 260, padding: 16 }}>

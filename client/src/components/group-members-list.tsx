@@ -14,18 +14,19 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import Typography from "@mui/material/Typography";
-import { useGroupDetails } from "../hooks/use-group-details";
+import type { SnackbarState } from "../types/snackbar.types";
 type GroupMembersListProps = {
   group: GroupData | null;
-  // setGroup: (group: GroupData) => void;
   isOwner: boolean;
+  deleteGroupMember:(userId: number)=>void
+  updateToGroupOwner: (userId: number)=>void,
+  snackbar: SnackbarState,
+  handleCloseSnackbar: () => void
 };
-export const GroupMembersList = ({ group, isOwner }: GroupMembersListProps) => {
+export const GroupMembersList = ({ group, isOwner, deleteGroupMember, updateToGroupOwner, snackbar, handleCloseSnackbar }: GroupMembersListProps) => {
   const [loading] = useState<boolean>(false);
 
-  const { snackbar,handleCloseSnackbar, actions } = useGroupDetails();
 
-  
   return (
     <TableContainer
       component={Paper}
@@ -60,7 +61,7 @@ export const GroupMembersList = ({ group, isOwner }: GroupMembersListProps) => {
               {isOwner && (
                 <TableCell align="center">
                   <IconButton
-                    onClick={() => actions.deleteGroupMember(member.id)}
+                    onClick={() => deleteGroupMember(member.id)}
                     disabled={loading}
                     sx={{
                       backgroundColor: "white",
@@ -74,8 +75,8 @@ export const GroupMembersList = ({ group, isOwner }: GroupMembersListProps) => {
               {isOwner && (
                 <TableCell align="center">
                   <IconButton
-                    onClick={() => actions.updateToGroupOwner(member.id)}
-                    disabled={loading || member.id === group?.owner.id}
+                    onClick={() => updateToGroupOwner(member.id)}
+                    disabled={loading || member.id === group?.owner?.id}
                     sx={{
                       backgroundColor: "white",
                       padding: 0.2,

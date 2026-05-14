@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { handleApiError } from "../helpers/handle-api-error.helper";
 import {
   addUserToGroup,
@@ -35,7 +35,7 @@ export const useGroupDetails = () => {
 
   const navigate = useNavigate();
 
-  const getGroupDetailsById = async (id: number) => {
+  const getGroupDetailsById = useCallback(async (id: number) => {
     try {
       setLoadingGroup(true);
 
@@ -51,7 +51,7 @@ export const useGroupDetails = () => {
     } finally {
       setLoadingGroup(false);
     }
-  };
+  },[setGroups]);
 
   const addGroupMember = async (userId: number) => {
     if (!group?.id) {
@@ -204,20 +204,15 @@ export const useGroupDetails = () => {
         severity: "error",
         message: "Group not loaded",
       });
-
       return;
     }
-
     try {
       setLoadingDeleteMember(true);
-
       const data = await deleteUserFromGroup(
         group.id,
         userId
       );
-
       setGroup(data);
-
       setSnackbar({
         open: true,
         severity: "success",
