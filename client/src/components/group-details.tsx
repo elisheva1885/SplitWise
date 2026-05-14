@@ -139,10 +139,10 @@ export const GroupDetails = () => {
 
   useEffect(() => {
     if (!id) return;
-      const fetchGroup = async () => {
-    await getGroupDetailsById(Number(id));
-  };
-  fetchGroup()
+    const fetchGroup = async () => {
+      await getGroupDetailsById(Number(id));
+    };
+    fetchGroup()
   }, [id, getGroupDetailsById]);
 
   if (loadingGroup && !group) {
@@ -159,20 +159,28 @@ export const GroupDetails = () => {
   }
 
   return (
-    <>
+    <Box sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: 2,
+      flexDirection: 'column',
+      width: '100%',
+    }}>
       <Card
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          gap: 2,
+          gap: 2.5,
+          textAlign: 'center'
         }}
       >
         <Typography sx={{ fontSize: "xx-large" }}>
           {group?.name}
         </Typography>
-        <IconButton>
-          {isOwner && (
+        {isOwner &&
+          <IconButton>
             <EditIcon
               onClick={updateGroupInfo}
               sx={{
@@ -180,8 +188,8 @@ export const GroupDetails = () => {
                 opacity: loadingUpdateGroup ? 0.5 : 1,
               }}
             />
-          )}
-        </IconButton>
+          </IconButton>
+        }
       </Card>
 
       {group?.owner && (
@@ -219,7 +227,7 @@ export const GroupDetails = () => {
         ></Chip>
       )}
 
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+      <Box sx={{ width: '100%' }}>
         <GroupMembersList
           group={group}
           setGroup={setGroup}
@@ -301,6 +309,6 @@ export const GroupDetails = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </>
+    </Box>
   );
 };

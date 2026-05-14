@@ -100,14 +100,19 @@ export const GroupMembersList = ({
         }));
     };
     return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableContainer component={Paper} sx={{
+            overflowX: 'auto'
+            , width: '100%'
+        }}>
+            <Table sx={{
+                minWidth: 650,
+            }}>
                 <TableHead>
                     <TableRow>
                         <TableCell align="center">Username</TableCell>
                         <TableCell align="center">email</TableCell>
-                        <TableCell align="center"></TableCell>
-                        <TableCell align="center"></TableCell>
+                        {isOwner && <TableCell align="center"></TableCell>}
+                        {isOwner && <TableCell align="center"></TableCell>}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -120,22 +125,23 @@ export const GroupMembersList = ({
                                 {member.username}
                             </TableCell>
                             <TableCell align="center">{member.email}</TableCell>
-                            <TableCell align="center">
-                                {isOwner && (
-                                    <IconButton
-                                        onClick={() => deleteGroupMember(member.id)}
-                                        disabled={loading}
-                                        sx={{
-                                            backgroundColor: "white",
-                                            padding: 0.2,
-                                        }}
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                )}
+                            {isOwner && (<TableCell align="center">
+
+                                <IconButton
+                                    onClick={() => deleteGroupMember(member.id)}
+                                    disabled={loading}
+                                    sx={{
+                                        backgroundColor: "white",
+                                        padding: 0.2,
+                                    }}
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
+
                             </TableCell>
-                            <TableCell align="center">
-                                {isOwner && (
+                            )}
+                            {isOwner && (
+                                <TableCell align="center">
                                     <IconButton
                                         onClick={() => updateToGroupOwner(member.id)}
                                         disabled={loading || member.id === group.owner.id}
@@ -149,8 +155,8 @@ export const GroupMembersList = ({
                                             to Admin
                                         </Typography>
                                     </IconButton>
+                                </TableCell>
                                 )}
-                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
@@ -167,6 +173,6 @@ export const GroupMembersList = ({
                     {snackbar.message}
                 </Alert>
             </Snackbar>
-        </TableContainer>
+        </TableContainer >
     );
 };

@@ -24,6 +24,8 @@ import type { AddGroupData } from "../schemas/group-schemas";
 import type { SnackbarState } from "../types/snackbar.types";
 import { handleApiError } from "../helpers/handle-api-error.helper";
 import CircularProgress from "@mui/material/CircularProgress";
+import Chip from "@mui/material/Chip";
+import IconButton from "@mui/material/IconButton";
 export const GroupPage = () => {
   const { groups, setGroups } = useGroupContext();
   const [open, setOpen] = useState(false);
@@ -66,17 +68,15 @@ export const GroupPage = () => {
       <List>
         <Typography>My Groups</Typography>
         {groups.map((group) => (
-          <ListItem key={group.id} disablePadding>
-            <ListItemButton
-              onClick={() => {
-                goToGroup(group.id);
-              }}
-            >
-              <ListItemIcon></ListItemIcon>
-              <ListItemText primary={group.name} />
-            </ListItemButton>
+          <ListItem key={group.id} >
+          <ListItemButton onClick={()=>goToGroup(group.id)} sx={{display: 'flex' , justifyContent: 'center'}}>
+          <Chip  label={group.name} >  
+          </Chip>
+          </ListItemButton>
           </ListItem>
         ))}
+
+ 
       </List>
       <Divider />
       <br />
@@ -85,6 +85,7 @@ export const GroupPage = () => {
       </Button>
     </Box>
   );
+
 
   const handleCloseDialog = () => {
     setOpen(false);
