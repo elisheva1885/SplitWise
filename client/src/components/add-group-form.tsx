@@ -21,31 +21,29 @@ export const AddGroupForm = ({ onSubmit }: AddGroupFormProps) => {
   });
 
   return (
-    <>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        style={{ backgroundColor: "#2e3136" }}
-      >
-        <Typography sx={{ color: "white" }}>Login</Typography>
-        <InputLabel>Group Name</InputLabel>
-        <TextField
-          type="text"
-          size="small"
-          {...register("name")}
-          error={!!errors.name}
-          helperText={errors.name?.message}
-        />
-        <InputLabel>Description</InputLabel>
-        <TextField
-          type="text"
-          size="medium"
-          {...register("description")}
-          error={!!errors.description}
-          helperText={errors.description?.message}
-        />
-        <br />
-        <Button type="submit">Add</Button>
-      </form>
-    </>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      style={{ backgroundColor: "#2e3136" }}
+    >
+      <Typography sx={{ color: "white" }}>Login</Typography>
+      <InputLabel>Group Name</InputLabel>
+      <TextField
+        type="text"
+        size="small"
+        {...register("name")}
+        error={!!errors.name}
+        helperText={errors.name?.message}
+      />
+      <InputLabel>Description</InputLabel>
+      <TextField
+        type="text"
+        size="medium"
+        {...register("description")}
+        error={!!errors.description}
+        helperText={errors.description?.message}
+      />
+      <br />
+      <Button type="submit">Add</Button>
+    </form>
   );
 };

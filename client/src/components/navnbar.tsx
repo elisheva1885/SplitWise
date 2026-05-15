@@ -126,17 +126,19 @@ export const Navbar = () => {
             paddingRight: "15px",
           }}
         >
-          <Box sx={{display: 'flex', justifyContent: 'end', marginTop: '8px'}}>
-          <IconButton>
-            <CloseIcon
-              onClick={handleCloseDialog}
-              sx={{
-                backgroundColor: "#2e3136",
-                color: "white",
-                insetInlineEnd: 3,
-              }}
-            />
-          </IconButton>
+          <Box
+            sx={{ display: "flex", justifyContent: "end", marginTop: "8px" }}
+          >
+            <IconButton>
+              <CloseIcon
+                onClick={handleCloseDialog}
+                sx={{
+                  backgroundColor: "#2e3136",
+                  color: "white",
+                  insetInlineEnd: 3,
+                }}
+              />
+            </IconButton>
           </Box>
           <Box
             sx={{

@@ -28,7 +28,6 @@ export const GroupPage = () => {
     message: "",
   });
 
-
   const addGroup = async (groupData: AddGroupData) => {
     try {
       setAddLoading(true);
@@ -50,7 +49,6 @@ export const GroupPage = () => {
       setOpen(false);
     }
   };
-
 
   const handleCloseDialog = () => {
     setOpen(false);
@@ -97,7 +95,11 @@ export const GroupPage = () => {
           }}
           ModalProps={{ disablePortal: true }}
         >
-          <GroupDrawerList groups= {groups} setOpen= {setOpen} addLoading= {addLoading} />
+          <GroupDrawerList
+            groups={groups}
+            setOpen={setOpen}
+            addLoading={addLoading}
+          />
         </Drawer>
       )}
       <Box style={{ marginLeft: 260, padding: 16 }}>
@@ -122,7 +124,7 @@ export const GroupPage = () => {
       </Dialog>
       <Snackbar
         open={snackbar.open}
-autoHideDuration={2500}
+        autoHideDuration={2500}
         onClose={handleClose}
       >
         <Alert severity={snackbar.severity}>

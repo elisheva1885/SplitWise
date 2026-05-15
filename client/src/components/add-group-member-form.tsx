@@ -70,34 +70,32 @@ export const AddGroupMemberForm = ({
     return () => clearTimeout(timeout);
   }, [inputValue, getUsers]);
   return (
-    <>
-      <form onSubmit={handleSubmit} style={{ backgroundColor: "#2e3136" }}>
-        <Typography sx={{ color: "white" }}>Add User</Typography>
-        <Autocomplete
-          options={options}
-          sx={{ width: 300, alignItems: "center" }}
-          onChange={(e, value) => setUserId(value?.id ?? 0)}
-          renderInput={(params) => <TextField {...params} label=" User" />}
-          onInputChange={(event, newInputValue) => {
-            setInputValue(newInputValue);
-          }}
-        />
-        <Button type="submit" disabled={loading}>
-          Add
-        </Button>
-        <Snackbar
-          open={snackbar.open}
-  autoHideDuration={2500}
-          onClose={handleClose}
-        >
-          <Alert severity={snackbar.severity}>
-            <AlertTitle>
-              {snackbar.severity === "success" ? "Success" : "Error"}
-            </AlertTitle>
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
-      </form>
-    </>
+    <form onSubmit={handleSubmit} style={{ backgroundColor: "#2e3136" }}>
+      <Typography sx={{ color: "white" }}>Add User</Typography>
+      <Autocomplete
+        options={options}
+        sx={{ width: 300, alignItems: "center" }}
+        onChange={(e, value) => setUserId(value?.id ?? 0)}
+        renderInput={(params) => <TextField {...params} label=" User" />}
+        onInputChange={(event, newInputValue) => {
+          setInputValue(newInputValue);
+        }}
+      />
+      <Button type="submit" disabled={loading}>
+        Add
+      </Button>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={2500}
+        onClose={handleClose}
+      >
+        <Alert severity={snackbar.severity}>
+          <AlertTitle>
+            {snackbar.severity === "success" ? "Success" : "Error"}
+          </AlertTitle>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </form>
   );
 };

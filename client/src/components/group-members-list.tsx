@@ -18,14 +18,20 @@ import type { SnackbarState } from "../types/snackbar.types";
 type GroupMembersListProps = {
   group: GroupData | null;
   isOwner: boolean;
-  deleteGroupMember:(userId: number)=>void
-  updateToGroupOwner: (userId: number)=>void,
-  snackbar: SnackbarState,
-  handleCloseSnackbar: () => void
+  deleteGroupMember: (userId: number) => void;
+  updateToGroupOwner: (userId: number) => void;
+  snackbar: SnackbarState;
+  handleCloseSnackbar: () => void;
 };
-export const GroupMembersList = ({ group, isOwner, deleteGroupMember, updateToGroupOwner, snackbar, handleCloseSnackbar }: GroupMembersListProps) => {
+export const GroupMembersList = ({
+  group,
+  isOwner,
+  deleteGroupMember,
+  updateToGroupOwner,
+  snackbar,
+  handleCloseSnackbar,
+}: GroupMembersListProps) => {
   const [loading] = useState<boolean>(false);
-
 
   return (
     <TableContainer
@@ -95,7 +101,7 @@ export const GroupMembersList = ({ group, isOwner, deleteGroupMember, updateToGr
       </Table>
       <Snackbar
         open={snackbar.open}
-autoHideDuration={2500}
+        autoHideDuration={2500}
         onClose={handleCloseSnackbar}
       >
         <Alert severity={snackbar.severity}>

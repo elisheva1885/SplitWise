@@ -35,23 +35,26 @@ export const useGroupDetails = () => {
 
   const navigate = useNavigate();
 
-  const getGroupDetailsById = useCallback(async (id: number) => {
-    try {
-      setLoadingGroup(true);
+  const getGroupDetailsById = useCallback(
+    async (id: number) => {
+      try {
+        setLoadingGroup(true);
 
-      const data = await getGroupDetails(id);
+        const data = await getGroupDetails(id);
 
-      setGroup(data);
-    } catch (err) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: handleApiError(err),
-      });
-    } finally {
-      setLoadingGroup(false);
-    }
-  },[setGroups]);
+        setGroup(data);
+      } catch (err) {
+        setSnackbar({
+          open: true,
+          severity: "error",
+          message: handleApiError(err),
+        });
+      } finally {
+        setLoadingGroup(false);
+      }
+    },
+    [setGroup],
+  );
 
   const addGroupMember = async (userId: number) => {
     if (!group?.id) {
@@ -109,9 +112,7 @@ export const useGroupDetails = () => {
         message: "Group deleted successfully!",
       });
 
-      const filteredGroups = groups.filter(
-        (group) => group.id !== data
-      );
+      const filteredGroups = groups.filter((group) => group.id !== data);
 
       setGroups(filteredGroups);
 
@@ -127,9 +128,7 @@ export const useGroupDetails = () => {
     }
   };
 
-  const updateGroupDetails = async (
-    groupData: UpdateGroupData
-  ) => {
+  const updateGroupDetails = async (groupData: UpdateGroupData) => {
     if (!group?.id) {
       setSnackbar({
         open: true,
@@ -208,10 +207,7 @@ export const useGroupDetails = () => {
     }
     try {
       setLoadingDeleteMember(true);
-      const data = await deleteUserFromGroup(
-        group.id,
-        userId
-      );
+      const data = await deleteUserFromGroup(group.id, userId);
       setGroup(data);
       setSnackbar({
         open: true,

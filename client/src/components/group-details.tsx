@@ -1,8 +1,6 @@
 import Box from "@mui/material/Box";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import EditIcon from "@mui/icons-material/Edit";
-import Dialog from "@mui/material/Dialog";
-import CloseIcon from "@mui/icons-material/Close";
 import { AddGroupMemberForm } from "./add-group-member-form";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
@@ -21,12 +19,13 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import { useGroupContext } from "../store/use-group.context";
+import { FormDialog } from "./form-dialog";
 
 export const GroupDetails = () => {
   const { id } = useParams();
-  const {group} = useGroupContext()
-  const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
-  const [updateUserDialog, setUpdateUserDialog] = useState(false);
+  const { group } = useGroupContext();
+  const [openAddUserDialog, setOpenAddUserDialog] = useState<boolean>(false);
+  const [updateUserDialog, setUpdateUserDialog] = useState<boolean>(false);
   const {
     snackbar,
     handleCloseSnackbar,
@@ -37,12 +36,11 @@ export const GroupDetails = () => {
     isOwner,
     actions,
   } = useGroupDetails();
-const getGroupDetailsById = actions.getGroupDetailsById;
+  const getGroupDetailsById = actions.getGroupDetailsById;
   const handleCloseDialog = () => {
     setOpenAddUserDialog(false);
     setUpdateUserDialog(false);
   };
-
 
   const updateGroupInfo = () => {
     setUpdateUserDialog(true);
@@ -56,7 +54,7 @@ const getGroupDetailsById = actions.getGroupDetailsById;
     fetchGroup();
   }, [id, getGroupDetailsById]);
 
-  if (loadingGroup && !group) {
+  if (loadingGroup) {
     return (
       <Box
         sx={{
@@ -93,25 +91,16 @@ const getGroupDetailsById = actions.getGroupDetailsById;
           {group?.name}
         </Typography>
         {isOwner && (
-          <IconButton>
-            <EditIcon
-              onClick={updateGroupInfo}
-              sx={{
-                cursor: loadingUpdateGroup ? "default" : "pointer",
-                opacity: loadingUpdateGroup ? 0.5 : 1,
-              }}
-            />
+          <IconButton onClick={updateGroupInfo}>
+            <EditIcon />
           </IconButton>
         )}
         {isOwner && (
-          <IconButton disabled={loadingDeleteGroup}>
-            <DeleteIcon
-              onClick={actions.deleteGroupData}
-              sx={{
-                cursor: loadingUpdateGroup ? "default" : "pointer",
-                opacity: loadingUpdateGroup ? 0.5 : 1,
-              }}
-            />
+          <IconButton
+            onClick={actions.deleteGroupData}
+            disabled={loadingDeleteGroup}
+          >
+            <DeleteIcon />
           </IconButton>
         )}
       </Card>
@@ -155,10 +144,10 @@ const getGroupDetailsById = actions.getGroupDetailsById;
         <GroupMembersList
           group={group}
           isOwner={isOwner}
-          deleteGroupMember = {actions.deleteGroupMember}
-          updateToGroupOwner = {actions.updateToGroupOwner}
+          deleteGroupMember={actions.deleteGroupMember}
+          updateToGroupOwner={actions.updateToGroupOwner}
           snackbar={snackbar}
-          handleCloseSnackbar= {handleCloseSnackbar}
+          handleCloseSnackbar={handleCloseSnackbar}
         />
       </Box>
 
@@ -171,64 +160,35 @@ const getGroupDetailsById = actions.getGroupDetailsById;
           {loadingAddMember ? <CircularProgress size={20} /> : <GroupAddIcon />}
         </Fab>
       )}
-
-      <Dialog open={openAddUserDialog} onClose={handleCloseDialog}>
-        <Box style={{ backgroundColor: "#2e3136" }}>
-          <CloseIcon
-            onClick={handleCloseDialog}
-            sx={{
-              backgroundColor: "#2e3136",
-              color: "white",
-              position: "absolute",
-              insetInlineEnd: 3,
-              cursor: "pointer",
-            }}
-          />
-
-          <Box sx={{ textAlign: "center", padding: "8px" }}>
-            <AddGroupMemberForm
-              setDialogOpen={setOpenAddUserDialog}
-              onSubmit={actions.addGroupMember}
-            />
-          </Box>
-        </Box>
-      </Dialog>
-
-      <Dialog open={updateUserDialog} onClose={handleCloseDialog}>
-        <Box style={{ backgroundColor: "#2e3136" }}>
-          <CloseIcon
-            onClick={handleCloseDialog}
-            sx={{
-              backgroundColor: "#2e3136",
-              color: "white",
-              position: "absolute",
-              insetInlineEnd: 3,
-              cursor: "pointer",
-            }}
-          />
-          <Box sx={{ textAlign: "center", padding: "8px" }}>
-            <UpdateGroupForm
-              setDialogOpen={setUpdateUserDialog}
-              onSubmit={async (data) => {
-                await actions.updateGroupDetails(data);
-                setUpdateUserDialog(false);
-              }}
-              group={group}
-            />
-          </Box>
-        </Box>
-      </Dialog>
+      <FormDialog
+        open={openAddUserDialog}
+        handleCloseDialog={handleCloseDialog}
+      >
+        <AddGroupMemberForm
+          setDialogOpen={setOpenAddUserDialog}
+          onSubmit={actions.addGroupMember}
+        />
+      </FormDialog>
+      <FormDialog open={updateUserDialog} handleCloseDialog={handleCloseDialog}>
+        <UpdateGroupForm
+          setDialogOpen={setUpdateUserDialog}
+          onSubmit={async (data) => {
+            await actions.updateGroupDetails(data);
+            setUpdateUserDialog(false);
+          }}
+          group={group}
+        />
+      </FormDialog>
 
       <Snackbar
         open={snackbar.open}
-autoHideDuration={2500}
+        autoHideDuration={2500}
         onClose={handleCloseSnackbar}
       >
         <Alert severity={snackbar.severity}>
           <AlertTitle>
             {snackbar.severity === "success" ? "Success" : "Error"}
           </AlertTitle>
-
           {snackbar.message}
         </Alert>
       </Snackbar>
