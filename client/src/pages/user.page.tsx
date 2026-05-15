@@ -12,7 +12,7 @@ import type { SnackbarState } from "../types/snackbar.types";
 import { Box } from "@mui/material";
 
 export const UserPage = () => {
-  const { setUser, logout } = useUserContext();
+  const { setUser, logout, user } = useUserContext();
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const [snackbar, setSnackbar] = useState<SnackbarState>({
@@ -22,7 +22,14 @@ export const UserPage = () => {
   });
   const handleSubmit = async (data: UpdateUserDto) => {
     setLoading(true);
-
+    if (data.username === user?.username && data.email === user?.email) {
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: "you need to change one of the inputs before saving!",
+      });
+      return;
+    }
     try {
       const userData = await updateUser(data);
       setSnackbar({
