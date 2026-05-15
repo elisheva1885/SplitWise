@@ -4,7 +4,7 @@ import { useUserContext } from "../store/use-user.context";
 import Snackbar from "@mui/material/Snackbar";
 import AlertTitle from "@mui/material/AlertTitle";
 import Alert from "@mui/material/Alert";
-import { deleteUser, updateUser } from "../api/user-api";
+import { deleteUser, updateUser } from "../api/user.api";
 import type { UpdateUserDto } from "../types/user.types";
 import { useNavigate } from "react-router";
 import { handleApiError } from "../helpers/handle-api-error.helper";
@@ -83,10 +83,9 @@ export const UserPage = () => {
       >
         <Alert severity={snackbar.severity}>
           <AlertTitle>
-            {" "}
             {snackbar.severity === "success" ? "Success" : "Error"}
           </AlertTitle>
-          {snackbar.message}{" "}
+          {snackbar.message}
         </Alert>
       </Snackbar>
     </Box>
