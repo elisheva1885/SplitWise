@@ -1,8 +1,7 @@
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { getAllUsers } from "../api/user.api";
-import { useCallback, useEffect, useState, type FormEvent } from "react";
-import type { UserToAdd } from "../types/user.types";
+import { useCallback, useEffect, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { handleApiError } from "../helpers/handle-api-error.helper";
@@ -10,9 +9,10 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import type { SnackbarState } from "../types/snackbar.types";
+import Box from "@mui/material/Box";
 
 type AddGroupMemberFormProps = {
-  onSubmit: (userId: number) => void;
+  onSubmit: (userId: number) => Promise<void>;
   setDialogOpen: (open: boolean) => void;
 };
 
@@ -20,7 +20,6 @@ export const AddGroupMemberForm = ({
   onSubmit,
   setDialogOpen,
 }: AddGroupMemberFormProps) => {
-  const [, setUsers] = useState<UserToAdd[] | []>([]);
   const [userId, setUserId] = useState<number>(0);
   const [options, setOptions] = useState<{ label: string; id: number }[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -31,16 +30,30 @@ export const AddGroupMemberForm = ({
     severity: "success",
     message: "",
   });
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    onSubmit(Number(userId));
-    setDialogOpen(false);
+    if (!userId) return;
+    try {
+      await onSubmit(userId);
+      setDialogOpen(false);
+    } catch (err) {
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: handleApiError(err),
+      });
+
+    }
   };
 
   const getUsers = useCallback(async () => {
+    if(!inputValue.trim()){
+      setOptions([]);
+      return;
+    }
+    setLoading(true);
     try {
       const data = await getAllUsers(inputValue);
-      setUsers(data);
       setOptions(
         data.map((user) => {
           return { label: user.username, id: user.id };
@@ -70,14 +83,14 @@ export const AddGroupMemberForm = ({
     return () => clearTimeout(timeout);
   }, [inputValue, getUsers]);
   return (
-    <form onSubmit={handleSubmit} style={{ backgroundColor: "#2e3136" }}>
+    <Box component='form' onSubmit={handleSubmit} sx={{ backgroundColor: "#2e3136" }}>
       <Typography sx={{ color: "white" }}>Add User</Typography>
       <Autocomplete
         options={options}
         sx={{ width: 300, alignItems: "center" }}
-        onChange={(e, value) => setUserId(value?.id ?? 0)}
+        onChange={(_, value) => setUserId(value?.id ?? 0)}
         renderInput={(params) => <TextField {...params} label=" User" />}
-        onInputChange={(event, newInputValue) => {
+        onInputChange={(_, newInputValue) => {
           setInputValue(newInputValue);
         }}
       />
@@ -96,6 +109,6 @@ export const AddGroupMemberForm = ({
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </form>
+    </Box>
   );
 };

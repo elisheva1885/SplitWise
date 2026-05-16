@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import CloseIcon from "@mui/icons-material/Close";
 import type { ReactNode } from "react";
+import IconButton from "@mui/material/IconButton";
 
 type FormDialogProps = {
   open: boolean;
@@ -15,26 +16,22 @@ export const FormDialog = ({
 }: FormDialogProps) => {
   return (
     <Dialog open={open} onClose={handleCloseDialog}>
-      <Box style={{ backgroundColor: "#2e3136" }}>
-        <CloseIcon
+      <Box sx={{
+        backgroundColor: "#2e3136",
+        position: "relative",
+      }}>
+        <IconButton
           onClick={handleCloseDialog}
           sx={{
-            backgroundColor: "#2e3136",
-            color: "white",
             position: "absolute",
-            insetInlineEnd: 3,
-            cursor: "pointer",
+            top: 8,
+            right: 8,
+            color: "white",
           }}
-        />
+        >
+          <CloseIcon />
+        </IconButton>
         <Box sx={{ textAlign: "center", padding: "8px" }}>
-          {/* <UpdateGroupForm
-              setDialogOpen={setUpdateUserDialog}
-              onSubmit={async (data) => {
-                await actions.updateGroupDetails(data);
-                setUpdateUserDialog(false);
-              }}
-              group={group}
-            /> */}
           {children}
         </Box>
       </Box>

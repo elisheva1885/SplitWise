@@ -24,28 +24,31 @@ import { FormDialog } from "./form-dialog";
 export const GroupDetails = () => {
   const { id } = useParams();
   const { group } = useGroupContext();
-  const [openAddUserDialog, setOpenAddUserDialog] = useState<boolean>(false);
-  const [updateUserDialog, setUpdateUserDialog] = useState<boolean>(false);
+  const owner = group?.owner;
+  const [dialogType, setDialogType] = useState<
+    "addUser" | "updateGroup" | null
+  >(null);
   const {
     snackbar,
     handleCloseSnackbar,
     loadingGroup,
     loadingAddMember,
-    loadingUpdateGroup,
     loadingDeleteGroup,
     isOwner,
     actions,
   } = useGroupDetails();
   const getGroupDetailsById = actions.getGroupDetailsById;
   const handleCloseDialog = () => {
-    setOpenAddUserDialog(false);
-    setUpdateUserDialog(false);
+    setDialogType(null);
   };
 
-  const updateGroupInfo = () => {
-    setUpdateUserDialog(true);
+  const openUpdateGroupDialog = () => {
+    setDialogType('updateGroup');
   };
 
+  const openAddUserDialog = ()=> {
+    setDialogType('addUser')
+  }
   useEffect(() => {
     if (!id) return;
     const fetchGroup = async () => {
@@ -91,21 +94,21 @@ export const GroupDetails = () => {
           {group?.name}
         </Typography>
         {isOwner && (
-          <IconButton onClick={updateGroupInfo}>
+          <>
+          <IconButton onClick={openUpdateGroupDialog}>
             <EditIcon />
           </IconButton>
-        )}
-        {isOwner && (
           <IconButton
             onClick={actions.deleteGroupData}
             disabled={loadingDeleteGroup}
           >
             <DeleteIcon />
           </IconButton>
+          </>
         )}
       </Card>
 
-      {group?.owner && (
+      {owner && (
         <Chip
           avatar={
             <Avatar
@@ -126,7 +129,7 @@ export const GroupDetails = () => {
               </Typography>
             </Avatar>
           }
-          label={group?.owner.username}
+          label={owner.username}
           sx={{
             height: "44px",
             px: 1,
@@ -146,14 +149,12 @@ export const GroupDetails = () => {
           isOwner={isOwner}
           deleteGroupMember={actions.deleteGroupMember}
           updateToGroupOwner={actions.updateToGroupOwner}
-          snackbar={snackbar}
-          handleCloseSnackbar={handleCloseSnackbar}
         />
       </Box>
 
       {isOwner && (
         <Fab
-          onClick={() => setOpenAddUserDialog(true)}
+          onClick={() => setDialogType('addUser')}
           aria-label="Add group member"
           disabled={loadingAddMember}
         >
@@ -161,20 +162,20 @@ export const GroupDetails = () => {
         </Fab>
       )}
       <FormDialog
-        open={openAddUserDialog}
+        open={dialogType=== 'addUser'}
         handleCloseDialog={handleCloseDialog}
       >
         <AddGroupMemberForm
-          setDialogOpen={setOpenAddUserDialog}
+          setDialogOpen={openAddUserDialog}
           onSubmit={actions.addGroupMember}
         />
       </FormDialog>
-      <FormDialog open={updateUserDialog} handleCloseDialog={handleCloseDialog}>
+      <FormDialog open={dialogType=== 'updateGroup'} handleCloseDialog={handleCloseDialog}>
         <UpdateGroupForm
-          setDialogOpen={setUpdateUserDialog}
+          setDialogOpen={openUpdateGroupDialog}
           onSubmit={async (data) => {
             await actions.updateGroupDetails(data);
-            setUpdateUserDialog(false);
+            setDialogType(null);
           }}
           group={group}
         />
