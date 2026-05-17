@@ -6,20 +6,18 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
-import type { GroupData } from "../types/group.types";
 import { useNavigate } from "react-router-dom";
+import { useGroupContext } from "../store/use-group.context";
 type GroupDrawerListProps = {
-  groups: GroupData[] | [];
   setOpen: (open: boolean) => void;
   addLoading: boolean;
 };
 export const GroupDrawerList = ({
-  groups,
   setOpen,
   addLoading,
 }: GroupDrawerListProps) => {
   const navigate = useNavigate();
-
+  const {groups} = useGroupContext()
   const goToGroup = (id: number) => {
     navigate(`/groups/${id}`);
   };

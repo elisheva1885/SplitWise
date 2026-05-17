@@ -21,7 +21,7 @@ export const useGroupDetails = () => {
   const [loadingDeleteGroup, setLoadingDeleteGroup] = useState(false);
   const [loadingUpdateOwner, setLoadingUpdateOwner] = useState(false);
   const [loadingDeleteMember, setLoadingDeleteMember] = useState(false);
-
+  const {updateGroups} = useGroupContext();
   const [snackbar, setSnackbar] = useState<SnackbarState>({
     open: false,
     severity: "success",
@@ -129,6 +129,14 @@ export const useGroupDetails = () => {
   };
 
   const updateGroupDetails = async (groupData: UpdateGroupData) => {
+     if (groupData.name === group?.name && groupData.description === group.description) {
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: "you need to change one of the inputs before saving!",
+      });
+      return;
+    }
     if (!group?.id) {
       setSnackbar({
         open: true,
@@ -141,11 +149,8 @@ export const useGroupDetails = () => {
 
     try {
       setLoadingUpdateGroup(true);
-
       const data = await updateGroup(group.id, groupData);
-
-      setGroup(data);
-
+      updateGroups(data);
       setSnackbar({
         open: true,
         severity: "success",
@@ -175,11 +180,8 @@ export const useGroupDetails = () => {
 
     try {
       setLoadingUpdateOwner(true);
-
       const data = await updateGroupOwner(group.id, userId);
-
       setGroup(data);
-
       setSnackbar({
         open: true,
         severity: "success",

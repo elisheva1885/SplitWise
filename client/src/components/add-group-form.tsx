@@ -27,10 +27,9 @@ export const AddGroupForm = ({ onSubmit }: AddGroupFormProps) => {
   return (
     <Box component='form'
       onSubmit={handleSubmit(submit)}
-      sx={{ backgroundColor: "#2e3136" }}
+      sx={{ backgroundColor: "#4f7362",display: "flex", flexDirection: 'column', gap:2, padding: 2 }}
     >
       <Typography sx={{ color: "white" }}>Add Group</Typography>
-      {/* <InputLabel>Group Name</InputLabel> */}
       <TextField
         type="text"
         size="small"
@@ -39,7 +38,6 @@ export const AddGroupForm = ({ onSubmit }: AddGroupFormProps) => {
         error={!!errors.name}
         helperText={errors.name?.message}
       />
-      {/* <InputLabel>Description</InputLabel> */}
       <TextField
         type="text"
         size="medium"
@@ -48,7 +46,7 @@ export const AddGroupForm = ({ onSubmit }: AddGroupFormProps) => {
         error={!!errors.description}
         helperText={errors.description?.message}
       />
-      <Button type="submit" disabled={!isValid}>Add</Button>
+      <Button type="submit" disabled={!isValid} sx={{color: 'white'}}>Add</Button>
     </Box>
   );
 };

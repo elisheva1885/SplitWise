@@ -12,13 +12,11 @@ import type { SnackbarState } from "../types/snackbar.types";
 import Box from "@mui/material/Box";
 
 type AddGroupMemberFormProps = {
-  onSubmit: (userId: number) => Promise<void>;
-  setDialogOpen: (open: boolean) => void;
+  onSubmit: (userId: number) => void;
 };
 
 export const AddGroupMemberForm = ({
   onSubmit,
-  setDialogOpen,
 }: AddGroupMemberFormProps) => {
   const [userId, setUserId] = useState<number>(0);
   const [options, setOptions] = useState<{ label: string; id: number }[]>([]);
@@ -34,8 +32,7 @@ export const AddGroupMemberForm = ({
     e.preventDefault();
     if (!userId) return;
     try {
-      await onSubmit(userId);
-      setDialogOpen(false);
+       onSubmit(userId);
     } catch (err) {
       setSnackbar({
         open: true,
@@ -47,10 +44,6 @@ export const AddGroupMemberForm = ({
   };
 
   const getUsers = useCallback(async () => {
-    if(!inputValue.trim()){
-      setOptions([]);
-      return;
-    }
     setLoading(true);
     try {
       const data = await getAllUsers(inputValue);
@@ -83,8 +76,11 @@ export const AddGroupMemberForm = ({
     return () => clearTimeout(timeout);
   }, [inputValue, getUsers]);
   return (
-    <Box component='form' onSubmit={handleSubmit} sx={{ backgroundColor: "#2e3136" }}>
-      <Typography sx={{ color: "white" }}>Add User</Typography>
+    <Box component='form' onSubmit={handleSubmit} sx={{
+      backgroundColor: "#4f7362",display: 'flex', flexDirection: 'column',
+      gap: 2
+    }}>
+      <Typography sx={{ color: "white" , marginTop: 2}}>Add User</Typography>
       <Autocomplete
         options={options}
         sx={{ width: 300, alignItems: "center" }}

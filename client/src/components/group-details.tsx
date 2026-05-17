@@ -41,14 +41,7 @@ export const GroupDetails = () => {
   const handleCloseDialog = () => {
     setDialogType(null);
   };
-
-  const openUpdateGroupDialog = () => {
-    setDialogType('updateGroup');
-  };
-
-  const openAddUserDialog = ()=> {
-    setDialogType('addUser')
-  }
+  
   useEffect(() => {
     if (!id) return;
     const fetchGroup = async () => {
@@ -95,7 +88,7 @@ export const GroupDetails = () => {
         </Typography>
         {isOwner && (
           <>
-          <IconButton onClick={openUpdateGroupDialog}>
+          <IconButton onClick={()=> setDialogType('updateGroup')}>
             <EditIcon />
           </IconButton>
           <IconButton
@@ -125,7 +118,7 @@ export const GroupDetails = () => {
                   color: "white",
                 }}
               >
-                OWNER
+                OWN
               </Typography>
             </Avatar>
           }
@@ -166,18 +159,15 @@ export const GroupDetails = () => {
         handleCloseDialog={handleCloseDialog}
       >
         <AddGroupMemberForm
-          setDialogOpen={openAddUserDialog}
-          onSubmit={actions.addGroupMember}
+          onSubmit={async (id) =>{ await actions.addGroupMember(id); setDialogType(null)}}
         />
       </FormDialog>
       <FormDialog open={dialogType=== 'updateGroup'} handleCloseDialog={handleCloseDialog}>
         <UpdateGroupForm
-          setDialogOpen={openUpdateGroupDialog}
           onSubmit={async (data) => {
             await actions.updateGroupDetails(data);
             setDialogType(null);
           }}
-          group={group}
         />
       </FormDialog>
 

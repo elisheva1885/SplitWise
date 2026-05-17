@@ -1,12 +1,10 @@
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useState } from "react";
 import { useGroupContext } from "../store/use-group.context";
 import { getUserDetails } from "../api/user.api";
 import { Outlet } from "react-router";
 import { AddGroupForm } from "../components/add-group-form";
-import Dialog from "@mui/material/Dialog";
 import { createGroup } from "../api/group.api";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
@@ -16,6 +14,7 @@ import type { SnackbarState } from "../types/snackbar.types";
 import { handleApiError } from "../helpers/handle-api-error.helper";
 import CircularProgress from "@mui/material/CircularProgress";
 import { GroupDrawerList } from "../components/group-drawer";
+import { FormDialog } from "../components/form-dialog";
 export const GroupPage = () => {
   const { groups, setGroups } = useGroupContext();
   const [open, setOpen] = useState(false);
@@ -76,7 +75,6 @@ export const GroupPage = () => {
         setGetLoading(false);
       }
     };
-
     getGroups();
   }, [setGroups]);
   return (
@@ -96,7 +94,6 @@ export const GroupPage = () => {
           ModalProps={{ disablePortal: true }}
         >
           <GroupDrawerList
-            groups={groups}
             setOpen={setOpen}
             addLoading={addLoading}
           />
@@ -105,23 +102,9 @@ export const GroupPage = () => {
       <Box style={{ marginLeft: 260, padding: 16 }}>
         <Outlet />
       </Box>
-      <Dialog open={open} onClose={handleCloseDialog}>
-        <Box style={{ backgroundColor: "#2e3136" }}>
-          <CloseIcon
-            onClick={handleCloseDialog}
-            sx={{
-              backgroundColor: "#2e3136",
-              color: "white",
-              position: "absolute",
-              insetInlineEnd: 3,
-            }}
-          />
-          <br />
-          <Box sx={{ textAlign: "center", padding: "8px" }}>
-            <AddGroupForm onSubmit={addGroup} />
-          </Box>
-        </Box>
-      </Dialog>
+      <FormDialog open={open} handleCloseDialog={handleCloseDialog}>
+        <AddGroupForm onSubmit={addGroup} />
+      </FormDialog>
       <Snackbar
         open={snackbar.open}
         autoHideDuration={2500}
