@@ -21,7 +21,7 @@ export const useGroupDetails = () => {
   const [loadingDeleteGroup, setLoadingDeleteGroup] = useState(false);
   const [loadingUpdateOwner, setLoadingUpdateOwner] = useState(false);
   const [loadingDeleteMember, setLoadingDeleteMember] = useState(false);
-  const {updateGroups} = useGroupContext();
+  const { updateGroups } = useGroupContext();
   const [snackbar, setSnackbar] = useState<SnackbarState>({
     open: false,
     severity: "success",
@@ -73,7 +73,7 @@ export const useGroupDetails = () => {
       const data = await addUserToGroup(group.id, userId);
 
       setGroup(data);
-
+      updateGroups(data);
       setSnackbar({
         open: true,
         severity: "success",
@@ -129,7 +129,7 @@ export const useGroupDetails = () => {
   };
 
   const updateGroupDetails = async (groupData: UpdateGroupData) => {
-     if (groupData.name === group?.name && groupData.description === group.description) {
+    if (groupData.name === group?.name && groupData.description === group.description) {
       setSnackbar({
         open: true,
         severity: "error",
@@ -182,6 +182,7 @@ export const useGroupDetails = () => {
       setLoadingUpdateOwner(true);
       const data = await updateGroupOwner(group.id, userId);
       setGroup(data);
+      updateGroups(data);
       setSnackbar({
         open: true,
         severity: "success",
@@ -211,6 +212,7 @@ export const useGroupDetails = () => {
       setLoadingDeleteMember(true);
       const data = await deleteUserFromGroup(group.id, userId);
       setGroup(data);
+      updateGroups(data);
       setSnackbar({
         open: true,
         severity: "success",

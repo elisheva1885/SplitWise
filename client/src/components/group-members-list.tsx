@@ -69,19 +69,6 @@ export const GroupMembersList = ({
                     </IconButton>
                   </TableCell>
                   <TableCell align="center">
-                    {/* <IconButton
-                      onClick={() => updateToGroupOwner(member.id)}
-                      disabled={member.id === group?.owner?.id}
-                      sx={{
-                        backgroundColor: "white",
-                        padding: 0.2,
-                      }}
-                    >
-                      <AdminPanelSettingsIcon />
-                      <Typography sx={{ fontSize: "x-small" }}>
-                        to Admin
-                      </Typography>
-                    </IconButton> */}
                     <Tooltip title="Make group owner">
                       <IconButton onClick={() => updateToGroupOwner(member.id)} disabled={member.id === currentOwnerId}
                       >
