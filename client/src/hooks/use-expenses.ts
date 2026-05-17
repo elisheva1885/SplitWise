@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useGroupContext } from "../store/use-group.context";
 import type { SnackbarState } from "../types/snackbar.types";
 import {
@@ -13,7 +13,7 @@ import { useUserContext } from "../store/use-user.context";
 import type { ExpenseInGroup, UpdateExpenseData } from "../types/expense.type";
 
 export const useExpenses = () => {
-  const { group, setOptimizedExpenses, setGroup, updateGroups } = useGroupContext();
+  const { group, setOptimizedExpenses, setGroup } = useGroupContext();
   const { user } = useUserContext();
   const [loadingOptimizedExpense, setLoadingOptimizedExpense] = useState(false);
   const [snackbar, setSnackbar] = useState<SnackbarState>({
@@ -21,7 +21,7 @@ export const useExpenses = () => {
     severity: "success",
     message: "",
   });
-  const getGroupOptimizedExpense = async (id: number) => {
+  const getGroupOptimizedExpense =useCallback( async (id: number) => {
     if (!group?.id) {
       setSnackbar({
         open: true,
@@ -44,7 +44,7 @@ export const useExpenses = () => {
     } finally {
       setLoadingOptimizedExpense(false);
     }
-  };
+  },[setOptimizedExpenses, group?.id]);
   const handleCloseSnackbar = () => {
     setSnackbar((prev) => ({
       ...prev,

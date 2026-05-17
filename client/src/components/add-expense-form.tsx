@@ -12,6 +12,8 @@ import {
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { useGroupContext } from "../store/use-group.context";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 type AddExpensesFromProps = {
   onSubmit: (data: AddExpenseData) => void;
 };
@@ -56,7 +58,14 @@ export const AddExpensesFrom = ({ onSubmit }: AddExpensesFromProps) => {
             {...register("cause")}
             error={!!errors.cause}
             helperText={errors.cause?.message}
-            sx={{ width: "100%", '& .MuiInputBase-input': { height: '25px' } }}
+            sx={{
+              width: "100%", '& .MuiInputBase-input': { height: '25px' }, "& .MuiInputLabel-root": {
+                color: "black",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "black",
+              },
+            }}
           />
         </Box>
         <Box sx={{ flex: 0.8 }}>
@@ -67,37 +76,50 @@ export const AddExpensesFrom = ({ onSubmit }: AddExpensesFromProps) => {
             {...register("value", { valueAsNumber: true })}
             error={!!errors.value}
             helperText={errors.value?.message}
-            sx={{ width: "100%", '& .MuiInputBase-input': { height: '25px' } }}
-          />
-        </Box>
-        <Box sx={{ flex: 1, color: "black" }}>
-          <Select
-            value={userToAdd}
-            {...register("paidOn")}
-            label="Paid On"
-            onChange={handleChange}
             sx={{
-              width: "100%", height: '41.5px', "& .MuiInputLabel-root": {
+              width: "100%", '& .MuiInputBase-input': { height: '25px' }, "& .MuiInputLabel-root": {
                 color: "black",
               },
               "& .MuiInputLabel-root.Mui-focused": {
                 color: "black",
               },
             }}
-          >
-            {group?.members.map((member) => {
-              return (
-                <MenuItem value={member.id} sx={{ color: "black" }}>
-                  {member.username}
-                </MenuItem>
-              );
-            })}
-          </Select>
+          />
+        </Box>
+        <Box sx={{ flex: 1, color: "black" }}>
+          <FormControl fullWidth size="small">
+            <InputLabel
+              sx={{
+                color: "black",
+                "&.Mui-focused": { color: "black" },
+              }}
+            >
+              Paid On
+            </InputLabel>
+            <Select
+              value={userToAdd}
+              {...register("paidOn")}
+              label="Paid On"
+              onChange={handleChange}
+              sx={{
+                width: "100%", height: '41.5px', color: "black",
+              }}
+            >
+              {group?.members.map((member) => {
+                return (
+                  <MenuItem value={member.id} sx={{ color: "black" }}>
+                    {member.username}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+
         </Box>
         <Button type="submit" sx={{ backgroundColor: "black" }}>
           Add Expense
         </Button>
-      </Paper>
-    </Box>
+      </Paper >
+    </Box >
   );
 };

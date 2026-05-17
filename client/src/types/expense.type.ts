@@ -23,7 +23,7 @@ export type CreateExpenseDto = {
 };
 
 export type UpdateExpenseData = {
-  cause: string;
+  cause?: string;
   value: number;
   paidBy: number;
   paidOn: number;

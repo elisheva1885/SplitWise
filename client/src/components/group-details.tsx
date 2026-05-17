@@ -25,7 +25,6 @@ import { ExpensesList } from "./expenses-list";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import { useRef } from 'react';
-import AppBar from "@mui/material/AppBar";
 
 export const GroupDetails = () => {
   const { id } = useParams();
@@ -76,7 +75,7 @@ export const GroupDetails = () => {
   const [alignment, setAlignment] = useState('left');
 
   const handleChange = (
-    event: React.MouseEvent<HTMLElement>,
+    _: React.MouseEvent<HTMLElement>,
     newAlignment: string,
   ) => {
     setAlignment(newAlignment);
@@ -114,7 +113,30 @@ export const GroupDetails = () => {
         width: "100%",
       }}
     >
-
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          position: "sticky",
+          top: 0,
+          // zIndex: 10,
+          backgroundColor: "transpert",
+          py: 1,
+        }}
+      >
+        <ToggleButtonGroup
+          color="primary"
+          value={alignment}
+          exclusive
+          onChange={handleChange}
+          sx={{ position: 'fixed', backgroundColor: 'white' }}
+        >
+          <ToggleButton value="Group_members" onClick={handleScrollTogroupMembers}>Group members</ToggleButton>
+          <ToggleButton value="Group_Expenses" onClick={handleScrollTogroupExpenses}>Group Expenses</ToggleButton>
+          <ToggleButton value="Group_Optimized_expenses" onClick={handleScrollTogroupOptimizedExpenses}>Group Optimized expenses</ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
       <Card
         sx={{
           display: "flex",
@@ -191,23 +213,21 @@ export const GroupDetails = () => {
           updateToGroupOwner={actions.updateToGroupOwner}
         />
 
-        {isOwner && (
-          <Fab
-            onClick={() => setDialogType("addUser")}
-            aria-label="Add group member"
-            disabled={loadingAddMember}
-            sx={{
-              display: 'flex',
-              justifyContent: 'center', alignContent: 'center', textAlign: 'center'
-            }}
-          >
-            {loadingAddMember ? (
-              <CircularProgress size={20} />
-            ) : (
-              <GroupAddIcon />
-            )}
-          </Fab>
-        )}
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+  {isOwner && (
+    <Fab
+      onClick={() => setDialogType("addUser")}
+      aria-label="Add group member"
+      disabled={loadingAddMember}
+    >
+      {loadingAddMember ? (
+        <CircularProgress size={20} />
+      ) : (
+        <GroupAddIcon />
+      )}
+    </Fab>
+  )}
+</Box>
         <Box ref={groupExpensesRef}>
           <ExpensesList />
         </Box>
