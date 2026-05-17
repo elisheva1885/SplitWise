@@ -22,6 +22,10 @@ import { useGroupContext } from "../store/use-group.context";
 import { FormDialog } from "./form-dialog";
 import { OptimizedExpensesList } from "./optimized-expenses-list";
 import { ExpensesList } from "./expenses-list";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import ToggleButton from "@mui/material/ToggleButton";
+import { useRef } from 'react';
+import AppBar from "@mui/material/AppBar";
 
 export const GroupDetails = () => {
   const { id } = useParams();
@@ -41,10 +45,41 @@ export const GroupDetails = () => {
   } = useGroupDetails();
 
   const getGroupDetailsById = actions.getGroupDetailsById;
-  // const getGroupOptimizedExpense = actions.getGroupOptimizedExpense;
+  const groupMembersRef = useRef<HTMLDivElement | null>(null);
+  const groupExpensesRef = useRef<HTMLDivElement | null>(null);
+  const groupOptimizedExpensesRef = useRef<HTMLDivElement | null>(null);
+  const handleScrollTogroupExpenses = () => {
+    groupExpensesRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'center'
+    });
+  }
+  const handleScrollTogroupOptimizedExpenses = () => {
+    groupOptimizedExpensesRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'center'
+    });
+  }
+  const handleScrollTogroupMembers = () => {
+    groupMembersRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'center'
+    });
+  }
 
   const handleCloseDialog = () => {
     setDialogType(null);
+  };
+  const [alignment, setAlignment] = useState('left');
+
+  const handleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newAlignment: string,
+  ) => {
+    setAlignment(newAlignment);
   };
 
   useEffect(() => {
@@ -79,6 +114,7 @@ export const GroupDetails = () => {
         width: "100%",
       }}
     >
+
       <Card
         sx={{
           display: "flex",
@@ -87,6 +123,7 @@ export const GroupDetails = () => {
           gap: 0.5,
           textAlign: "center",
         }}
+        ref={groupMembersRef}
       >
         <Typography sx={{ fontSize: "xx-large", padding: "8px" }}>
           {group?.name}
@@ -106,43 +143,46 @@ export const GroupDetails = () => {
         )}
       </Card>
 
-      {owner && (
-        <Chip
-          avatar={
-            <Avatar
-              sx={{
-                backgroundColor: "black",
-                width: "70px",
-                height: "70px",
-              }}
-            >
-              <Typography
+      {
+        owner && (
+          <Chip
+            avatar={
+              <Avatar
                 sx={{
-                  fontSize: "x-small",
-                  fontWeight: "bold",
-                  color: "white",
+                  backgroundColor: "black",
+                  width: "70px",
+                  height: "70px",
                 }}
               >
-                OWN
-              </Typography>
-            </Avatar>
-          }
-          label={owner.username}
-          sx={{
-            height: "44px",
-            px: 1,
-            "& .MuiChip-avatar": {
-              width: 38,
-              height: 38,
-              borderRadius: "16px",
-            },
-          }}
-          variant="outlined"
-        ></Chip>
-      )}
+                <Typography
+                  sx={{
+                    fontSize: "x-small",
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                >
+                  OWN
+                </Typography>
+              </Avatar>
+            }
+            label={owner.username}
+            sx={{
+              height: "44px",
+              px: 1,
+              "& .MuiChip-avatar": {
+                width: 38,
+                height: 38,
+                borderRadius: "16px",
+              },
+            }}
+            variant="outlined"
+          ></Chip>
+        )
+      }
 
-      <Box sx={{ width: "100%" , display: 'flex', flexDirection: 'column',
-        justifyContent: 'center',alignContent: 'center', gap:3
+      <Box sx={{
+        width: "100%", display: 'flex', flexDirection: 'column',
+        justifyContent: 'center', alignContent: 'center', gap: 3
       }}>
         <GroupMembersList
           group={group}
@@ -156,8 +196,10 @@ export const GroupDetails = () => {
             onClick={() => setDialogType("addUser")}
             aria-label="Add group member"
             disabled={loadingAddMember}
-            sx={{display: 'flex',
-        justifyContent: 'center',alignContent: 'center', textAlign:'center'}}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center', alignContent: 'center', textAlign: 'center'
+            }}
           >
             {loadingAddMember ? (
               <CircularProgress size={20} />
@@ -166,8 +208,14 @@ export const GroupDetails = () => {
             )}
           </Fab>
         )}
-        <ExpensesList />
-        <OptimizedExpensesList />
+        <Box ref={groupExpensesRef}>
+          <ExpensesList />
+        </Box>
+        <Box ref={groupOptimizedExpensesRef}>
+
+          <OptimizedExpensesList />
+        </Box>
+
       </Box>
 
       <FormDialog
@@ -205,6 +253,6 @@ export const GroupDetails = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </Box>
+    </Box >
   );
 };

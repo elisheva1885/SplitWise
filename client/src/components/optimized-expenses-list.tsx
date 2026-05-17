@@ -14,12 +14,12 @@ import { useExpenses } from "../hooks/use-expenses";
 
 export const OptimizedExpensesList = () => {
   const { snackbar, handleCloseSnackbar, actions } = useExpenses();
-  const { optimizedExpenses, group , setGroups} = useGroupContext();
+  const { optimizedExpenses, group } = useGroupContext();
 
   useEffect(() => {
     if (!group?.id) return;
     actions.getGroupOptimizedExpense(group.id);
-  }, [setGroups]);
+  }, [group?.expenses]);
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">

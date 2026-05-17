@@ -48,7 +48,7 @@ export const Navbar = () => {
 
   return (
     <>
-      <AppBar position="static" style={{ backgroundColor: "#182720" }}>
+      <AppBar position="sticky" style={{ backgroundColor: "#182720" }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Box

@@ -11,7 +11,6 @@ import { handleApiError } from "../helpers/handle-api-error.helper";
 import type { AddExpenseData } from "../schemas/expense-schema";
 import { useUserContext } from "../store/use-user.context";
 import type { ExpenseInGroup, UpdateExpenseData } from "../types/expense.type";
-import { updateGroup } from "../api/group.api";
 
 export const useExpenses = () => {
   const { group, setOptimizedExpenses, setGroup, updateGroups } = useGroupContext();
@@ -162,7 +161,6 @@ export const useExpenses = () => {
     }
     try {
       const data = await updateExpense(expense.id, expenseData);
-
       const filteredExpenses = group.expenses.filter(
         (expense) => expense.id !== data.id,
       );
@@ -170,7 +168,6 @@ export const useExpenses = () => {
         ...group,
         expenses: [...filteredExpenses, data],
       });
-      updateGroups(group)
 
       setSnackbar({
         open: true,
@@ -184,9 +181,6 @@ export const useExpenses = () => {
         message: handleApiError(err),
       });
     }
-    // finally {
-    //     setUpdateExpenseDialog(false);
-    // }
   };
 
   return {
