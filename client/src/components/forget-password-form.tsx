@@ -11,9 +11,9 @@ import {
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import axios from "axios";
 import { useState } from "react";
-import type { SnackbarState } from "../types/snackbar.types";
+import Box from "@mui/material/Box";
+import { handleApiError } from "../helpers/handle-api-error.helper";
 
 type ForgetPasswordProps = {
   toLoginMode: () => void;
@@ -24,48 +24,28 @@ export const ForgetPasswordForm = ({
   toLoginMode,
   setDialogOpen,
 }: ForgetPasswordProps) => {
-  const [snackbar, setSnackbar] = useState<SnackbarState>({
+  const [snackbar, setSnackbar] = useState({
     open: false,
-    severity: "success",
+    severity: "success" as "success" | "error",
     message: "",
   });
-
   const onSubmit = async (data: ForgetPasswordData) => {
     try {
-      //add a call to the server
       setSnackbar({
         open: true,
         severity: "success",
         message: `send message to your email ${data.email}`,
       });
-
       setTimeout(() => {
         setDialogOpen(false);
       }, 450);
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const message = err.response?.data?.message || err.message;
-
-        setSnackbar({
-          open: true,
-          severity: "error",
-          message,
-        });
-      } else {
-        setSnackbar({
-          open: true,
-          severity: "error",
-          message: "Something went wrong",
-        });
-      }
+    } catch (err) {
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: handleApiError(err),
+      });
     }
-  };
-
-  const handleClose = () => {
-    setSnackbar((prev) => ({
-      ...prev,
-      open: false,
-    }));
   };
 
   const {
@@ -76,19 +56,23 @@ export const ForgetPasswordForm = ({
     resolver: zodResolver(ForgetPasswordSchema),
     mode: "onChange",
   });
-
+  const handleClose = () => {
+    setSnackbar((prev) => ({
+      ...prev,
+      open: false,
+    }));
+  };
   return (
-    <form
+    <Box
+      component="form"
       onSubmit={handleSubmit(onSubmit)}
-      style={{ backgroundColor: "#2e3136" }}
+      sx={{
+        backgroundColor: "#2e3136",
+      }}
     >
-      <Typography sx={{ color: "white" }}>
-        Forget Password
-      </Typography>
+      <Typography sx={{ color: "white" }}>Forget Password</Typography>
 
-      <InputLabel sx={{ margin: "7px" }}>
-        Email
-      </InputLabel>
+      <InputLabel sx={{ margin: "7px" }}>Email</InputLabel>
 
       <TextField
         type="email"
@@ -103,22 +87,18 @@ export const ForgetPasswordForm = ({
       <Button onClick={toLoginMode}>Login</Button>
 
       <Button type="submit">SUBMIT</Button>
-
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={5000}
+        autoHideDuration={2500}
         onClose={handleClose}
       >
         <Alert severity={snackbar.severity}>
           <AlertTitle>
-            {snackbar.severity === "success"
-              ? "Success"
-              : "Error"}
+            {snackbar.severity === "success" ? "Success" : "Error"}
           </AlertTitle>
-
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </form>
+    </Box>
   );
 };

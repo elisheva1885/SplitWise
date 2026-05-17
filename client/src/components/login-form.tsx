@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema, type LoginData } from "../schemas/auth-schemas";
 import type { LoginFormData } from "../types/auth.types";
+import Box from "@mui/material/Box";
 
 type LoginFormProps = {
   onSubmit: (data: LoginFormData) => void;
@@ -28,9 +29,10 @@ export const LoginForm = ({
   });
 
   return (
-    <form
+    <Box
+      component="form"
       onSubmit={handleSubmit(onSubmit)}
-      style={{ backgroundColor: "#2e3136" }}
+      sx={{ backgroundColor: "#2e3136" }}
     >
       <Typography sx={{ color: "white" }}>Login</Typography>
       <InputLabel sx={{ margin: "7px" }}>username</InputLabel>
@@ -55,6 +57,6 @@ export const LoginForm = ({
       <Button onClick={toForgetPasswordMode}>Forget password</Button>
       <Button onClick={toRegisterMode}>Register</Button>
       <Button type="submit">Submit</Button>
-    </form>
+    </Box>
   );
 };

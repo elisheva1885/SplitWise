@@ -30,40 +30,39 @@ export const AddExpensesFrom = ({ group, onSubmit }: AddExpensesFromProps) => {
   } = useForm<AddExpenseData>({
     resolver: zodResolver(AddExpenseSchema),
     mode: "onChange",
-
   });
   return (
-    <Box component='form'
+    <Box
+      component="form"
       onSubmit={handleSubmit(onSubmit)}
       style={{
         display: "flex",
         justifyContent: "center",
         gap: 3,
-        padding: '10px',
+        padding: "10px",
       }}
     >
-      <Paper sx={{
-        display: "flex",
-        gap: 2,
-        p: 1,
-        alignItems: "center",
-      }}>
-        <Box sx={{ flex: 1.7 }}
-        >
-          <InputLabel sx={{ color: 'black' }}>cause</InputLabel>
+      <Paper
+        sx={{
+          display: "flex",
+          gap: 2,
+          p: 1,
+          alignItems: "center",
+        }}
+      >
+        <Box sx={{ flex: 1.7 }}>
+          <InputLabel sx={{ color: "black" }}>cause</InputLabel>
           <TextField
             type="text"
             size="small"
-            label='cause'
+            label="cause"
             {...register("cause")}
             error={!!errors.cause}
             helperText={errors.cause?.message}
-
           />
         </Box>
-        <Box sx={{ flex: 0.8 }}
-        >
-          <InputLabel sx={{ color: 'black' }}>value</InputLabel>
+        <Box sx={{ flex: 0.8 }}>
+          <InputLabel sx={{ color: "black" }}>value</InputLabel>
           <TextField
             type="number"
             size="small"
@@ -73,8 +72,8 @@ export const AddExpensesFrom = ({ group, onSubmit }: AddExpensesFromProps) => {
             helperText={errors.value?.message}
           />
         </Box>
-        <Box sx={{ flex: 1, color: 'black' }}>
-          <InputLabel sx={{ color: 'black' }}>Paid On</InputLabel>
+        <Box sx={{ flex: 1, color: "black" }}>
+          <InputLabel sx={{ color: "black" }}>Paid On</InputLabel>
           <Select
             value={userToAdd}
             {...register("paidOn")}
@@ -84,8 +83,7 @@ export const AddExpensesFrom = ({ group, onSubmit }: AddExpensesFromProps) => {
           >
             {group?.members.map((member) => {
               return (
-                <MenuItem value={member.id} sx={{ color: 'black' }}
-                >
+                <MenuItem value={member.id} sx={{ color: "black" }}>
                   {member.username}
                 </MenuItem>
               );

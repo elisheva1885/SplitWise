@@ -39,7 +39,7 @@ export class AuthController {
     @Body() signInInfo: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AuthResponseDto> {
-    const {id, username, email, token } =
+    const { id, username, email, token } =
       await this.authService.signIn(signInInfo);
     res.cookie('access_token', token, {
       httpOnly: true,

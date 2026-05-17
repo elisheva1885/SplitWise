@@ -10,7 +10,6 @@ export class UserResponseDto {
 export class UsersResponseDto {
   id!: number;
   username!: string;
-
 }
 export class GetUserResponseDto {
   user!: UserResponseDto;

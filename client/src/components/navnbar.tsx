@@ -9,11 +9,10 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
 import { useUserContext } from "../store/use-user.context";
 import { useNavigate } from "react-router";
 import { AuthForms } from "./auth-forms";
-import CloseIcon from "@mui/icons-material/Close";
+import { FormDialog } from "./form-dialog";
 
 export const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -117,39 +116,10 @@ export const Navbar = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      <Dialog open={open} onClose={handleCloseDialog}>
-        <Box
-          style={{
-            backgroundColor: "#2e3136",
-            paddingBottom: "10px",
-            paddingLeft: "15px",
-            paddingRight: "15px",
-          }}
-        >
-          <CloseIcon
-            onClick={handleCloseDialog}
-            sx={{
-              backgroundColor: "#2e3136",
-              color: "white",
-              position: "absolute",
-              insetInlineEnd: 3,
-            }}
-          />
-          <br />
-          <Box
-            sx={{
-              textAlign: "center",
-              padding: "8px",
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              justifyContent: "space-between",
-            }}
-          >
-            <AuthForms setDialogOpen={setOpen} />
-          </Box>
-        </Box>
-      </Dialog>
+
+      <FormDialog open={open} handleCloseDialog={handleCloseDialog}>
+        <AuthForms setDialogOpen={setOpen} />
+      </FormDialog>
     </>
   );
 };

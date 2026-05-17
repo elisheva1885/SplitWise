@@ -1,5 +1,4 @@
-import { useState } from "react";
-import type { GroupData } from "../types/group.types";
+import { useEffect} from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -10,63 +9,17 @@ import Paper from "@mui/material/Paper";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import type { OptimizedExpense } from "../types/expense.type";
-import type { SnackbarState } from "../types/snackbar.types";
+import { useGroupContext } from "../store/use-group.context";
+import { useExpenses } from "../hooks/use-expenses";
 
-type OptimizedExpensesListProps = {
-  expenses: OptimizedExpense[] | null;
-  groupId: number | undefined;
-  setGroup: (group: GroupData) => void;
-};
+export const OptimizedExpensesList = () => {
+  const { snackbar, handleCloseSnackbar, actions } = useExpenses();
+  const { optimizedExpenses, group , setGroups} = useGroupContext();
 
-export const OptimizedExpensesList = ({
-  expenses,
-  groupId,
-  setGroup,
-}: OptimizedExpensesListProps) => {
-  const [snackbar, setSnackbar] = useState<SnackbarState>({
-    open: false,
-    severity: "success",
-    message: "",
-  });
-
-  // const deleteGroupMember = async (userId: number) => {
-  //     setSnackbar({
-  //         open: true,
-  //         severity: "error",
-  //         message: "Group not loaded",
-  //     });
-
-  //     if (!groupId) {
-  //         return;
-  //     }
-
-  //     try {
-  //         const data = await deleteUserFromGroup(groupId, userId)
-  //         setGroup(data);
-
-  //         setSnackbar({
-  //             open: true,
-  //             severity: "success",
-  //             message: "User removed successfully",
-  //         });
-  //     }
-  //     catch (err) {
-  //         setSnackbar({
-  //             open: true,
-  //             severity: "error",
-  //             message: handleApiError(err),
-  //         });
-  //     }
-  // }
-
-  const handleClose = () => {
-    setSnackbar((prev) => ({
-      ...prev,
-      open: false,
-    }));
-  };
-
+  useEffect(() => {
+    if (!group?.id) return;
+    actions.getGroupOptimizedExpense(group?.id);
+  }, [setGroups]);
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -80,7 +33,7 @@ export const OptimizedExpensesList = ({
         </TableHead>
 
         <TableBody>
-          {expenses?.map((expense) => (
+          {optimizedExpenses.map((expense) => (
             <TableRow
               sx={{
                 "&:last-child td, &:last-child th": {
@@ -88,9 +41,7 @@ export const OptimizedExpensesList = ({
                 },
               }}
             >
-              <TableCell align="center">
-                {expense.value}
-              </TableCell>
+              <TableCell align="center">{expense.value}</TableCell>
 
               <TableCell align="center">
                 {expense.paidByUser.username}
@@ -100,17 +51,7 @@ export const OptimizedExpensesList = ({
                 {expense.paidOnUser.username}
               </TableCell>
 
-              <TableCell align="center">
-                {/* <IconButton
-                    onClick={() => deleteGroupMember(member.id)}
-                    sx={{
-                        backgroundColor: "white",
-                        padding: 0.2,
-                    }}
-                >
-                    <DeleteIcon />
-                </IconButton> */}
-              </TableCell>
+              <TableCell align="center"></TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -119,15 +60,12 @@ export const OptimizedExpensesList = ({
       <Snackbar
         open={snackbar.open}
         autoHideDuration={5000}
-        onClose={handleClose}
+        onClose={handleCloseSnackbar}
       >
         <Alert severity={snackbar.severity}>
           <AlertTitle>
-            {snackbar.severity === "success"
-              ? "Success"
-              : "Error"}
+            {snackbar.severity === "success" ? "Success" : "Error"}
           </AlertTitle>
-
           {snackbar.message}
         </Alert>
       </Snackbar>

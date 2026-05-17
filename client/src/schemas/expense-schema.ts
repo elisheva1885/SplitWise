@@ -12,7 +12,6 @@ export const UpdateExpenseSchema = z.object({
   value: z.number().min(1),
   paidOn: z.number(),
   paidBy: z.number(),
-
 });
 
 export type UpdateExpenseData = z.infer<typeof UpdateExpenseSchema>;

@@ -30,10 +30,9 @@ export async function deleteExpense(
   return data;
 }
 
-
 export async function updateExpense(
   expenseId: number,
-  expenseData: UpdateExpenseData
+  expenseData: UpdateExpenseData,
 ): Promise<ExpenseInGroup> {
   const { data } = await api.patch(`/expense/${expenseId}`, expenseData);
   console.log(data);

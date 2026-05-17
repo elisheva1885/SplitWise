@@ -2,10 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   ForbiddenException,
-  forwardRef,
-  Inject,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { Group } from './group.entity';
@@ -22,11 +19,9 @@ export class GroupService {
   constructor(
     @InjectRepository(Group)
     private readonly groupRepository: Repository<Group>,
-    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
-    @Inject(forwardRef(() => ExpenseService))
-    private readonly expenseService: ExpenseService
-  ) { }
+    private readonly expenseService: ExpenseService,
+  ) {}
 
   private toResponseDto(group: Group): FullGroupResponseDto {
     return plainToInstance(FullGroupResponseDto, group, {
@@ -113,7 +108,7 @@ export class GroupService {
   ): Promise<FullGroupResponseDto> {
     const group = await this.groupRepository.findOne({
       where: { uuid: groupId, owner: { uuid: userId } },
-      relations: ['owner','members','expenses'],
+      relations: ['owner', 'members', 'expenses'],
     });
     if (!group) {
       throw new NotFoundException('group not found');
@@ -152,13 +147,14 @@ export class GroupService {
     if (group.owner.uuid !== userId) {
       throw new ForbiddenException('Only the owner can delete this group');
     }
-    try {
-      await this.groupRepository.remove(group);
-    } catch {
-      throw new InternalServerErrorException(
-        'Could not delete group. Ensure all related data is cleared or cascading is enabled',
-      );
+    const groupBalancedExpense = await this.expenseService.getGroupExpense(
+      groupId,
+      userId,
+    );
+    if (groupBalancedExpense.length > 0) {
+      throw new BadRequestException('you cant delete unbalanced group');
     }
+    await this.groupRepository.remove(group);
     return { message: 'Group deleted successfully' };
   }
 
@@ -197,7 +193,7 @@ export class GroupService {
       expense.paidByUser.id === user.uuid || expense.paidOnUser.id === user.uuid
     )
     if (hasOpenDebts) {
-      throw new BadRequestException('user still has open expenses')
+      throw new BadRequestException('user still has open expenses');
     }
     const members = group?.members.filter(
       (member) => member.uuid !== userToRemoveId,
@@ -229,7 +225,7 @@ export class GroupService {
       throw new NotFoundException('user to add not found');
     }
     const isMember = group.members.some((member) => member.uuid == userToAddId);
-    
+
     if (isMember) {
       throw new ConflictException('user already in group');
     }
