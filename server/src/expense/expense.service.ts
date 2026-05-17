@@ -23,9 +23,7 @@ export class ExpenseService {
   constructor(
     @InjectRepository(Expense)
     private readonly expenseRepository: Repository<Expense>,
-    @Inject(forwardRef(() => GroupService))
     private readonly groupService: GroupService,
-    @Inject(forwardRef(() => ExpenseValidator))
     private readonly expenseValidator: ExpenseValidator,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,

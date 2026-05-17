@@ -28,6 +28,7 @@ export const UserPage = () => {
         severity: "error",
         message: "you need to change one of the inputs before saving!",
       });
+      setLoading(false)
       return;
     }
     try {
