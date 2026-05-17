@@ -1,9 +1,8 @@
 import Button from "@mui/material/Button";
-import Select, { type SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AddExpenseSchema,
@@ -14,16 +13,14 @@ import Paper from "@mui/material/Paper";
 import { useGroupContext } from "../store/use-group.context";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-type AddExpensesFromProps = {
+type AddExpensesFormProps = {
   onSubmit: (data: AddExpenseData) => void;
 };
-export const AddExpensesFrom = ({ onSubmit }: AddExpensesFromProps) => {
-  const [userToAdd, setUserToAdd] = useState("");
+export const AddExpensesForm = ({ onSubmit }: AddExpensesFormProps) => {
   const { group } = useGroupContext()
-  const handleChange = (event: SelectChangeEvent) => {
-    setUserToAdd(event.target.value as string);
-  };
+
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -58,14 +55,7 @@ export const AddExpensesFrom = ({ onSubmit }: AddExpensesFromProps) => {
             {...register("cause")}
             error={!!errors.cause}
             helperText={errors.cause?.message}
-            sx={{
-              width: "100%", '& .MuiInputBase-input': { height: '25px' }, "& .MuiInputLabel-root": {
-                color: "black",
-              },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "black",
-              },
-            }}
+            sx={inputStyles}
           />
         </Box>
         <Box sx={{ flex: 0.8 }}>
@@ -76,14 +66,7 @@ export const AddExpensesFrom = ({ onSubmit }: AddExpensesFromProps) => {
             {...register("value", { valueAsNumber: true })}
             error={!!errors.value}
             helperText={errors.value?.message}
-            sx={{
-              width: "100%", '& .MuiInputBase-input': { height: '25px' }, "& .MuiInputLabel-root": {
-                color: "black",
-              },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "black",
-              },
-            }}
+            sx={inputStyles}
           />
         </Box>
         <Box sx={{ flex: 1, color: "black" }}>
@@ -96,23 +79,25 @@ export const AddExpensesFrom = ({ onSubmit }: AddExpensesFromProps) => {
             >
               Paid On
             </InputLabel>
-            <Select
-              value={userToAdd}
-              {...register("paidOn")}
-              label="Paid On"
-              onChange={handleChange}
-              sx={{
-                width: "100%", height: '41.5px', color: "black",
-              }}
-            >
-              {group?.members.map((member) => {
-                return (
-                  <MenuItem value={member.id} sx={{ color: "black" }}>
-                    {member.username}
-                  </MenuItem>
-                );
-              })}
-            </Select>
+            <Controller
+              name="paidOn"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  label="Paid On"
+                  sx={{
+                    width: "100%", height: '41.5px', color: "black",
+                  }}
+                >
+                  {group?.members.map((member) => (
+                    <MenuItem key={member.id} value={member.id} sx={{ color: "black" }}>
+                      {member.username}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
           </FormControl>
 
         </Box>
@@ -122,4 +107,17 @@ export const AddExpensesFrom = ({ onSubmit }: AddExpensesFromProps) => {
       </Paper >
     </Box >
   );
+};
+
+const inputStyles = {
+  width: "100%",
+  "& .MuiInputBase-input": {
+    height: "25px",
+  },
+  "& .MuiInputLabel-root": {
+    color: "black",
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "black",
+  },
 };
