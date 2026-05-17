@@ -14,6 +14,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import axios from "axios";
 import { useState } from "react";
 import Box from "@mui/material/Box";
+import { handleApiError } from "../helpers/handle-api-error.helper";
 
 type ForgetPasswordProps = {
   toLoginMode: () => void;
@@ -40,22 +41,12 @@ export const ForgetPasswordForm = ({
         setDialogOpen(false);
       }, 450);
     }
-    catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const message = err.response?.data?.message || err.message;
-
-        setSnackbar({
-          open: true,
-          severity: "error",
-          message,
-        });
-      } else {
-        setSnackbar({
-          open: true,
-          severity: "error",
-          message: "Something went wrong",
-        });
-      }
+    catch (err) {
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: handleApiError(err),
+      });
     }
   };
 
@@ -76,7 +67,7 @@ export const ForgetPasswordForm = ({
   return (
     <Box component='form'
       onSubmit={handleSubmit(onSubmit)}
-      sx={{ bgcolor: 'primary.main' }}
+      sx={{ backgroundColor: "#2e3136" }}
     >
       <Typography sx={{ color: "white" }}>Forget Password</Typography>
       <InputLabel sx={{ margin: "7px" }}>Email</InputLabel>
