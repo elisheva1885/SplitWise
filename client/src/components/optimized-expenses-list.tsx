@@ -18,7 +18,7 @@ export const OptimizedExpensesList = () => {
 
   useEffect(() => {
     if (!group?.id) return;
-    actions.getGroupOptimizedExpense(group?.id);
+    actions.getGroupOptimizedExpense(group.id);
   }, [setGroups]);
   return (
     <TableContainer component={Paper}>
@@ -28,7 +28,6 @@ export const OptimizedExpensesList = () => {
             <TableCell align="center">Value</TableCell>
             <TableCell align="center">Paid By</TableCell>
             <TableCell align="center">Paid On</TableCell>
-            <TableCell align="center"></TableCell>
           </TableRow>
         </TableHead>
 
@@ -51,7 +50,6 @@ export const OptimizedExpensesList = () => {
                 {expense.paidOnUser.username}
               </TableCell>
 
-              <TableCell align="center"></TableCell>
             </TableRow>
           ))}
         </TableBody>

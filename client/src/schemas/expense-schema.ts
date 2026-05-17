@@ -8,7 +8,7 @@ export const AddExpenseSchema = z.object({
 export type AddExpenseData = z.infer<typeof AddExpenseSchema>;
 
 export const UpdateExpenseSchema = z.object({
-  cause: z.string(),
+  cause: z.string().optional(),
   value: z.number().min(1),
   paidOn: z.number(),
   paidBy: z.number(),

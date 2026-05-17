@@ -72,7 +72,6 @@ export const useGroupDetails = () => {
       const data = await addUserToGroup(group.id, userId);
 
       setGroup(data);
-
       setSnackbar({
         open: true,
         severity: "success",

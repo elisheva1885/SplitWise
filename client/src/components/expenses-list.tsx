@@ -34,7 +34,7 @@ export const ExpensesList = () => {
 
     return (
         <TableContainer component={Paper}>
-            <AddExpensesFrom group={group} onSubmit={actions.addExpenseToGroup} />
+            <AddExpensesFrom onSubmit={actions.addExpenseToGroup} />
             <Table sx={{ minWidth: 650 }}>
                 <TableHead>
                     <TableRow>

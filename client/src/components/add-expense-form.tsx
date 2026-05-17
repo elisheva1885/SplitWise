@@ -2,7 +2,6 @@ import Button from "@mui/material/Button";
 import Select, { type SelectChangeEvent } from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
-import type { GroupData } from "../types/group.types";
 import MenuItem from "@mui/material/MenuItem";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,16 +9,15 @@ import {
   AddExpenseSchema,
   type AddExpenseData,
 } from "../schemas/expense-schema";
-import InputLabel from "@mui/material/InputLabel";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
+import { useGroupContext } from "../store/use-group.context";
 type AddExpensesFromProps = {
-  group: GroupData | null;
   onSubmit: (data: AddExpenseData) => void;
 };
-export const AddExpensesFrom = ({ group, onSubmit }: AddExpensesFromProps) => {
+export const AddExpensesFrom = ({ onSubmit }: AddExpensesFromProps) => {
   const [userToAdd, setUserToAdd] = useState("");
-
+  const { group } = useGroupContext()
   const handleChange = (event: SelectChangeEvent) => {
     setUserToAdd(event.target.value as string);
   };
@@ -35,11 +33,11 @@ export const AddExpensesFrom = ({ group, onSubmit }: AddExpensesFromProps) => {
     <Box
       component="form"
       onSubmit={handleSubmit(onSubmit)}
-      style={{
+      sx={{
         display: "flex",
         justifyContent: "center",
         gap: 3,
-        padding: "10px",
+        padding: 2,
       }}
     >
       <Paper
@@ -51,7 +49,6 @@ export const AddExpensesFrom = ({ group, onSubmit }: AddExpensesFromProps) => {
         }}
       >
         <Box sx={{ flex: 1.7 }}>
-          <InputLabel sx={{ color: "black" }}>cause</InputLabel>
           <TextField
             type="text"
             size="small"
@@ -59,10 +56,10 @@ export const AddExpensesFrom = ({ group, onSubmit }: AddExpensesFromProps) => {
             {...register("cause")}
             error={!!errors.cause}
             helperText={errors.cause?.message}
+            sx={{ width: "100%", '& .MuiInputBase-input': { height: '25px' } }}
           />
         </Box>
         <Box sx={{ flex: 0.8 }}>
-          <InputLabel sx={{ color: "black" }}>value</InputLabel>
           <TextField
             type="number"
             size="small"
@@ -70,16 +67,23 @@ export const AddExpensesFrom = ({ group, onSubmit }: AddExpensesFromProps) => {
             {...register("value", { valueAsNumber: true })}
             error={!!errors.value}
             helperText={errors.value?.message}
+            sx={{ width: "100%", '& .MuiInputBase-input': { height: '25px' } }}
           />
         </Box>
         <Box sx={{ flex: 1, color: "black" }}>
-          <InputLabel sx={{ color: "black" }}>Paid On</InputLabel>
           <Select
             value={userToAdd}
             {...register("paidOn")}
             label="Paid On"
             onChange={handleChange}
-            sx={{ width: "100%" }}
+            sx={{
+              width: "100%", height: '41.5px', "& .MuiInputLabel-root": {
+                color: "black",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "black",
+              },
+            }}
           >
             {group?.members.map((member) => {
               return (
