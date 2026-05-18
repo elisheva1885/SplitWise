@@ -11,10 +11,12 @@ import Paper from "@mui/material/Paper";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import { MemberSelect } from "./member-select";
+import FormHelperText from "@mui/material/FormHelperText";
 type AddExpensesFormProps = {
   onSubmit: (data: AddExpenseData) => void;
+  loadingAddExpense: boolean
 };
-export const AddExpensesForm = ({ onSubmit }: AddExpensesFormProps) => {
+export const AddExpensesForm = ({ onSubmit ,loadingAddExpense}: AddExpensesFormProps) => {
 
   const {
     control,
@@ -67,7 +69,7 @@ export const AddExpensesForm = ({ onSubmit }: AddExpensesFormProps) => {
           />
         </Box>
         <Box sx={{ flex: 1, color: "black" }}>
-          <FormControl fullWidth size="small">
+          <FormControl fullWidth size="small" error={!!errors.paidOn} >
             <InputLabel
               sx={{
                 color: "black",
@@ -77,9 +79,10 @@ export const AddExpensesForm = ({ onSubmit }: AddExpensesFormProps) => {
               Paid On
             </InputLabel>
             <MemberSelect name="paidOn" control={control} label="Paid By" />
+          <FormHelperText>{errors.paidOn?.message}</FormHelperText>
           </FormControl>
         </Box>
-        <Button type="submit" sx={{ backgroundColor: "black" }}>
+        <Button type="submit" sx={{ backgroundColor: "black" }} disabled={loadingAddExpense}>
           Add Expense
         </Button>
       </Paper>

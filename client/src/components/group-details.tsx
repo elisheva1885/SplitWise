@@ -113,18 +113,18 @@ export const GroupDetails = () => {
         width: "100%",
       }}
     >
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          position: "sticky",
-          top: 0,
-          // zIndex: 10,
-          backgroundColor: "transpert",
-          py: 1,
-        }}
-      >
+ <Box
+  sx={{
+    width: "100%",
+    position: "sticky",
+    top: 0,
+    display: "flex",
+    justifyContent: "center",
+    py: 1.5,
+    backgroundColor: "background.default",
+    backdropFilter: "blur(6px)",
+  }}
+>
         <ToggleButtonGroup
           color="primary"
           value={alignment}
@@ -159,6 +159,7 @@ export const GroupDetails = () => {
           alignItems: "center",
           gap: 0.5,
           textAlign: "center",
+          marginTop: 5
         }}
         ref={groupMembersRef}
       >

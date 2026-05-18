@@ -28,7 +28,7 @@ export const ExpensesList = () => {
   const [updateExpenseDialog, setUpdateExpenseDialog] = useState(false);
   const [expenseForUpdate, setExpenseForUpdate] = useState<ExpenseInGroup>();
 
-  const { snackbar, handleCloseSnackbar, actions } = useExpenses();
+  const { snackbar, handleCloseSnackbar,loadingAddExpenses,loadingDeleteExpenses, loadingUpdateExpenses, actions } = useExpenses();
   const openUpdateDialog = (expense: ExpenseInGroup) => {
     setExpenseForUpdate(expense);
     setUpdateExpenseDialog(true);
@@ -44,7 +44,7 @@ export const ExpensesList = () => {
         <Box>No expenses in this group</Box>
       ) : (
         <TableContainer component={Paper}>
-          <AddExpensesForm onSubmit={actions.addExpenseToGroup} />
+          <AddExpensesForm onSubmit={actions.addExpenseToGroup} loadingAddExpense={loadingAddExpenses}/>
           <Table sx={{ minWidth: 650 }}>
             <TableHead>
               <TableRow>
@@ -75,7 +75,7 @@ export const ExpensesList = () => {
                     <TableCell align="center">
                       {canEdit && (
                         <Tooltip title="Edit Expense">
-                          <IconButton onClick={() => openUpdateDialog(expense)}>
+                          <IconButton onClick={() => openUpdateDialog(expense)} disabled={loadingUpdateExpenses}>
                             <EditIcon />
                           </IconButton>
                         </Tooltip>
@@ -85,7 +85,7 @@ export const ExpensesList = () => {
                     <TableCell align="center">
                       {canEdit && (
                         <Tooltip title="Delete Expense">
-                          <IconButton
+                          <IconButton disabled={loadingDeleteExpenses}
                             onClick={() =>
                               actions.deleteExpenseFromGroup(expense.id)
                             }
@@ -118,7 +118,7 @@ export const ExpensesList = () => {
       )}
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={5000}
+        autoHideDuration={2500}
         onClose={handleCloseSnackbar}
       >
         <Alert severity={snackbar.severity}>

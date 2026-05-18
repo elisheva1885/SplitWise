@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { SnackbarState } from "../types/snackbar.types";
 
 export const useSnackbar = () => {
@@ -19,9 +19,9 @@ export const useSnackbar = () => {
     });
   };
 
-  const showError = (message: string) => {
+  const showError = useCallback((message: string) => {
     showSnackbar("error", message);
-  };
+  },[]);
 
   const showSuccess = (message: string) => {
     showSnackbar("success", message);

@@ -16,6 +16,9 @@ export const useExpenses = () => {
     const { group, setOptimizedExpenses, setGroup } = useGroupContext();
     const { user } = useUserContext();
     const [loadingOptimizedExpenses, setLoadingOptimizedExpenses] = useState(false);
+    const [loadingAddExpenses, setLoadingAddExpenses] = useState(false);
+    const [loadingUpdateExpenses, setLoadingUpdateExpenses] = useState(false);
+    const [loadingDeleteExpenses, setLoadingDeleteExpenses] = useState(false);
 
     const {
         snackbar,
@@ -40,12 +43,9 @@ export const useExpenses = () => {
                 showError("Group not loaded");
                 return;
             }
-
             try {
                 setLoadingOptimizedExpenses(true);
-
                 const data = await getOptimizedExpenses(id);
-
                 setOptimizedExpenses(data);
             } catch (err) {
                 showError(handleApiError(err));
@@ -66,8 +66,8 @@ export const useExpenses = () => {
             showError("User not connected");
             return;
         }
-
         try {
+            setLoadingAddExpenses(true);
             const data = await createExpense({
                 cause: expenseData.cause,
                 value: expenseData.value,
@@ -85,6 +85,9 @@ export const useExpenses = () => {
         } catch (err) {
             showError(handleApiError(err));
         }
+        finally{
+            setLoadingAddExpenses(false)
+        }
     };
 
     const deleteExpenseFromGroup = async (expenseId: number) => {
@@ -94,6 +97,7 @@ export const useExpenses = () => {
         }
 
         try {
+            setLoadingDeleteExpenses(true)
             await deleteExpense(expenseId);
 
             const filteredExpenses = group.expenses.filter(
@@ -109,6 +113,9 @@ export const useExpenses = () => {
         } catch (err) {
             showError(handleApiError(err));
         }
+        finally{
+            setLoadingDeleteExpenses(false)
+        }
     };
 
     const updateGroupExpense = async (
@@ -121,15 +128,15 @@ export const useExpenses = () => {
         }
 
         if (
-            isExpenseChanged(expense,expenseData)
+            !isExpenseChanged(expense,expenseData)
         ) {
             showError("you need to change one of the inputs before saving!");
             return;
         }
 
         try {
+            setLoadingUpdateExpenses(true)
             const data = await updateExpense(expense.id, expenseData);
-
             const mappedExpenses = group.expenses.map((expense) =>
                 expense.id === data.id ? data : expense,
             );
@@ -142,10 +149,16 @@ export const useExpenses = () => {
         } catch (err) {
             showError(handleApiError(err));
         }
+        finally{
+            setLoadingUpdateExpenses(false)
+        }
     };
 
     return {
         loadingOptimizedExpenses,
+        loadingAddExpenses,
+        loadingUpdateExpenses,
+        loadingDeleteExpenses,
         snackbar,
         handleCloseSnackbar,
         actions: {

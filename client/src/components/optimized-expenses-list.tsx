@@ -26,7 +26,7 @@ export const OptimizedExpensesList = () => {
     if (!group?.id) return;
     getGroupOptimizedExpense(group.id);
   }, [group?.id, getGroupOptimizedExpense]);
-  if (loadingOptimizedExpenses) {
+  if (loadingOptimizedExpenses) {    
     return <CircularProgress />;
   }
   if (!optimizedExpenses.length) {
@@ -75,7 +75,7 @@ export const OptimizedExpensesList = () => {
       )}
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={5000}
+        autoHideDuration={2500}
         onClose={handleCloseSnackbar}
       >
         <Alert severity={snackbar.severity} onClose={handleCloseSnackbar}>

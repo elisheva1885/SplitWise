@@ -4,7 +4,7 @@ export const AddExpenseSchema = z.object({
   value: z
     .number({ message: "value must be bigger than zero" })
     .min(1, { message: "value must be bigger than zero" }),
-  paidOn: z.number(),
+  paidOn: z.number({ message: "you must choose a user for the expense" }),
 });
 
 export type AddExpenseData = z.infer<typeof AddExpenseSchema>;
