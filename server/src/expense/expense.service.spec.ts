@@ -2,31 +2,10 @@
 // import { GroupService } from "src/group/group.service";
 // import { Test } from "@nestjs/testing";
 
-import { GroupService } from "src/group/group.service";
 import { ExpenseService } from "./expense.service";
 import { Test } from "@nestjs/testing";
 import { NotFoundException } from "@nestjs/common";
-
-// describe('ExpenseService', () => {
-//     let expenseService: ExpenseService;
-//     let groupService: GroupService;
-//     beforeEach(async () => {
-//         const moduleRef = await Test.createTestingModule({
-//             providers: [ExpenseService, GroupService],
-//         }).compile();
-
-//         expenseService = moduleRef.get(ExpenseService);
-//         groupService = moduleRef.get(GroupService);
-//     });
-//     describe('getOptimizedExpense', () => {
-//         it('should throw group not found', async () => {
-//             const result = ['test'];
-//             jest.spyOn(groupService, 'findByIdWithRelations')(() => result);
-//             expect(await catsController.findAll()).toBe(result);
-
-//         })
-//     })
-// })
+import { GroupService } from "src/group/group.service";
 
 describe("ExpenseService", () => {
     let expenseService: ExpenseService;
@@ -35,7 +14,10 @@ describe("ExpenseService", () => {
         const moduleRef = await Test.createTestingModule({
             providers: [
                 ExpenseService,
-                GroupService,
+                {
+                    provide: GroupService,
+                    useValue: { findByIdWithRelations: jest.fn(), },
+                },
             ]
         }).compile();
         expenseService = moduleRef.get(ExpenseService);
@@ -47,6 +29,27 @@ describe("ExpenseService", () => {
             await expect(
                 expenseService.getGroupExpense(1, 1),
             ).rejects.toThrow(NotFoundException);
+        });
+        it("should return empty array when group has no expenses", async () => {
+            // (groupService.findByIdWithRelations as jest.Mock).mockResolvedValue(null);
+            // await expect(
+            //     expenseService.getGroupExpense(1, 1),
+            // ).rejects.toThrow(NotFoundException);
+        });
+         it("should return the same data for expense between two users", async () => {
+    
+        });
+        it("should return the sum of expenses values for a few expense between two users", async () => {
+    
+        });
+        it("should return the direct expense", async () => {
+    
+        });
+         it("should return the direct expense", async () => {
+    
+        });
+        it("should return the same expenses when simplify isnt possible", async () => {
+    
         });
     });
 });
