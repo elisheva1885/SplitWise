@@ -18,7 +18,7 @@ export const OptimizedExpensesList = () => {
   const {
     snackbar,
     handleCloseSnackbar,
-    loadingOptimizedExpense,
+    loadingOptimizedExpenses,
     actions: { getGroupOptimizedExpense },
   } = useExpenses();
   const { optimizedExpenses, group } = useGroupContext();
@@ -26,7 +26,7 @@ export const OptimizedExpensesList = () => {
     if (!group?.id) return;
     getGroupOptimizedExpense(group.id);
   }, [group?.id, getGroupOptimizedExpense]);
-  if (loadingOptimizedExpense) {
+  if (loadingOptimizedExpenses) {
     return <CircularProgress />;
   }
   if (!optimizedExpenses.length) {
@@ -34,7 +34,7 @@ export const OptimizedExpensesList = () => {
   }
   return (
     <>
-      {loadingOptimizedExpense ? (
+      {loadingOptimizedExpenses ? (
         <CircularProgress />
       ) : !optimizedExpenses.length ? (
         <Box>No optimized expenses</Box>
