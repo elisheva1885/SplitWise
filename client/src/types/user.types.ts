@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import type { GroupData } from "./group.types";
 
 export type User = {
@@ -13,8 +12,8 @@ export type UserInGroup = {
 };
 
 export type UpdateUserDto = {
-  username: string;
-  email: string;
+  username?: string;
+  email?: string;
 };
 
 export type UserDetails = {
@@ -27,9 +26,3 @@ export type UserToAdd = {
   id: number;
   username: string;
 };
-=======
-export class UpdateUserDto {
-  username?: string;
-  email?: string;
-}
->>>>>>> dev

@@ -15,12 +15,12 @@ import { useNavigate } from "react-router-dom";
 import type { SnackbarState } from "../types/snackbar.types";
 
 export const useGroupDetails = () => {
-  const [loadingGroup, setLoadingGroup] = useState(false);
-  const [loadingAddMember, setLoadingAddMember] = useState(false);
-  const [loadingUpdateGroup, setLoadingUpdateGroup] = useState(false);
-  const [loadingDeleteGroup, setLoadingDeleteGroup] = useState(false);
-  const [loadingUpdateOwner, setLoadingUpdateOwner] = useState(false);
-  const [loadingDeleteMember, setLoadingDeleteMember] = useState(false);
+  const [loadingGroup, setLoadingGroup] = useState<boolean>(false);
+  const [loadingAddMember, setLoadingAddMember] = useState<boolean>(false);
+  const [loadingUpdateGroup, setLoadingUpdateGroup] = useState<boolean>(false);
+  const [loadingDeleteGroup, setLoadingDeleteGroup] = useState<boolean>(false);
+  const [loadingUpdateOwner, setLoadingUpdateOwner] = useState<boolean>(false);
+  const [loadingDeleteMember, setLoadingDeleteMember] = useState<boolean>(false);
   const { updateGroups } = useGroupContext();
   const [snackbar, setSnackbar] = useState<SnackbarState>({
     open: false,
@@ -103,19 +103,14 @@ export const useGroupDetails = () => {
 
     try {
       setLoadingDeleteGroup(true);
-
       const data = await deleteGroup(group.id);
-
       setSnackbar({
         open: true,
         severity: "success",
         message: "Group deleted successfully!",
       });
-
       const filteredGroups = groups.filter((group) => group.id !== data);
-
       setGroups(filteredGroups);
-
       navigate("/groups");
     } catch (err) {
       setSnackbar({

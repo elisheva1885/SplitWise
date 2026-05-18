@@ -23,6 +23,7 @@ export class GroupService {
     private readonly groupRepository: Repository<Group>,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
+    @Inject(forwardRef(() => ExpenseService))
     private readonly expenseService: ExpenseService,
   ) {}
 
