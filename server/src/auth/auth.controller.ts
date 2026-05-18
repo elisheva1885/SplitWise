@@ -30,7 +30,7 @@ export class AuthController {
       secure: true,
       sameSite: 'strict',
     });
-    return { username, email };
+    return { id, username, email };
   }
 
   @HttpCode(HttpStatus.OK)
@@ -39,14 +39,14 @@ export class AuthController {
     @Body() signInInfo: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AuthResponseDto> {
-    const { username, email, token } =
+    const { id, username, email, token } =
       await this.authService.signIn(signInInfo);
     res.cookie('access_token', token, {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
     });
-    return { username, email };
+    return { id, username, email };
   }
 
   @HttpCode(HttpStatus.OK)

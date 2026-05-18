@@ -6,12 +6,13 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { RegisterDto } from 'src/auth/dto/register.dto';
 import {
   GetUserResponseDto,
   UpdateUserDto,
   UpdateUserResponseDto,
+  UsersResponseDto,
 } from './dto/user.dto';
 import { ExpenseService } from 'src/expense/expense.service';
 
@@ -84,9 +85,30 @@ export class UserService {
       groups: user?.groups?.map((group) => ({
         id: group.uuid,
         name: group.name,
-        owner: { uuid: group.owner.uuid, username: group.owner.username },
+        owner: {
+          id: group.owner.uuid,
+          username: group.owner.username,
+          email: group.owner.email,
+        },
       })),
     };
+    return userDto;
+  }
+
+  async getUsers(userId: number, query: string): Promise<UsersResponseDto[]> {
+    const users = await this.userRepository.find({
+      where: { username: ILike(`${query}%`) },
+      take: 10,
+    });
+
+    if (!users) {
+      throw new NotFoundException();
+    }
+    const userDto: UsersResponseDto[] = users.map((user) => ({
+      id: user.uuid,
+      username: user?.username,
+    }));
+
     return userDto;
   }
 

@@ -4,6 +4,7 @@ import { UserPage } from "../pages/user.page";
 import { GroupPage } from "../pages/group.page";
 import { Layout } from "../components/layout";
 import ProtectedRoutes from "./protected-routes";
+import { GroupDetails } from "../components/group-details";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,12 @@ const router = createBrowserRouter([
           {
             path: "groups",
             element: <GroupPage />,
+            children: [
+              {
+                path: ":id",
+                element: <GroupDetails />,
+              },
+            ],
           },
         ],
       },

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Patch,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -12,11 +13,12 @@ import {
   GetUserResponseDto,
   UpdateUserDto,
   UpdateUserResponseDto,
+  UsersResponseDto,
 } from './dto/user.dto';
 import { CurrentUser } from './current-user.decorator';
 import type { JwtPayload } from 'src/types/express';
 import { ApiCookieAuth } from '@nestjs/swagger';
-import { AuthResponseDto } from 'src/auth/dto/auth.dto';
+import type { AuthResponseDto } from 'src/auth/dto/auth.dto';
 @ApiCookieAuth()
 @UseGuards(AuthGuard)
 @Controller('user')
@@ -28,7 +30,13 @@ export class UserController {
   ): Promise<GetUserResponseDto> {
     return await this.userService.getUserInfoAndGroups(user.id);
   }
-
+  @Get('/all')
+  async getUsers(
+    @CurrentUser() user: JwtPayload,
+    @Query('query') query: string,
+  ): Promise<UsersResponseDto[]> {
+    return await this.userService.getUsers(user.id, query);
+  }
   @Patch()
   async updateUser(
     @CurrentUser() user: JwtPayload,
@@ -47,6 +55,6 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Get('status')
   userStatus(@CurrentUser() user: JwtPayload): AuthResponseDto {
-    return { username: user.username, email: user.email };
+    return { id: user.id, username: user.username, email: user.email };
   }
 }

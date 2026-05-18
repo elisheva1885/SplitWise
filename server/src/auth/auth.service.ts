@@ -73,6 +73,7 @@ export class AuthService {
     };
     const token = this.generateToken(payload);
     const userResult: LoginResponseDto = {
+      id: user.uuid,
       email: user.email,
       username: user.username,
       token: token,

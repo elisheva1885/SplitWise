@@ -1,15 +1,17 @@
 import { Expose, Type } from 'class-transformer';
 
 export class UserInGroupDto {
-  @Expose()
-  uuid!: number;
+  @Expose({ name: 'uuid' })
+  id!: number;
   @Expose()
   username!: string;
+  @Expose()
+  email!: string;
 }
 
 export class ExpenseInGroupDto {
-  @Expose()
-  uuid!: number;
+  @Expose({ name: 'uuid' })
+  id!: number;
   @Expose()
   cause?: string;
   @Expose()
@@ -24,8 +26,8 @@ export class ExpenseInGroupDto {
 }
 
 export class FullGroupResponseDto {
-  @Expose()
-  uuid!: number;
+  @Expose({ name: 'uuid' })
+  id!: number;
   @Expose()
   name!: string;
   @Expose()

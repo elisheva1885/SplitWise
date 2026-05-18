@@ -1,10 +1,12 @@
-export class LoginResponseDto {
-  email!: string;
-  username!: string;
-  token!: string;
-}
+export type LoginResponseDto = {
+  id: number;
+  email: string;
+  username: string;
+  token: string;
+};
 
-export class AuthResponseDto {
-  email!: string;
-  username!: string;
-}
+export type AuthResponseDto = {
+  id: number;
+  email: string;
+  username: string;
+};
