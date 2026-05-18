@@ -33,7 +33,8 @@ export const useGroupDetails = () => {
   const { user } = useUserContext();
 
   const isOwner = user?.id === group?.owner?.id;
-
+  console.log(isOwner,user?.id, group);
+  
   const navigate = useNavigate();
 
   const getGroupDetailsById = useCallback(

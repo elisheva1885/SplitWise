@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -13,12 +14,14 @@ import {
   UpdateUserResponseDto,
   UsersResponseDto,
 } from './dto/user.dto';
+import { ExpenseService } from 'src/expense/expense.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly expenseService: ExpenseService,
   ) {}
 
   async findByUsernameOrEmail(
@@ -27,6 +30,15 @@ export class UserService {
   ): Promise<User | null> {
     return await this.userRepository.findOne({
       where: [{ username }, { email }],
+    });
+  }
+  async findByIdWithRelations(
+    uuid: number,
+    relations: string[],
+  ): Promise<User | null> {
+    return await this.userRepository.findOne({
+      where: { uuid },
+      relations: relations,
     });
   }
 
@@ -131,15 +143,25 @@ export class UserService {
   }
 
   async deleteUser(userId: number): Promise<{ message: string }> {
-    const user = await this.findByUuid(userId);
+    const user = await this.findByIdWithRelations(userId, ['groups']);
     if (!user) {
       throw new NotFoundException();
     }
-    //TODO: check if the user have any expense on this group
-    //if he has to throw BadRequestException
-    user.groups = [];
-    user.expensesPaid = [];
-    await this.userRepository.save(user);
+    const groupsExpenses = await Promise.all(
+      user.groups.map(async (group) => {
+        return await this.expenseService.getGroupExpense(group.uuid, user.uuid);
+      }),
+    );
+    const hasOpenDebts = groupsExpenses.some((groupResult) =>
+      groupResult.some(
+        (expense) =>
+          expense.paidByUser.id === userId ||
+          expense.paidOnUser.id === userId,
+      ),
+    );
+    if (hasOpenDebts) {
+      throw new BadRequestException('user still has open expenses');
+    }
     await this.userRepository.remove(user);
     return { message: 'user deleted successfully' };
   }

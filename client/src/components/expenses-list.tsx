@@ -40,11 +40,12 @@ export const ExpensesList = () => {
 
   return (
     <>
-      {!group?.expenses.length ? (
-        <Box>No expenses in this group</Box>
-      ) : (
+     
         <TableContainer component={Paper}>
           <AddExpensesForm onSubmit={actions.addExpenseToGroup} loadingAddExpense={loadingAddExpenses}/>
+           {!group?.expenses?.length ? (
+        <Box>No expenses in this group</Box>
+      ) : (
           <Table sx={{ minWidth: 650 }}>
             <TableHead>
               <TableRow>
@@ -100,6 +101,7 @@ export const ExpensesList = () => {
               })}
             </TableBody>
           </Table>
+          )}
           <FormDialog
             open={updateExpenseDialog}
             handleCloseDialog={handleCloseDialog}
@@ -115,7 +117,7 @@ export const ExpensesList = () => {
             )}
           </FormDialog>
         </TableContainer>
-      )}
+      
       <Snackbar
         open={snackbar.open}
         autoHideDuration={2500}

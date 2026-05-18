@@ -113,18 +113,18 @@ export const GroupDetails = () => {
         width: "100%",
       }}
     >
- <Box
-  sx={{
-    width: "100%",
-    position: "sticky",
-    top: 0,
-    display: "flex",
-    justifyContent: "center",
-    py: 1.5,
-    backgroundColor: "background.default",
-    backdropFilter: "blur(6px)",
-  }}
->
+      <Box
+        sx={{
+          width: "100%",
+          position: "sticky",
+          top: 0,
+          display: "flex",
+          justifyContent: "center",
+          py: 1.5,
+          backgroundColor: "background.default",
+          backdropFilter: "blur(6px)",
+        }}
+      >
         <ToggleButtonGroup
           color="primary"
           value={alignment}
@@ -240,11 +240,7 @@ export const GroupDetails = () => {
               aria-label="Add group member"
               disabled={loadingAddMember}
             >
-              {loadingAddMember ? (
-                <CircularProgress size={20} />
-              ) : (
-                <GroupAddIcon />
-              )}
+              <GroupAddIcon />
             </Fab>
           )}
         </Box>

@@ -116,7 +116,6 @@ export const Navbar = () => {
           </Box>
         </Toolbar>
       </AppBar>
-
       <FormDialog open={open} handleCloseDialog={handleCloseDialog}>
         <AuthForms setDialogOpen={setOpen} />
       </FormDialog>
