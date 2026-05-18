@@ -49,7 +49,10 @@ export const Navbar = () => {
 
   return (
     <>
-      <AppBar position="static" style={{ backgroundColor: "#182720" }}>
+      <AppBar
+        position="static"
+        style={{ backgroundColor: "#182720", marginBottom: "15px" }}
+      >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Box
@@ -126,17 +129,19 @@ export const Navbar = () => {
             paddingRight: "15px",
           }}
         >
-          <Box sx={{display: 'flex', justifyContent: 'end', marginTop: '8px'}}>
-          <IconButton>
-            <CloseIcon
-              onClick={handleCloseDialog}
-              sx={{
-                backgroundColor: "#2e3136",
-                color: "white",
-                insetInlineEnd: 3,
-              }}
-            />
-          </IconButton>
+          <Box
+            sx={{ display: "flex", justifyContent: "end", marginTop: "8px" }}
+          >
+            <IconButton>
+              <CloseIcon
+                onClick={handleCloseDialog}
+                sx={{
+                  backgroundColor: "#2e3136",
+                  color: "white",
+                  insetInlineEnd: 3,
+                }}
+              />
+            </IconButton>
           </Box>
           <Box
             sx={{

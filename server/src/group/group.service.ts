@@ -1,6 +1,8 @@
 import {
   ConflictException,
   ForbiddenException,
+  forwardRef,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -18,6 +20,7 @@ export class GroupService {
   constructor(
     @InjectRepository(Group)
     private readonly groupRepository: Repository<Group>,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
   ) {}
 

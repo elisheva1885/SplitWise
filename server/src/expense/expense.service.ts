@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import {
   BadRequestException,
   ForbiddenException,
+  forwardRef,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -23,6 +25,7 @@ export class ExpenseService {
     private readonly expenseRepository: Repository<Expense>,
     private readonly groupService: GroupService,
     private readonly expenseValidator: ExpenseValidator,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
   ) {}
 
