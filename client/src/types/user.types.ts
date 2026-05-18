@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { GroupData } from "./group.types";
 
 export type User = {
@@ -26,3 +27,9 @@ export type UserToAdd = {
   id: number;
   username: string;
 };
+=======
+export class UpdateUserDto {
+  username?: string;
+  email?: string;
+}
+>>>>>>> dev

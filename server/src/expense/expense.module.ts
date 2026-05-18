@@ -10,8 +10,13 @@ import { ExpenseValidator } from './expense.validator';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Expense]),
+<<<<<<< HEAD
     UserModule,
     forwardRef(() => GroupModule),
+=======
+    forwardRef(() => UserModule),
+    GroupModule,
+>>>>>>> dev
   ],
   controllers: [ExpenseController],
   providers: [ExpenseService, ExpenseValidator],

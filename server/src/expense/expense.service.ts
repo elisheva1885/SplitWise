@@ -26,6 +26,7 @@ export class ExpenseService {
     @Inject(forwardRef(() => GroupService))
     private readonly groupService: GroupService,
     private readonly expenseValidator: ExpenseValidator,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
   ) {}
 

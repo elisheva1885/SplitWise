@@ -1,6 +1,11 @@
 import { createTheme } from "@mui/material/styles";
 
 export const theme = createTheme({
+  palette: {
+    background: {
+      default: "#6b9783",
+    },
+  },
   components: {
     MuiOutlinedInput: {
       styleOverrides: {
