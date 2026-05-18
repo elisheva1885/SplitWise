@@ -47,7 +47,6 @@ export class UpdateExpenseDto {
   @ApiProperty({ example: 'Developers Team', required: false })
   @IsString()
   @IsOptional()
-  @MinLength(3)
   cause?: string;
 
   @ApiProperty({

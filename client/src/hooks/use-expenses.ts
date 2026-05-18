@@ -110,7 +110,7 @@ export const useExpenses = () => {
             });
 
             showSuccess("Expense deleted successfully");
-        } catch (err) {
+        } catch (err) {            
             showError(handleApiError(err));
         }
         finally{

@@ -22,10 +22,13 @@ export const OptimizedExpensesList = () => {
     actions: { getGroupOptimizedExpense },
   } = useExpenses();
   const { optimizedExpenses, group } = useGroupContext();
+
   useEffect(() => {
     if (!group?.id) return;
     getGroupOptimizedExpense(group.id);
-  }, [group?.id, getGroupOptimizedExpense]);
+  }, [group?.id, getGroupOptimizedExpense, group?.expenses]);
+
+
   if (loadingOptimizedExpenses) {    
     return <CircularProgress />;
   }
@@ -44,8 +47,8 @@ export const OptimizedExpensesList = () => {
             <TableHead>
               <TableRow>
                 <TableCell align="center">Value</TableCell>
-                <TableCell align="center">Paid By</TableCell>
-                <TableCell align="center">Paid On</TableCell>
+                <TableCell align="center">From</TableCell>
+                <TableCell align="center">To</TableCell>
               </TableRow>
             </TableHead>
 
