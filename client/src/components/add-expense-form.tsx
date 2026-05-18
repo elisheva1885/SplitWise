@@ -1,8 +1,6 @@
 import Button from "@mui/material/Button";
-import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AddExpenseSchema,
@@ -10,7 +8,6 @@ import {
 } from "../schemas/expense-schema";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import { useGroupContext } from "../store/use-group.context";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import { MemberSelect } from "./member-select";
@@ -18,7 +15,6 @@ type AddExpensesFormProps = {
   onSubmit: (data: AddExpenseData) => void;
 };
 export const AddExpensesForm = ({ onSubmit }: AddExpensesFormProps) => {
-  const { group } = useGroupContext();
 
   const {
     control,

@@ -111,7 +111,6 @@ export const ExpensesList = () => {
                   handleCloseDialog();
                 }}
                 expense={expenseForUpdate}
-                groupMembers={group?.members}
               />
             )}
           </FormDialog>
