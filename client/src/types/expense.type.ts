@@ -1,4 +1,4 @@
-import type {UserInExpense, UserInGroup } from "./user.types";
+import type { UserInExpense, UserInGroup } from "./user.types";
 
 export type ExpenseInGroup = {
   id: number;

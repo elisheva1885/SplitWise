@@ -10,6 +10,7 @@ import Select from "@mui/material/Select";
 import type { UserInGroup } from "../types/user.types";
 import { UpdateExpenseSchema } from "../schemas/expense-schema";
 import { useEffect } from "react";
+import { MemberSelect } from "./member-select";
 
 type UpdateExpenseFormProps = {
     onSubmit: (expense: ExpenseInGroup, data: UpdateExpenseData) => Promise<void>;
@@ -24,7 +25,6 @@ export const UpdateExpenseForm = ({
 }: UpdateExpenseFormProps) => {
     const {
         control,
-        reset,
         register,
         handleSubmit,
         formState: { errors },
@@ -34,85 +34,51 @@ export const UpdateExpenseForm = ({
         defaultValues: {
             cause: expense?.cause ?? "",
             value: expense?.value ?? 0,
-            paidBy: expense?.paidBy.id ?? 0,
-            paidOn: expense?.paidOn.id ?? 0,
+            paidBy: expense?.paidBy.id ?? undefined,
+            paidOn: expense?.paidOn.id ?? undefined,
         },
     });
-    useEffect(() => {
-        if (expense) {
-            reset({
-                cause: expense?.cause ?? "",
-                value: expense?.value ?? 0,
-                paidBy: expense?.paidBy.id ?? 0,
-                paidOn: expense?.paidOn.id ?? 0,
-            });
-        }
-    }, [expense, reset]);
+
     return (
         <>
             <Box
                 component="form"
-                onSubmit={handleSubmit((data) => {
+                onSubmit={handleSubmit(async (data) => {
                     if (!expense?.id) return;
-                    onSubmit(expense, data);
+                    await onSubmit(expense, data);
                 })}
                 sx={{
-                    backgroundColor: "#405a4e", display: 'flex', flexDirection: 'column',
-                    justifyContent: 'center', alignContent: 'center', gap: 2  ,      padding: 2,
-
+                    backgroundColor: "#405a4e",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignContent: "center",
+                    gap: 2,
+                    padding: 2,
                 }}
             >
-                <Typography sx={{ color: "white" }}>Update Group</Typography>
+                <Typography sx={{ color: "white" }}>Update Expense</Typography>
                 <TextField
                     type="text"
                     size="small"
                     variant="outlined"
-                    label='cause'
+                    label="Cause"
                     {...register("cause")}
                     error={!!errors.cause}
                     helperText={errors.cause?.message}
                 />
                 <TextField
-                    type="text"
+                    type="number"
                     size="medium"
-                    label='value'
+                    label="Value"
                     {...register("value", { valueAsNumber: true })}
                     error={!!errors.value}
                     helperText={errors.value?.message}
                 />
                 <Box sx={{ flex: 1, color: "black" }}>
-                    <Controller
-                        name="paidBy"
-                        control={control}
-                        render={({ field }) => (
-                            <Select {...field} label="Paid On" sx={{ width: "100%" }}>
-                                {groupMembers?.map((member) => {
-                                    return (
-                                        <MenuItem value={member.id} sx={{ color: "black" }}>
-                                            {member.username}
-                                        </MenuItem>
-                                    );
-                                })}
-                            </Select>
-                        )}
-                    />
+                    <MemberSelect name="paidBy" control={control} label="Paid By" />
                 </Box>
                 <Box sx={{ flex: 1, color: "black" }}>
-                    <Controller
-                        name="paidOn"
-                        control={control}
-                        render={({ field }) => (
-                            <Select {...field} label="Paid On" sx={{ width: "100%" }}>
-                                {groupMembers?.map((member) => {
-                                    return (
-                                        <MenuItem value={member.id} sx={{ color: "black" }}>
-                                            {member.username}
-                                        </MenuItem>
-                                    );
-                                })}
-                            </Select>
-                        )}
-                    />
+                    <MemberSelect name="paidOn" control={control} label="Paid On" />
                 </Box>
                 <Button type="submit">Save Changes</Button>
             </Box>

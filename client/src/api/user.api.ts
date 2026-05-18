@@ -21,9 +21,11 @@ export async function getUserDetails(): Promise<UserDetails> {
   return data;
 }
 
-export async function getAllUsers(startUsername: string): Promise<UserIdAndName[]> {
+export async function getAllUsers(
+  startUsername: string,
+): Promise<UserIdAndName[]> {
   const { data } = await api.get(`/user/all?query=${startUsername}`);
   console.log(data);
-  
+
   return data;
 }

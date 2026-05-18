@@ -20,104 +20,115 @@ import { useGroupContext } from "../store/use-group.context";
 import { FormDialog } from "./form-dialog";
 import { useExpenses } from "../hooks/use-expenses";
 import Tooltip from "@mui/material/Tooltip";
+import Box from "@mui/material/Box";
 
 export const ExpensesList = () => {
-    const { user } = useUserContext();
-    const { group } = useGroupContext();
-    const [updateExpenseDialog, setUpdateExpenseDialog] = useState(false);
-    const [expenseForUpdate, setExpenseForUpdate] = useState<ExpenseInGroup>();
+  const { user } = useUserContext();
+  const { group } = useGroupContext();
+  const [updateExpenseDialog, setUpdateExpenseDialog] = useState(false);
+  const [expenseForUpdate, setExpenseForUpdate] = useState<ExpenseInGroup>();
 
-    const { snackbar, handleCloseSnackbar, actions } = useExpenses();
-    const openUpdateDialog = (expense: ExpenseInGroup) => {
-        setExpenseForUpdate(expense);
-        setUpdateExpenseDialog(true);
-    };
-    const handleCloseDialog = () => {
-        setUpdateExpenseDialog(false);
-        setExpenseForUpdate(undefined);
-    };
+  const { snackbar, handleCloseSnackbar, actions } = useExpenses();
+  const openUpdateDialog = (expense: ExpenseInGroup) => {
+    setExpenseForUpdate(expense);
+    setUpdateExpenseDialog(true);
+  };
+  const handleCloseDialog = () => {
+    setUpdateExpenseDialog(false);
+    setExpenseForUpdate(undefined);
+  };
 
-    return (
+  return (
+    <>
+      {!group?.expenses.length ? (
+        <Box>No expenses in this group</Box>
+      ) : (
         <TableContainer component={Paper}>
-            <AddExpensesForm onSubmit={actions.addExpenseToGroup} />
-            <Table sx={{ minWidth: 650 }}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell align="center">Cause</TableCell>
-                        <TableCell align="center">Value</TableCell>
-                        <TableCell align="center">Paid By</TableCell>
-                        <TableCell align="center">Paid On</TableCell>
-                        <TableCell align="center">Edit</TableCell>
-                        <TableCell align="center">Delete</TableCell>
-                    </TableRow>
-                </TableHead>
+          <AddExpensesForm onSubmit={actions.addExpenseToGroup} />
+          <Table sx={{ minWidth: 650 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Cause</TableCell>
+                <TableCell align="center">Value</TableCell>
+                <TableCell align="center">Paid By</TableCell>
+                <TableCell align="center">Paid On</TableCell>
+                <TableCell align="center">Edit</TableCell>
+                <TableCell align="center">Delete</TableCell>
+              </TableRow>
+            </TableHead>
 
-                <TableBody>
-                    {group?.expenses?.map((expense) => {
-                        const canEdit =
-                            expense.paidBy.id === user?.id ||
-                            expense.paidOn.id === user?.id;
-                        return (
-                            <TableRow key={expense.id}>
-                                <TableCell align="center">{expense.cause}</TableCell>
-                                <TableCell align="center">{expense.value}</TableCell>
-                                <TableCell align="center">{expense.paidBy.username}</TableCell>
-                                <TableCell align="center">{expense.paidOn.username}</TableCell>
-                                <TableCell align="center">
-                                    {canEdit && (
-                                        <Tooltip title="Edit Expense">
-                                            <IconButton onClick={() => openUpdateDialog(expense)}>
-                                                <EditIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    )}
-                                </TableCell>
+            <TableBody>
+              {group?.expenses?.map((expense) => {
+                const canEdit =
+                  expense.paidBy.id === user?.id ||
+                  expense.paidOn.id === user?.id;
+                return (
+                  <TableRow key={expense.id}>
+                    <TableCell align="center">{expense.cause}</TableCell>
+                    <TableCell align="center">{expense.value}</TableCell>
+                    <TableCell align="center">
+                      {expense.paidBy.username}
+                    </TableCell>
+                    <TableCell align="center">
+                      {expense.paidOn.username}
+                    </TableCell>
+                    <TableCell align="center">
+                      {canEdit && (
+                        <Tooltip title="Edit Expense">
+                          <IconButton onClick={() => openUpdateDialog(expense)}>
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </TableCell>
 
-                                <TableCell align="center">
-                                    {canEdit && (
-                                        <Tooltip title="Delete Expense">
-                                            <IconButton
-                                                onClick={() =>
-                                                    actions.deleteExpenseFromGroup(expense.id)
-                                                }
-                                            >
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    )}
-                                </TableCell>
-                            </TableRow>
-                    })
-                </TableBody>
-
-            </Table>
-            <FormDialog
-                open={updateExpenseDialog}
-                handleCloseDialog={handleCloseDialog}
-            >
-                {expenseForUpdate && (
-                    <UpdateExpenseForm
-                        onSubmit={async (expense, expenseData) => {
-                            await actions.updateGroupExpense(expense, expenseData);
-                            handleCloseDialog();
-                        }}
-                        expense={expenseForUpdate}
-                        groupMembers={group?.members}
-                    />
-                )}
-            </FormDialog>
-            <Snackbar
-                open={snackbar.open}
-                autoHideDuration={5000}
-                onClose={handleCloseSnackbar}
-            >
-                <Alert severity={snackbar.severity}>
-                    <AlertTitle>
-                        {snackbar.severity === "success" ? "Success" : "Error"}
-                    </AlertTitle>
-                    {snackbar.message}
-                </Alert>
-            </Snackbar>
+                    <TableCell align="center">
+                      {canEdit && (
+                        <Tooltip title="Delete Expense">
+                          <IconButton
+                            onClick={() =>
+                              actions.deleteExpenseFromGroup(expense.id)
+                            }
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+          <FormDialog
+            open={updateExpenseDialog}
+            handleCloseDialog={handleCloseDialog}
+          >
+            {expenseForUpdate && (
+              <UpdateExpenseForm
+                onSubmit={async (expense, expenseData) => {
+                  await actions.updateGroupExpense(expense, expenseData);
+                  handleCloseDialog();
+                }}
+                expense={expenseForUpdate}
+                groupMembers={group?.members}
+              />
+            )}
+          </FormDialog>
         </TableContainer>
-    );
+      )}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={5000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity={snackbar.severity}>
+          <AlertTitle>
+            {snackbar.severity === "success" ? "Success" : "Error"}
+          </AlertTitle>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </>
+  );
 };

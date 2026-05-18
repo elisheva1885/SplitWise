@@ -1,4 +1,4 @@
-import { useEffect} from "react";
+import { useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -11,64 +11,80 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import { useGroupContext } from "../store/use-group.context";
 import { useExpenses } from "../hooks/use-expenses";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 export const OptimizedExpensesList = () => {
-  const { snackbar, handleCloseSnackbar, actions } = useExpenses();
+  const {
+    snackbar,
+    handleCloseSnackbar,
+    loadingOptimizedExpense,
+    actions: { getGroupOptimizedExpense },
+  } = useExpenses();
   const { optimizedExpenses, group } = useGroupContext();
-  const getGroupOptimizedExpense = actions.getGroupOptimizedExpense;
-
-useEffect(() => {
-  if (!group?.id) return;
-
-  getGroupOptimizedExpense(group.id);
-}, [group?.id, getGroupOptimizedExpense]);
+  useEffect(() => {
+    if (!group?.id) return;
+    getGroupOptimizedExpense(group.id);
+  }, [group?.id, getGroupOptimizedExpense]);
+  if (loadingOptimizedExpense) {
+    return <CircularProgress />;
+  }
+  if (!optimizedExpenses.length) {
+    return <div>No optimized expenses</div>;
+  }
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell align="center">Value</TableCell>
-            <TableCell align="center">Paid By</TableCell>
-            <TableCell align="center">Paid On</TableCell>
-          </TableRow>
-        </TableHead>
+    <>
+      {loadingOptimizedExpense ? (
+        <CircularProgress />
+      ) : !optimizedExpenses.length ? (
+        <Box>No optimized expenses</Box>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Value</TableCell>
+                <TableCell align="center">Paid By</TableCell>
+                <TableCell align="center">Paid On</TableCell>
+              </TableRow>
+            </TableHead>
 
-        <TableBody>
-          {optimizedExpenses.map((expense) => (
-            <TableRow
-              sx={{
-                "&:last-child td, &:last-child th": {
-                  border: 0,
-                },
-              }}
-            >
-              <TableCell align="center">{expense.value}</TableCell>
+            <TableBody>
+              {optimizedExpenses.map((expense) => (
+                <TableRow
+                  sx={{
+                    "&:last-child td, &:last-child th": {
+                      border: 0,
+                    },
+                  }}
+                >
+                  <TableCell align="center">{expense.value}</TableCell>
 
-              <TableCell align="center">
-                {expense.paidByUser.username}
-              </TableCell>
+                  <TableCell align="center">
+                    {expense.paidByUser.username}
+                  </TableCell>
 
-              <TableCell align="center">
-                {expense.paidOnUser.username}
-              </TableCell>
-
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
+                  <TableCell align="center">
+                    {expense.paidOnUser.username}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={5000}
         onClose={handleCloseSnackbar}
       >
-        <Alert severity={snackbar.severity}>
+        <Alert severity={snackbar.severity} onClose={handleCloseSnackbar}>
           <AlertTitle>
             {snackbar.severity === "success" ? "Success" : "Error"}
           </AlertTitle>
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </TableContainer>
+    </>
   );
 };

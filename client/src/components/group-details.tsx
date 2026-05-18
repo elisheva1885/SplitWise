@@ -24,7 +24,7 @@ import { OptimizedExpensesList } from "./optimized-expenses-list";
 import { ExpensesList } from "./expenses-list";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
-import { useRef } from 'react';
+import { useRef } from "react";
 
 export const GroupDetails = () => {
   const { id } = useParams();
@@ -43,36 +43,36 @@ export const GroupDetails = () => {
     actions,
   } = useGroupDetails();
 
-  const getGroupDetailsById = actions.getGroupDetailsById;
+  const { getGroupDetailsById } = actions;
   const groupMembersRef = useRef<HTMLDivElement | null>(null);
   const groupExpensesRef = useRef<HTMLDivElement | null>(null);
   const groupOptimizedExpensesRef = useRef<HTMLDivElement | null>(null);
   const handleScrollTogroupExpenses = () => {
     groupExpensesRef.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-      inline: 'center'
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
     });
-  }
+  };
   const handleScrollTogroupOptimizedExpenses = () => {
     groupOptimizedExpensesRef.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-      inline: 'center'
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
     });
-  }
+  };
   const handleScrollTogroupMembers = () => {
     groupMembersRef.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-      inline: 'center'
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
     });
-  }
+  };
 
   const handleCloseDialog = () => {
     setDialogType(null);
   };
-  const [alignment, setAlignment] = useState('left');
+  const [alignment, setAlignment] = useState("left");
 
   const handleChange = (
     _: React.MouseEvent<HTMLElement>,
@@ -130,11 +130,26 @@ export const GroupDetails = () => {
           value={alignment}
           exclusive
           onChange={handleChange}
-          sx={{ position: 'fixed', backgroundColor: 'white' }}
+          sx={{ position: "fixed", backgroundColor: "white" }}
         >
-          <ToggleButton value="Group_members" onClick={handleScrollTogroupMembers}>Group members</ToggleButton>
-          <ToggleButton value="Group_Expenses" onClick={handleScrollTogroupExpenses}>Group Expenses</ToggleButton>
-          <ToggleButton value="Group_Optimized_expenses" onClick={handleScrollTogroupOptimizedExpenses}>Group Optimized expenses</ToggleButton>
+          <ToggleButton
+            value="Group_members"
+            onClick={handleScrollTogroupMembers}
+          >
+            Group members
+          </ToggleButton>
+          <ToggleButton
+            value="Group_Expenses"
+            onClick={handleScrollTogroupExpenses}
+          >
+            Group Expenses
+          </ToggleButton>
+          <ToggleButton
+            value="Group_Optimized_expenses"
+            onClick={handleScrollTogroupOptimizedExpenses}
+          >
+            Group Optimized expenses
+          </ToggleButton>
         </ToggleButtonGroup>
       </Box>
       <Card
@@ -165,47 +180,51 @@ export const GroupDetails = () => {
         )}
       </Card>
 
-      {
-        owner && (
-          <Chip
-            avatar={
-              <Avatar
+      {owner && (
+        <Chip
+          avatar={
+            <Avatar
+              sx={{
+                backgroundColor: "black",
+                width: "70px",
+                height: "70px",
+              }}
+            >
+              <Typography
                 sx={{
-                  backgroundColor: "black",
-                  width: "70px",
-                  height: "70px",
+                  fontSize: "x-small",
+                  fontWeight: "bold",
+                  color: "white",
                 }}
               >
-                <Typography
-                  sx={{
-                    fontSize: "x-small",
-                    fontWeight: "bold",
-                    color: "white",
-                  }}
-                >
-                  OWN
-                </Typography>
-              </Avatar>
-            }
-            label={owner.username}
-            sx={{
-              height: "44px",
-              px: 1,
-              "& .MuiChip-avatar": {
-                width: 38,
-                height: 38,
-                borderRadius: "16px",
-              },
-            }}
-            variant="outlined"
-          ></Chip>
-        )
-      }
+                OWN
+              </Typography>
+            </Avatar>
+          }
+          label={owner.username}
+          sx={{
+            height: "44px",
+            px: 1,
+            "& .MuiChip-avatar": {
+              width: 38,
+              height: 38,
+              borderRadius: "16px",
+            },
+          }}
+          variant="outlined"
+        ></Chip>
+      )}
 
-      <Box sx={{
-        width: "100%", display: 'flex', flexDirection: 'column',
-        justifyContent: 'center', alignContent: 'center', gap: 3
-      }}>
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignContent: "center",
+          gap: 3,
+        }}
+      >
         <GroupMembersList
           group={group}
           isOwner={isOwner}
@@ -213,29 +232,27 @@ export const GroupDetails = () => {
           updateToGroupOwner={actions.updateToGroupOwner}
         />
 
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-  {isOwner && (
-    <Fab
-      onClick={() => setDialogType("addUser")}
-      aria-label="Add group member"
-      disabled={loadingAddMember}
-    >
-      {loadingAddMember ? (
-        <CircularProgress size={20} />
-      ) : (
-        <GroupAddIcon />
-      )}
-    </Fab>
-  )}
-</Box>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          {isOwner && (
+            <Fab
+              onClick={() => setDialogType("addUser")}
+              aria-label="Add group member"
+              disabled={loadingAddMember}
+            >
+              {loadingAddMember ? (
+                <CircularProgress size={20} />
+              ) : (
+                <GroupAddIcon />
+              )}
+            </Fab>
+          )}
+        </Box>
         <Box ref={groupExpensesRef}>
           <ExpensesList />
         </Box>
         <Box ref={groupOptimizedExpensesRef}>
-
           <OptimizedExpensesList />
         </Box>
-
       </Box>
 
       <FormDialog
@@ -273,6 +290,6 @@ export const GroupDetails = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </Box >
+    </Box>
   );
 };

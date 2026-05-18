@@ -21,30 +21,33 @@ export const useExpenses = () => {
     severity: "success",
     message: "",
   });
-  const getGroupOptimizedExpense =useCallback( async (id: number) => {
-    if (!group?.id) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: "Group not loaded",
-      });
+  const getGroupOptimizedExpense = useCallback(
+    async (id: number) => {
+      if (!group?.id) {
+        setSnackbar({
+          open: true,
+          severity: "error",
+          message: "Group not loaded",
+        });
 
-      return;
-    }
-    try {
-      setLoadingOptimizedExpense(true);
-      const data = await getOptimizedExpenses(id);
-      setOptimizedExpenses(data);
-    } catch (err) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: handleApiError(err),
-      });
-    } finally {
-      setLoadingOptimizedExpense(false);
-    }
-  },[setOptimizedExpenses, group?.id]);
+        return;
+      }
+      try {
+        setLoadingOptimizedExpense(true);
+        const data = await getOptimizedExpenses(id);
+        setOptimizedExpenses(data);
+      } catch (err) {
+        setSnackbar({
+          open: true,
+          severity: "error",
+          message: handleApiError(err),
+        });
+      } finally {
+        setLoadingOptimizedExpense(false);
+      }
+    },
+    [setOptimizedExpenses, group?.id],
+  );
   const handleCloseSnackbar = () => {
     setSnackbar((prev) => ({
       ...prev,

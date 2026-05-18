@@ -13,11 +13,12 @@ import Paper from "@mui/material/Paper";
 import { useGroupContext } from "../store/use-group.context";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import { MemberSelect } from "./member-select";
 type AddExpensesFormProps = {
   onSubmit: (data: AddExpenseData) => void;
 };
 export const AddExpensesForm = ({ onSubmit }: AddExpensesFormProps) => {
-  const { group } = useGroupContext()
+  const { group } = useGroupContext();
 
   const {
     control,
@@ -79,33 +80,14 @@ export const AddExpensesForm = ({ onSubmit }: AddExpensesFormProps) => {
             >
               Paid On
             </InputLabel>
-            <Controller
-              name="paidOn"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  label="Paid On"
-                  sx={{
-                    width: "100%", height: '41.5px', color: "black",
-                  }}
-                >
-                  {group?.members.map((member) => (
-                    <MenuItem key={member.id} value={member.id} sx={{ color: "black" }}>
-                      {member.username}
-                    </MenuItem>
-                  ))}
-                </Select>
-              )}
-            />
+            <MemberSelect name="paidOn" control={control} label="Paid By" />
           </FormControl>
-
         </Box>
         <Button type="submit" sx={{ backgroundColor: "black" }}>
           Add Expense
         </Button>
-      </Paper >
-    </Box >
+      </Paper>
+    </Box>
   );
 };
 
