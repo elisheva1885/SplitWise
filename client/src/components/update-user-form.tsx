@@ -9,11 +9,11 @@ import {
   type UpdateUserSchemaData,
 } from "../schemas/user.schema";
 import DeleteIcon from "@mui/icons-material/Delete";
-import type { UpdateUserDto } from "../types/user.types";
 import { Box } from "@mui/material";
+import type { UpdateUserDto } from "../types/user.types";
 
 type UpdateUserFormProps = {
-  onSubmit: (data: UpdateUserDto) => Promise<void>;
+  onSubmit:  (data: UpdateUserDto) => Promise<void>;
   onDelete: () => Promise<void>;
   loading: boolean;
 };

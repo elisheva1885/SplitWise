@@ -1,0 +1,87 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
+import type { GroupData } from "../types/group.types";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import Tooltip from "@mui/material/Tooltip";
+type GroupMembersListProps = {
+  group: GroupData | null;
+  isOwner: boolean;
+  deleteGroupMember: (userId: number) => void;
+  updateToGroupOwner: (userId: number) => void;
+};
+export const GroupMembersList = ({
+  group,
+  isOwner,
+  deleteGroupMember,
+  updateToGroupOwner,
+}: GroupMembersListProps) => {
+  const members = group?.members ?? [];
+  const currentOwnerId = group?.owner?.id;
+  return (
+    <TableContainer
+      component={Paper}
+      sx={{
+        overflowX: "auto",
+        width: "100%",
+      }}
+    >
+      <Table
+        sx={{
+          minWidth: 650,
+        }}
+      >
+        <TableHead>
+          <TableRow>
+            <TableCell align="center">Username</TableCell>
+            <TableCell align="center">email</TableCell>
+            {isOwner &&
+              <> <TableCell align="center">Remove</TableCell>
+                <TableCell align="center">Role</TableCell></>}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {members.map((member) => (
+            <TableRow
+              key={member.id}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            >
+              <TableCell component="th" scope="row" align="center">
+                {member.username}
+              </TableCell>
+              <TableCell align="center">{member.email}</TableCell>
+              {isOwner && (
+                <>
+                  <TableCell align="center">
+                    <IconButton
+                      onClick={() => deleteGroupMember(member.id)}
+                      sx={{
+                        padding: 0.2,
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Tooltip title="Make group owner">
+                      <IconButton onClick={() => updateToGroupOwner(member.id)} disabled={member.id === currentOwnerId}
+                      >
+                        <AdminPanelSettingsIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </>
+              )}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+};

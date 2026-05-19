@@ -84,10 +84,9 @@ describe('ExpenseService', () => {
 
       const result = expenseService.simplifyDebts(matrix);
       let hasSelfDebt = false;
-      result.forEach((row,i)=> {
-         hasSelfDebt = row[i]!=0
-      }
-      )
+      result.forEach((row, i) => {
+        hasSelfDebt = row[i] != 0;
+      });
       expect(hasSelfDebt).toBe(false);
     });
     it('should preserve net balance for every user', () => {
@@ -134,8 +133,8 @@ describe('ExpenseService', () => {
       const expectedMatrix = [[0]];
       expect(result).toEqual(expectedMatrix);
     });
-    it('should handle multiple independent debt groups', () => { 
-         const matrix = [
+    it('should handle multiple independent debt groups', () => {
+      const matrix = [
         [0, 100, 0, 0, 0, 0],
         [0, 0, 100, 0, 0, 0],
         [0, 0, 0, 0, 0, 0],

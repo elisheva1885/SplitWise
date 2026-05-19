@@ -11,7 +11,7 @@ import { ExpenseValidator } from './expense.validator';
   imports: [
     TypeOrmModule.forFeature([Expense]),
     forwardRef(() => UserModule),
-    GroupModule,
+    forwardRef(() => GroupModule),
   ],
   controllers: [ExpenseController],
   providers: [ExpenseService, ExpenseValidator],

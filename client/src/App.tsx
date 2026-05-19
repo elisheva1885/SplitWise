@@ -5,14 +5,19 @@ import { UserProvider } from "./store/user.context";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "./theme/theme";
 import CssBaseline from "@mui/material/CssBaseline";
+import { GroupProvider } from "./store/groups.context";
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <UserProvider>
-        <RouterProvider router={router} />
-      </UserProvider>
-    </ThemeProvider>
+    <>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <GroupProvider>
+          <UserProvider>
+            <RouterProvider router={router} />
+          </UserProvider>
+        </GroupProvider>
+      </ThemeProvider>
+    </>
   );
 }
 

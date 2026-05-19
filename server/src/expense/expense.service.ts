@@ -22,9 +22,10 @@ import { UserService } from 'src/user/user.service';
 export class ExpenseService {
   constructor(
     @InjectRepository(Expense)
-    public readonly expenseRepository: Repository<Expense>,
-    public readonly groupService: GroupService,
-    public readonly expenseValidator: ExpenseValidator,
+    private readonly expenseRepository: Repository<Expense>,
+    @Inject(forwardRef(() => GroupService))
+    private readonly groupService: GroupService,
+    private readonly expenseValidator: ExpenseValidator,
     @Inject(forwardRef(() => UserService))
     public readonly userService: UserService,
   ) {}
