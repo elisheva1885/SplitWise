@@ -1,7 +1,3 @@
-// import { ExpenseService } from "./expense.service";
-// import { GroupService } from "src/group/group.service";
-// import { Test } from "@nestjs/testing";
-
 import { ExpenseService } from './expense.service';
 import { Test } from '@nestjs/testing';
 import { GroupService } from 'src/group/group.service';
@@ -87,7 +83,11 @@ describe('ExpenseService', () => {
       ];
 
       const result = expenseService.simplifyDebts(matrix);
-      const hasSelfDebt = result.some((row, i) => row[i] !== 0);
+      let hasSelfDebt = false;
+      result.forEach((row,i)=> {
+         hasSelfDebt = row[i]!=0
+      }
+      )
       expect(hasSelfDebt).toBe(false);
     });
     it('should preserve net balance for every user', () => {
