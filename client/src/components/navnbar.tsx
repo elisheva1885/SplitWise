@@ -48,7 +48,7 @@ export const Navbar = () => {
 
   return (
     <>
-      <AppBar position="sticky" sx={{ backgroundColor: "#182720", maxHeight:'60px' }}>
+      <AppBar position="sticky" sx={{ backgroundColor: "#182720", height:'60px' }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Box onClick={()=> navigate('/')}
