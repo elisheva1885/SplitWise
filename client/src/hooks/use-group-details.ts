@@ -15,13 +15,12 @@ import { useNavigate } from "react-router-dom";
 import type { SnackbarState } from "../types/snackbar.types";
 
 export const useGroupDetails = () => {
-  const [loadingGroup, setLoadingGroup] = useState(false);
-  const [loadingAddMember, setLoadingAddMember] = useState(false);
-  const [loadingUpdateGroup, setLoadingUpdateGroup] = useState(false);
-  const [loadingDeleteGroup, setLoadingDeleteGroup] = useState(false);
-  const [loadingUpdateOwner, setLoadingUpdateOwner] = useState(false);
-  const [loadingDeleteMember, setLoadingDeleteMember] = useState(false);
-
+  const [loadingGroup, setLoadingGroup] = useState<boolean>(false);
+  const [loadingAddMember, setLoadingAddMember] = useState<boolean>(false);
+  const [loadingUpdateGroup, setLoadingUpdateGroup] = useState<boolean>(false);
+  const [loadingDeleteGroup, setLoadingDeleteGroup] = useState<boolean>(false);
+  const [loadingUpdateOwner, setLoadingUpdateOwner] = useState<boolean>(false);
+  const [loadingDeleteMember, setLoadingDeleteMember] = useState<boolean>(false);
   const [snackbar, setSnackbar] = useState<SnackbarState>({
     open: false,
     severity: "success",
@@ -73,6 +72,7 @@ export const useGroupDetails = () => {
       const data = await addUserToGroup(group.id, userId);
 
       setGroup(data);
+      updateGroups(data);
       setSnackbar({
         open: true,
         severity: "success",
@@ -102,17 +102,13 @@ export const useGroupDetails = () => {
 
     try {
       setLoadingDeleteGroup(true);
-
       const data = await deleteGroup(group.id);
-
       setSnackbar({
         open: true,
         severity: "success",
         message: "Group deleted successfully!",
       });
-
       const filteredGroups = groups.filter((group) => group.id !== data);
-
       setGroups(filteredGroups);
       navigate("/groups");
     } catch (err) {
@@ -183,6 +179,7 @@ export const useGroupDetails = () => {
       setLoadingUpdateOwner(true);
       const data = await updateGroupOwner(group.id, userId);
       setGroup(data);
+      updateGroups(data);
       setSnackbar({
         open: true,
         severity: "success",
@@ -212,6 +209,7 @@ export const useGroupDetails = () => {
       setLoadingDeleteMember(true);
       const data = await deleteUserFromGroup(group.id, userId);
       setGroup(data);
+      updateGroups(data);
       setSnackbar({
         open: true,
         severity: "success",

@@ -36,7 +36,7 @@ export const ForgetPasswordForm = ({
         severity: "success",
         message: `send message to your email ${data.email}`,
       });
-      setTimeout(() => {
+        setTimeout(() => {
         setDialogOpen(false);
       }, 450);
     } catch (err) {
@@ -66,9 +66,7 @@ export const ForgetPasswordForm = ({
     <Box
       component="form"
       onSubmit={handleSubmit(onSubmit)}
-      sx={{
-        backgroundColor: "#2e3136",
-      }}
+      sx={{ backgroundColor: "#2e3136" }}
     >
       <Typography sx={{ color: "white" }}>Forget Password</Typography>
 
@@ -83,7 +81,6 @@ export const ForgetPasswordForm = ({
       />
 
       <br />
-
       <Button onClick={toLoginMode}>Login</Button>
 
       <Button type="submit">SUBMIT</Button>

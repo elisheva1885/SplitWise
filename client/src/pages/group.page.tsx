@@ -3,7 +3,7 @@ import Drawer from "@mui/material/Drawer";
 import { useEffect, useState } from "react";
 import { useGroupContext } from "../store/use-group.context";
 import { getUserDetails } from "../api/user.api";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate, useParams } from "react-router";
 import { AddGroupForm } from "../components/add-group-form";
 import { createGroup } from "../api/group.api";
 import Snackbar from "@mui/material/Snackbar";
@@ -17,6 +17,8 @@ import { GroupDrawerList } from "../components/group-drawer";
 import { FormDialog } from "../components/form-dialog";
 export const GroupPage = () => {
   const { groups, setGroups } = useGroupContext();
+  const navigate = useNavigate();
+  const {id} = useParams();
   const [open, setOpen] = useState(false);
   const [addLoading, setAddLoading] = useState<boolean>(false);
   const [getLoading, setGetLoading] = useState<boolean>(false);
@@ -77,6 +79,15 @@ export const GroupPage = () => {
     };
     getGroups();
   }, [setGroups]);
+useEffect(() => {
+  if (!groups.length) return;
+
+  const currentId = Number(id);
+
+  if (!currentId) {
+    navigate(`/groups/${groups[0].id}`);
+  }
+}, [groups, id, navigate]);
   return (
     <Box>
       {getLoading ? (

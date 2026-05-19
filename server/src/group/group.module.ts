@@ -7,8 +7,11 @@ import { UserModule } from 'src/user/user.module';
 import { ExpenseModule } from 'src/expense/expense.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Group]), forwardRef(() => UserModule),
-  forwardRef(() => ExpenseModule),],
+  imports: [
+    TypeOrmModule.forFeature([Group]),
+    forwardRef(() => UserModule),
+    forwardRef(() => ExpenseModule),
+  ],
   controllers: [GroupController],
   providers: [GroupService],
   exports: [GroupService],

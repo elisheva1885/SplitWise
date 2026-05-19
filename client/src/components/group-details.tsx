@@ -163,7 +163,13 @@ export const GroupDetails = () => {
         }}
         ref={groupMembersRef}
       >
-        <Typography sx={{ fontSize: "xx-large", padding: "8px" }}>
+        <Typography sx={{ fontSize: "xx-large", padding: "8px",                  wordBreak: 'break-word',
+                 '& .MuiTypography-root': {
+                  display: 'block',
+                  whiteSpace: 'normal',
+                  wordBreak: 'break-word',
+                }
+ }}>
           {group?.name}
         </Typography>
         {isOwner && (
