@@ -37,6 +37,7 @@ export const ExpensesList = () => {
     setUpdateExpenseDialog(false);
     setExpenseForUpdate(undefined);
   };
+  
 
   return (
     <>
@@ -61,10 +62,10 @@ export const ExpensesList = () => {
             <TableBody>
               {group?.expenses?.map((expense) => {
                 const canEdit =
-                  expense.paidBy.id === user?.id ||
-                  expense.paidOn.id === user?.id;
+                  expense?.paidBy.id === user?.id ||
+                  expense?.paidOn.id === user?.id;
                 return (
-                  <TableRow key={expense.id}>
+                  <TableRow key={expense?.id}>
                     <TableCell align="center">{expense.cause}</TableCell>
                     <TableCell align="center">{expense.value}</TableCell>
                     <TableCell align="center">

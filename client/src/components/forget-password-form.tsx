@@ -11,9 +11,9 @@ import {
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import { useState } from "react";
 import Box from "@mui/material/Box";
 import { handleApiError } from "../helpers/handle-api-error.helper";
+import { useSnackbar } from "../hooks/use-snackbar";
 
 type ForgetPasswordProps = {
   toLoginMode: () => void;
@@ -24,28 +24,21 @@ export const ForgetPasswordForm = ({
   toLoginMode,
   setDialogOpen,
 }: ForgetPasswordProps) => {
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    severity: "success" as "success" | "error",
-    message: "",
-  });
+  const {
+    snackbar,
+    showError,
+    showSuccess,
+    handleCloseSnackbar,
+  } = useSnackbar();
   const onSubmit = async (data: ForgetPasswordData) => {
     try {
-      setSnackbar({
-        open: true,
-        severity: "success",
-        message: `send message to your email ${data.email}`,
-      });
+      showSuccess(`send message to your email ${data.email}`)
         setTimeout(() => {
         setDialogOpen(false);
       }, 450);
-    } catch (err) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: handleApiError(err),
-      });
-    }
+    }catch (err) {
+            showError(handleApiError(err));
+        }
   };
 
   const {
@@ -56,12 +49,6 @@ export const ForgetPasswordForm = ({
     resolver: zodResolver(ForgetPasswordSchema),
     mode: "onChange",
   });
-  const handleClose = () => {
-    setSnackbar((prev) => ({
-      ...prev,
-      open: false,
-    }));
-  };
   return (
     <Box
       component="form"
@@ -87,7 +74,7 @@ export const ForgetPasswordForm = ({
       <Snackbar
         open={snackbar.open}
         autoHideDuration={2500}
-        onClose={handleClose}
+        onClose={handleCloseSnackbar}
       >
         <Alert severity={snackbar.severity}>
           <AlertTitle>

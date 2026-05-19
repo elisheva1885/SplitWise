@@ -16,7 +16,7 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useGroupDetails } from "../hooks/use-group-details";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import { useGroupContext } from "../store/use-group.context";
 import { FormDialog } from "./form-dialog";
@@ -28,7 +28,7 @@ import { useRef } from "react";
 
 export const GroupDetails = () => {
   const { id } = useParams();
-  const { group } = useGroupContext();
+  const { group, alignment,setAlignment } = useGroupContext();
   const owner = group?.owner;
   const [dialogType, setDialogType] = useState<
     "addUser" | "updateGroup" | null
@@ -42,7 +42,6 @@ export const GroupDetails = () => {
     isOwner,
     actions,
   } = useGroupDetails();
-
   const { getGroupDetailsById } = actions;
   const groupMembersRef = useRef<HTMLDivElement | null>(null);
   const groupExpensesRef = useRef<HTMLDivElement | null>(null);
@@ -72,7 +71,7 @@ export const GroupDetails = () => {
   const handleCloseDialog = () => {
     setDialogType(null);
   };
-  const [alignment, setAlignment] = useState("left");
+console.log(alignment);
 
   const handleChange = (
     _: React.MouseEvent<HTMLElement>,
@@ -88,6 +87,9 @@ export const GroupDetails = () => {
     };
     fetchGroup();
   }, [id, getGroupDetailsById]);
+
+
+
 
   if (loadingGroup) {
     return (
@@ -115,40 +117,65 @@ export const GroupDetails = () => {
     >
       <Box
         sx={{
-          width: "100%",
           position: "sticky",
-          top: 0,
+          top: 65,
+          zIndex: 1000,
+          width: "35%",
           display: "flex",
           justifyContent: "center",
           py: 1.5,
-          backgroundColor: "background.default",
-          backdropFilter: "blur(6px)",
+          backdropFilter: "blur(12px)",
+          backgroundColor: "rgba(255,255,255,0.75)",
         }}
       >
         <ToggleButtonGroup
-          color="primary"
           value={alignment}
           exclusive
           onChange={handleChange}
-          sx={{ position: "fixed", backgroundColor: "white" }}
+          key={id}
+          sx={{
+            backgroundColor: "background.paper",
+            borderRadius: "18px",
+            padding: "6px",
+            boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
+            border: "1px solid",
+            borderColor: "divider",
+
+            "& .MuiToggleButton-root": {
+              border: "none",
+              px: 2.5,
+              py: 1,
+              borderRadius: "14px",
+              textTransform: "none",
+              fontWeight: 600,
+
+              "&.Mui-selected": {
+                background:
+                  '#6b9783',
+                color: "white",
+              },
+            },
+          }}
         >
           <ToggleButton
             value="Group_members"
             onClick={handleScrollTogroupMembers}
           >
-            Group members
+            Members
           </ToggleButton>
+
           <ToggleButton
             value="Group_Expenses"
             onClick={handleScrollTogroupExpenses}
           >
-            Group Expenses
+            Expenses
           </ToggleButton>
+
           <ToggleButton
             value="Group_Optimized_expenses"
             onClick={handleScrollTogroupOptimizedExpenses}
           >
-            Group Optimized expenses
+            Optimized
           </ToggleButton>
         </ToggleButtonGroup>
       </Box>
@@ -159,17 +186,18 @@ export const GroupDetails = () => {
           alignItems: "center",
           gap: 0.5,
           textAlign: "center",
-          marginTop: 5
+          marginTop: 5,
         }}
         ref={groupMembersRef}
       >
-        <Typography sx={{ fontSize: "xx-large", padding: "8px",                  wordBreak: 'break-word',
-                 '& .MuiTypography-root': {
-                  display: 'block',
-                  whiteSpace: 'normal',
-                  wordBreak: 'break-word',
-                }
- }}>
+        <Typography sx={{
+          fontSize: "xx-large", padding: "8px", wordBreak: 'break-word',
+          '& .MuiTypography-root': {
+            display: 'block',
+            whiteSpace: 'normal',
+            wordBreak: 'break-word',
+          }
+        }}>
           {group?.name}
         </Typography>
         {isOwner && (
@@ -238,10 +266,11 @@ export const GroupDetails = () => {
           deleteGroupMember={actions.deleteGroupMember}
           updateToGroupOwner={actions.updateToGroupOwner}
         />
-
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           {isOwner && (
-            <Fab
+            <Fab sx={{
+              zIndex: 1,
+            }}
               onClick={() => setDialogType("addUser")}
               aria-label="Add group member"
               disabled={loadingAddMember}
@@ -250,7 +279,7 @@ export const GroupDetails = () => {
             </Fab>
           )}
         </Box>
-        <Box ref={groupExpensesRef}>
+        <Box ref={groupExpensesRef} >
           <ExpensesList />
         </Box>
         <Box ref={groupOptimizedExpensesRef}>

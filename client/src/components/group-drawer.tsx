@@ -19,10 +19,11 @@ export const GroupDrawerList = ({
   const navigate = useNavigate();
   const { id } = useParams();
 const activeGroupId = Number(id);
-  const { groups } = useGroupContext()
+  const { groups, setAlignment } = useGroupContext()
  
 
   const goToGroup = (id: number) => {
+    setAlignment(null)
     navigate(`/groups/${id}`);
   };
   return (

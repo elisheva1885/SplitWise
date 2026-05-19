@@ -6,6 +6,7 @@ export type GroupState = {
   groups: GroupData[];
   group: GroupData | null;
   optimizedExpenses: OptimizedExpense[];
+  alignment: string|null
 };
 
 export type GroupContextType = GroupState & {
@@ -13,5 +14,6 @@ export type GroupContextType = GroupState & {
   setGroup: (group: GroupData) => void;
   updateGroups: (group: GroupData) => void;
   setOptimizedExpenses: (expenses: OptimizedExpense[]) => void;
+  setAlignment: (value: string | null) => void
 };
 export const GroupContext = createContext<GroupContextType | null>(null);

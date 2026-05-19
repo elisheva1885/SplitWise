@@ -10,7 +10,6 @@ export async function getOptimizedExpenses(
   groupId: number,
 ): Promise<OptimizedExpense[]> {
   const { data } = await api.get(`/expense/${groupId}`);
-  console.log(data);
   return data;
 }
 
@@ -18,7 +17,6 @@ export async function createExpense(
   expenseData: CreateExpenseDto,
 ): Promise<ExpenseInGroup> {
   const { data } = await api.post("/expense", expenseData);
-  console.log(data);
   return data;
 }
 
@@ -26,7 +24,6 @@ export async function deleteExpense(
   expenseId: number,
 ): Promise<{ message: string }> {
   const { data } = await api.delete(`/expense/${expenseId}`);
-  console.log(data);
   return data;
 }
 
@@ -35,6 +32,5 @@ export async function updateExpense(
   expenseData: UpdateExpenseData,
 ): Promise<ExpenseInGroup> {
   const { data } = await api.patch(`/expense/${expenseId}`, expenseData);
-  console.log(data);
   return data;
 }

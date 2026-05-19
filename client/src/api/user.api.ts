@@ -25,7 +25,5 @@ export async function getAllUsers(
   startUsername: string,
 ): Promise<UserIdAndName[]> {
   const { data } = await api.get(`/user/all?query=${startUsername}`);
-  console.log(data);
-
   return data;
 }

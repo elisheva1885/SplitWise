@@ -11,7 +11,6 @@ export async function createGroup(
 
 export async function getGroupDetails(groupId: number): Promise<GroupData> {
   const { data } = await api.get(`/group/${groupId}`);
-  console.log(data);
   return data;
 }
 
@@ -19,7 +18,7 @@ export async function updateGroup(
   groupId: number,
   groupData: UpdateGroupData,
 ): Promise<GroupData> {
-  const { data } = await api.patch(`/group/${groupId}`, groupData);
+  const { data } = await api.patch(`/group/${groupId}`, groupData);  
   return data;
 }
 
@@ -48,8 +47,6 @@ export async function deleteUserFromGroup(
   groupId: number,
   userId: number,
 ): Promise<GroupData> {
-  console.log(groupId, userId);
-
   const { data } = await api.patch(`/group/${groupId}/${userId}`);
   return data;
 }

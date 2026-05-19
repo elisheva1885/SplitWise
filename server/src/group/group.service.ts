@@ -112,7 +112,7 @@ export class GroupService {
   ): Promise<FullGroupResponseDto> {
     const group = await this.groupRepository.findOne({
       where: { uuid: groupId, owner: { uuid: userId } },
-      relations: ['owner', 'members', 'expenses'],
+      relations: ['owner', 'members', 'expenses.paidBy', 'expenses.paidOn'],
     });
     if (!group) {
       throw new NotFoundException('group not found');

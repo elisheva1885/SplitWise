@@ -6,6 +6,7 @@ import type { OptimizedExpense } from "../types/expense.type";
 export const GroupProvider = ({ children }: { children: ReactNode }) => {
   const [groups, setGroups] = useState<GroupData[] | []>([]);
   const [group, setGroup] = useState<GroupData | null>(null);
+  const [alignment, setAlignment] = useState<string | null>(null);
   const updateGroups = (updatedGroup: GroupData) => {
     setGroups((prev) =>
       prev.map((g) => (g.id === updatedGroup.id ? updatedGroup : g)),
@@ -28,6 +29,8 @@ export const GroupProvider = ({ children }: { children: ReactNode }) => {
         updateGroups,
         optimizedExpenses,
         setOptimizedExpenses,
+        alignment,
+        setAlignment
       }}
     >
       {children}
