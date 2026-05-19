@@ -155,8 +155,7 @@ export class UserService {
     const hasOpenDebts = groupsExpenses.some((groupResult) =>
       groupResult.some(
         (expense) =>
-          expense.paidByUser.id === userId ||
-          expense.paidOnUser.id === userId,
+          expense.paidByUser.id === userId || expense.paidOnUser.id === userId,
       ),
     );
     if (hasOpenDebts) {

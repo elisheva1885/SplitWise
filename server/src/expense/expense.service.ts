@@ -29,7 +29,7 @@ export class ExpenseService {
     private readonly expenseValidator: ExpenseValidator,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
-  ) { }
+  ) {}
 
   private toResponse(expense: Expense): ExpenseResponseDto {
     return {

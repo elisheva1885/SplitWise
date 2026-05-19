@@ -192,10 +192,15 @@ export class GroupService {
         'please assign someone else to be the owner of the group and request him to remove you',
       );
     }
-    const userExpenses = await this.expenseService.getGroupExpense(group.uuid, user.uuid)
-    const hasOpenDebts = userExpenses.some(expense =>
-      expense.paidByUser.id === user.uuid || expense.paidOnUser.id === user.uuid
-    )
+    const userExpenses = await this.expenseService.getGroupExpense(
+      group.uuid,
+      user.uuid,
+    );
+    const hasOpenDebts = userExpenses.some(
+      (expense) =>
+        expense.paidByUser.id === user.uuid ||
+        expense.paidOnUser.id === user.uuid,
+    );
     if (hasOpenDebts) {
       throw new BadRequestException('user still has open expenses');
     }

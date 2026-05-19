@@ -16,4 +16,4 @@ import { ExpenseModule } from 'src/expense/expense.module';
   providers: [GroupService],
   exports: [GroupService],
 })
-export class GroupModule { }
+export class GroupModule {}

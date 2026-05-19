@@ -6,8 +6,7 @@ import { UserController } from './user.controller';
 import { ExpenseModule } from 'src/expense/expense.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), forwardRef(() => ExpenseModule),
-  ],
+  imports: [TypeOrmModule.forFeature([User]), forwardRef(() => ExpenseModule)],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService],
