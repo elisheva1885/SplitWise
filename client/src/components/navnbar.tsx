@@ -51,11 +51,13 @@ export const Navbar = () => {
       <AppBar position="sticky" sx={{ backgroundColor: "#182720", height:'60px' }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Box onClick={()=> navigate('/')}
+            <IconButton  onClick={()=> navigate('/')}>
+            <Box
               component={"img"}
               src="splitwise2.png"
               sx={{ maxHeight: 40 }}
             ></Box>
+            </IconButton>
             {user ? (
               <Button
                 sx={{
