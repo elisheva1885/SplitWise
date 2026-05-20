@@ -86,14 +86,12 @@ export class GroupService {
         uuid: groupId,
       },
       relations: [
-        'expenses',
         'owner',
         'members',
         'expenses.paidBy',
         'expenses.paidOn',
       ],
     });
-
     if (!group) {
       throw new NotFoundException('group not found');
     }
@@ -169,7 +167,7 @@ export class GroupService {
   ): Promise<FullGroupResponseDto> {
     const group = await this.groupRepository.findOne({
       where: { uuid: groupId },
-      relations: ['owner', 'members'],
+      relations: ['owner', 'members', 'expenses.paidBy', 'expenses.paidOn'],
     });
     if (!group) {
       throw new NotFoundException('group not found');
@@ -219,7 +217,7 @@ export class GroupService {
   ): Promise<FullGroupResponseDto> {
     const group = await this.groupRepository.findOne({
       where: { uuid: groupId },
-      relations: ['owner', 'members'],
+      relations: ['owner', 'members', 'expenses.paidBy', 'expenses.paidOn'],
     });
     if (!group) {
       throw new NotFoundException('group not found');

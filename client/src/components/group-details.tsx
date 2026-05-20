@@ -68,7 +68,6 @@ export const GroupDetails = () => {
   const handleCloseDialog = () => {
     setDialogType(null);
   };
-  console.log(alignment);
 
   const handleChange = (
     _: React.MouseEvent<HTMLElement>,
