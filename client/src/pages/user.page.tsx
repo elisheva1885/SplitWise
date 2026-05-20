@@ -54,7 +54,7 @@ export const UserPage = () => {
     }
   };
   return (
-    <Box>
+    <Box sx={{marginTop: '50px'}}>
       <UpdateUserForm
         onSubmit={handleSubmit}
         onDelete={onDelete}

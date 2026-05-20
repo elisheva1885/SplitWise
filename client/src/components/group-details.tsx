@@ -105,35 +105,25 @@ export const GroupDetails = () => {
     <Box
       sx={{
         display: "flex",
-        justifyContent: "center",
         alignItems: "center",
-        gap: 2.5,
         flexDirection: "column",
-        width: "100%",
       }}
     >
       <Box
         sx={{
           position: "sticky",
-          top: 65,
+          top: 60,
           zIndex: 1000,
-          width: '30%',
+          width: '380px',
           display: {
             xs: "none",
             md: "flex",
           },
-
           justifyContent: "center",
           py: 1,
           px: 1,
           backdropFilter: "blur(12px)",
           backgroundColor: "rgba(255,255,255,0.75)",
-          overflowX: "auto",
-
-          "&::-webkit-scrollbar": {
-            display: "none",
-          },
-
         }}
       >
         <ToggleButtonGroup
@@ -187,6 +177,16 @@ export const GroupDetails = () => {
           </ToggleButton>
         </ToggleButtonGroup>
       </Box>
+       <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 2.5,
+        flexDirection: "column",
+        width: "100%",
+      }}
+    >
       <Card
         sx={{
           display: "flex",
@@ -194,7 +194,7 @@ export const GroupDetails = () => {
           alignItems: "center",
           gap: 0.5,
           textAlign: "center",
-          marginTop: 5,
+          marginTop: '30px',
         }}
         ref={groupMembersRef}
       >
@@ -317,7 +317,7 @@ export const GroupDetails = () => {
           }}
         />
       </FormDialog>
-
+</Box>
       <Snackbar
         open={snackbar.open}
         autoHideDuration={2500}
