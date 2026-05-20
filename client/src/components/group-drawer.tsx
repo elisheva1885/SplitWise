@@ -28,9 +28,13 @@ const activeGroupId = Number(id);
   };
   return (
     <Box sx={{
-      width: 250, height: '100%',
+      width: {
+        xs: '150px',
+        md: '250px'
+      }, height: '100%',
       display: 'flex',
       flexDirection: 'column',
+
     }} role="presentation">
       <List sx={{
         width: '100%',

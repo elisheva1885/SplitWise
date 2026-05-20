@@ -16,7 +16,7 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useGroupDetails } from "../hooks/use-group-details";
 import { useParams } from "react-router-dom";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import { useGroupContext } from "../store/use-group.context";
 import { FormDialog } from "./form-dialog";
@@ -28,7 +28,7 @@ import { useRef } from "react";
 
 export const GroupDetails = () => {
   const { id } = useParams();
-  const { group, alignment,setAlignment } = useGroupContext();
+  const { group, alignment, setAlignment } = useGroupContext();
   const owner = group?.owner;
   const [dialogType, setDialogType] = useState<
     "addUser" | "updateGroup" | null
@@ -49,29 +49,26 @@ export const GroupDetails = () => {
   const handleScrollTogroupExpenses = () => {
     groupExpensesRef.current?.scrollIntoView({
       behavior: "smooth",
-      block: "nearest",
-      inline: "center",
+      block: "start",
     });
   };
   const handleScrollTogroupOptimizedExpenses = () => {
     groupOptimizedExpensesRef.current?.scrollIntoView({
       behavior: "smooth",
-      block: "nearest",
-      inline: "center",
+      block: "start",
     });
   };
   const handleScrollTogroupMembers = () => {
     groupMembersRef.current?.scrollIntoView({
       behavior: "smooth",
-      block: "nearest",
-      inline: "center",
+      block: "start",
     });
   };
 
   const handleCloseDialog = () => {
     setDialogType(null);
   };
-console.log(alignment);
+  console.log(alignment);
 
   const handleChange = (
     _: React.MouseEvent<HTMLElement>,
@@ -120,12 +117,23 @@ console.log(alignment);
           position: "sticky",
           top: 65,
           zIndex: 1000,
-          width: "35%",
-          display: "flex",
+          width: '30%',
+          display: {
+            xs: "none",
+            md: "flex",
+          },
+
           justifyContent: "center",
-          py: 1.5,
+          py: 1,
+          px: 1,
           backdropFilter: "blur(12px)",
           backgroundColor: "rgba(255,255,255,0.75)",
+          overflowX: "auto",
+
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+
         }}
       >
         <ToggleButtonGroup

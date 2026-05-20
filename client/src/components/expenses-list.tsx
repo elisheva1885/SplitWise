@@ -28,7 +28,7 @@ export const ExpensesList = () => {
   const [updateExpenseDialog, setUpdateExpenseDialog] = useState(false);
   const [expenseForUpdate, setExpenseForUpdate] = useState<ExpenseInGroup>();
 
-  const { snackbar, handleCloseSnackbar,loadingAddExpenses,loadingDeleteExpenses, loadingUpdateExpenses, actions } = useExpenses();
+  const { snackbar, handleCloseSnackbar, loadingAddExpenses, loadingDeleteExpenses, loadingUpdateExpenses, actions } = useExpenses();
   const openUpdateDialog = (expense: ExpenseInGroup) => {
     setExpenseForUpdate(expense);
     setUpdateExpenseDialog(true);
@@ -37,16 +37,16 @@ export const ExpensesList = () => {
     setUpdateExpenseDialog(false);
     setExpenseForUpdate(undefined);
   };
-  
+
 
   return (
     <>
-     
-        <TableContainer component={Paper}>
-          <AddExpensesForm onSubmit={actions.addExpenseToGroup} loadingAddExpense={loadingAddExpenses}/>
-           {!group?.expenses?.length ? (
-        <Box>No expenses in this group</Box>
-      ) : (
+
+      <TableContainer component={Paper}>
+        <AddExpensesForm onSubmit={actions.addExpenseToGroup} loadingAddExpense={loadingAddExpenses} />
+        {!group?.expenses?.length ? (
+          <Box>No expenses in this group</Box>
+        ) : (
           <Table sx={{ minWidth: 650 }}>
             <TableHead>
               <TableRow>
@@ -66,7 +66,9 @@ export const ExpensesList = () => {
                   expense?.paidOn.id === user?.id;
                 return (
                   <TableRow key={expense?.id}>
-                    <TableCell align="center">{expense.cause}</TableCell>
+                    <TableCell align="center" sx={{
+                      wordBreak: 'break-word',
+                    }}>{expense.cause}</TableCell>
                     <TableCell align="center">{expense.value}</TableCell>
                     <TableCell align="center">
                       {expense.paidBy.username}
@@ -102,23 +104,23 @@ export const ExpensesList = () => {
               })}
             </TableBody>
           </Table>
+        )}
+        <FormDialog
+          open={updateExpenseDialog}
+          handleCloseDialog={handleCloseDialog}
+        >
+          {expenseForUpdate && (
+            <UpdateExpenseForm
+              onSubmit={async (expense, expenseData) => {
+                await actions.updateGroupExpense(expense, expenseData);
+                handleCloseDialog();
+              }}
+              expense={expenseForUpdate}
+            />
           )}
-          <FormDialog
-            open={updateExpenseDialog}
-            handleCloseDialog={handleCloseDialog}
-          >
-            {expenseForUpdate && (
-              <UpdateExpenseForm
-                onSubmit={async (expense, expenseData) => {
-                  await actions.updateGroupExpense(expense, expenseData);
-                  handleCloseDialog();
-                }}
-                expense={expenseForUpdate}
-              />
-            )}
-          </FormDialog>
-        </TableContainer>
-      
+        </FormDialog>
+      </TableContainer>
+
       <Snackbar
         open={snackbar.open}
         autoHideDuration={2500}

@@ -1,6 +1,6 @@
 import { z } from "zod";
 export const AddExpenseSchema = z.object({
-  cause: z.string().optional(),
+  cause: z.string().max(100, "Cause must be less than 100 characters").optional(),
   value: z
     .number({ message: "value must be bigger than zero" })
     .min(1, { message: "value must be bigger than zero" }),

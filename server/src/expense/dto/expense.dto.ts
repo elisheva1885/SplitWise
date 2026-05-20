@@ -1,11 +1,19 @@
 import { Optional } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+  Min,
+} from 'class-validator';
 
 export class CreateExpenseDto {
   @ApiProperty({ example: 'Developers Team', required: false })
   @IsString()
   @Optional()
+  @MaxLength(100)
   cause?: string;
 
   @ApiProperty({

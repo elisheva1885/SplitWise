@@ -90,7 +90,8 @@ useEffect(() => {
           <GroupDrawerList setOpen={setOpen} addLoading={addLoading} />
         </Drawer>
       )}
-      <Box sx={{ marginLeft: '260px', padding: '16px', maxWidth: '100%' }}>
+      <Box sx={{ marginLeft: {
+        xs:'160px', md: '260px'}, padding: '16px', maxWidth: '100%' }}>
         <Outlet />
       </Box>
       <FormDialog open={open} handleCloseDialog={handleCloseDialog}>

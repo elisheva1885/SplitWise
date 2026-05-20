@@ -16,7 +16,7 @@ type AddExpensesFormProps = {
   onSubmit: (data: AddExpenseData) => void;
   loadingAddExpense: boolean
 };
-export const AddExpensesForm = ({ onSubmit ,loadingAddExpense}: AddExpensesFormProps) => {
+export const AddExpensesForm = ({ onSubmit, loadingAddExpense }: AddExpensesFormProps) => {
 
   const {
     control,
@@ -41,9 +41,18 @@ export const AddExpensesForm = ({ onSubmit ,loadingAddExpense}: AddExpensesFormP
       <Paper
         sx={{
           display: "flex",
+
+          flexDirection: {
+            xs: "column",
+            md: "row",
+          },
           gap: 2,
           p: 1,
-          alignItems: "center",
+          alignItems: {
+            xs: "stretch",
+            md: "center",
+          },
+
         }}
       >
         <Box sx={{ flex: 1.7 }}>
@@ -79,7 +88,7 @@ export const AddExpensesForm = ({ onSubmit ,loadingAddExpense}: AddExpensesFormP
               Paid On
             </InputLabel>
             <MemberSelect name="paidOn" control={control} label="Paid By" />
-          <FormHelperText>{errors.paidOn?.message}</FormHelperText>
+            <FormHelperText>{errors.paidOn?.message}</FormHelperText>
           </FormControl>
         </Box>
         <Button type="submit" sx={{ backgroundColor: "black" }} disabled={loadingAddExpense}>
