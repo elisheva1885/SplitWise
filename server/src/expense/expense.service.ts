@@ -28,10 +28,10 @@ export class ExpenseService {
     @Inject(forwardRef(() => ExpenseValidator))
     private readonly expenseValidator: ExpenseValidator,
     @Inject(forwardRef(() => UserService))
-    private readonly userService: UserService,
+    public readonly userService: UserService,
   ) {}
 
-  private toResponse(expense: Expense): ExpenseResponseDto {
+  public toResponse(expense: Expense): ExpenseResponseDto {
     return {
       id: expense.uuid,
       value: expense.value,
@@ -135,7 +135,7 @@ export class ExpenseService {
     return { message: 'Expense deleted successfully' };
   }
 
-  private buildUserMappings(expenses: Expense[]) {
+  public buildUserMappings(expenses: Expense[]) {
     const userToIndexMap = new Map<number, number>();
     const indexToUserMap = new Map<number, number>();
     const expenseByUserPair = new Map<string, number>();
@@ -164,7 +164,7 @@ export class ExpenseService {
 
     return { userToIndexMap, indexToUserMap, expenseByUserPair };
   }
-  private buildDebtMatrix(
+  public buildDebtMatrix(
     userToIndexMap: Map<number, number>,
     indexToUserMap: Map<number, number>,
     expenseByUserPair: Map<string, number>,
@@ -189,7 +189,7 @@ export class ExpenseService {
 
     return debtMatrix;
   }
-  private simplifyDebts(debtMatrix: number[][]): number[][] {
+  public simplifyDebts(debtMatrix: number[][]): number[][] {
     const result: number[][] = debtMatrix.map((row) => [...row]);
 
     const n = debtMatrix.length;
@@ -214,7 +214,7 @@ export class ExpenseService {
     }
     return result;
   }
-  private async mapToResponse(
+  public async mapToResponse(
     debtMatrix: number[][],
     indexToUserMap: Map<number, number>,
   ): Promise<BalanceExpenseResponse[]> {
