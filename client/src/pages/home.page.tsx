@@ -28,7 +28,7 @@ export const HomePage = () => {
       padding: "1rem 0 1rem", textAlign: "center", fontSize: 20, fontWeight: 200, lineHeight: 1.1,
       letterSpacing: "-0.03em", margin: "0 0 0rem"
     }}>
-      the easiest wat to manage group expenses
+      the easiest way to manage group expenses
     </Typography>
   </>
 };
