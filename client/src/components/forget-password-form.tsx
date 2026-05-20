@@ -33,12 +33,12 @@ export const ForgetPasswordForm = ({
   const onSubmit = async (data: ForgetPasswordData) => {
     try {
       showSuccess(`send message to your email ${data.email}`)
-        setTimeout(() => {
+      setTimeout(() => {
         setDialogOpen(false);
       }, 450);
-    }catch (err) {
-            showError(handleApiError(err));
-        }
+    } catch (err) {
+      showError(handleApiError(err));
+    }
   };
 
   const {
@@ -63,6 +63,11 @@ export const ForgetPasswordForm = ({
         type="email"
         size="small"
         {...register("email")}
+        sx={{
+          "& .MuiInputLabel-root.Mui-focused": {
+            color: "white",
+          },
+        }}
         error={!!errors.email}
         helperText={errors.email?.message}
       />

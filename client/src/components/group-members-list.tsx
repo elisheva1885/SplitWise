@@ -10,6 +10,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import Tooltip from "@mui/material/Tooltip";
+import { Typography } from "@mui/material";
 type GroupMembersListProps = {
   group: GroupData | null;
   isOwner: boolean;
@@ -32,6 +33,8 @@ export const GroupMembersList = ({
         width: "100%",
       }}
     >
+       <Typography sx={{marginTop:'5px'}}>Users group</Typography>
+
       <Table
         sx={{
           minWidth: 650,

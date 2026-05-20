@@ -85,12 +85,7 @@ export class GroupService {
       where: {
         uuid: groupId,
       },
-      relations: [
-        'owner',
-        'members',
-        'expenses.paidBy',
-        'expenses.paidOn',
-      ],
+      relations: ['owner', 'members', 'expenses.paidBy', 'expenses.paidOn'],
     });
     if (!group) {
       throw new NotFoundException('group not found');

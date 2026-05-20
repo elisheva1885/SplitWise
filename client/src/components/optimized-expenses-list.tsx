@@ -13,6 +13,7 @@ import { useGroupContext } from "../store/use-group.context";
 import { useExpenses } from "../hooks/use-expenses";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import { Typography } from "@mui/material";
 
 export const OptimizedExpensesList = () => {
   const {
@@ -43,6 +44,7 @@ export const OptimizedExpensesList = () => {
         <Box>No optimized expenses</Box>
       ) : (
         <TableContainer component={Paper}>
+           <Typography sx={{marginTop:'5px'}}>Minimize Expenses</Typography>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>

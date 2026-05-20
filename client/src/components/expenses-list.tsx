@@ -21,6 +21,7 @@ import { FormDialog } from "./form-dialog";
 import { useExpenses } from "../hooks/use-expenses";
 import Tooltip from "@mui/material/Tooltip";
 import Box from "@mui/material/Box";
+import { Typography } from "@mui/material";
 
 export const ExpensesList = () => {
   const { user } = useUserContext();
@@ -41,12 +42,13 @@ export const ExpensesList = () => {
 
   return (
     <>
-
       <TableContainer component={Paper}>
+        <Typography sx={{marginTop:'5px'}}>Total expenses</Typography>
         <AddExpensesForm onSubmit={actions.addExpenseToGroup} loadingAddExpense={loadingAddExpenses} />
         {!group?.expenses?.length ? (
           <Box>No expenses in this group</Box>
         ) : (
+
           <Table sx={{ minWidth: 650 }}>
             <TableHead>
               <TableRow>

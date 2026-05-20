@@ -68,7 +68,6 @@ export const AddExpensesForm = ({ onSubmit, loadingAddExpense }: AddExpensesForm
         </Box>
         <Box sx={{ flex: 0.8 }}>
           <TextField
-            type="number"
             size="small"
             label="value"
             {...register("value", { valueAsNumber: true })}
