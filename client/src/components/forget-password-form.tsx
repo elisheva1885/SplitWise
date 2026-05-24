@@ -7,12 +7,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ForgetPasswordSchema,
   type ForgetPasswordData,
-} from "../schemas/auth-schemas";
+} from "../schemas/auth.schemas";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Box from "@mui/material/Box";
-import { handleApiError } from "../helpers/handle-api-error.helper";
 import { useSnackbar } from "../hooks/use-snackbar";
 
 type ForgetPasswordProps = {
@@ -26,19 +25,14 @@ export const ForgetPasswordForm = ({
 }: ForgetPasswordProps) => {
   const {
     snackbar,
-    showError,
     showSuccess,
     handleCloseSnackbar,
   } = useSnackbar();
   const onSubmit = async (data: ForgetPasswordData) => {
-    try {
       showSuccess(`send message to your email ${data.email}`)
       setTimeout(() => {
         setDialogOpen(false);
       }, 450);
-    } catch (err) {
-      showError(handleApiError(err));
-    }
   };
 
   const {

@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import {
   UpdateGroupSchema,
   type UpdateGroupData,
-} from "../schemas/group-schemas";
+} from "../schemas/group.schemas";
 import { useEffect } from "react";
 import Box from "@mui/material/Box";
 import { useGroupContext } from "../store/use-group.context";

@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AddExpenseSchema,
   type AddExpenseData,
-} from "../schemas/expense-schema";
+} from "../schemas/expense.schema";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import FormControl from "@mui/material/FormControl";

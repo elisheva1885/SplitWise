@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import { useForm } from "react-hook-form";
-import { AddGroupSchema, type AddGroupData } from "../schemas/group-schemas";
+import { AddGroupSchema, type AddGroupData } from "../schemas/group.schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Box from "@mui/material/Box";
 

@@ -73,7 +73,9 @@ export const GroupDetails = () => {
     _: React.MouseEvent<HTMLElement>,
     newAlignment: string,
   ) => {
-    setAlignment(newAlignment);
+    if (newAlignment !== null) {
+      setAlignment(newAlignment);
+    }
   };
 
   useEffect(() => {
@@ -176,147 +178,147 @@ export const GroupDetails = () => {
           </ToggleButton>
         </ToggleButtonGroup>
       </Box>
-       <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 2.5,
-        flexDirection: "column",
-        width: "100%",
-      }}
-    >
-      <Card
+      <Box
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          gap: 0.5,
-          textAlign: "center",
-          marginTop: '30px',
+          gap: 2.5,
+          flexDirection: "column",
+          width: "100%",
         }}
-        ref={groupMembersRef}
       >
-        <Typography sx={{
-          fontSize: "xx-large", padding: "8px", wordBreak: 'break-word',
-          '& .MuiTypography-root': {
-            display: 'block',
-            whiteSpace: 'normal',
-            wordBreak: 'break-word',
-          }
-        }}>
-          {group?.name}
-        </Typography>
-        {isOwner && (
-          <>
-            <IconButton onClick={() => setDialogType("updateGroup")}>
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              onClick={actions.deleteGroupData}
-              disabled={loadingDeleteGroup}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </>
-        )}
-      </Card>
+        <Card
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 0.5,
+            textAlign: "center",
+            marginTop: '30px',
+          }}
+          ref={groupMembersRef}
+        >
+          <Typography sx={{
+            fontSize: "xx-large", padding: "8px", wordBreak: 'break-word',
+            '& .MuiTypography-root': {
+              display: 'block',
+              whiteSpace: 'normal',
+              wordBreak: 'break-word',
+            }
+          }}>
+            {group?.name}
+          </Typography>
+          {isOwner && (
+            <>
+              <IconButton onClick={() => setDialogType("updateGroup")}>
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                onClick={actions.deleteGroupData}
+                disabled={loadingDeleteGroup}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </>
+          )}
+        </Card>
 
-      {owner && (
-        <Chip
-          avatar={
-            <Avatar
-              sx={{
-                backgroundColor: "black",
-                width: "70px",
-                height: "70px",
-              }}
-            >
-              <Typography
+        {owner && (
+          <Chip
+            avatar={
+              <Avatar
                 sx={{
-                  fontSize: "x-small",
-                  fontWeight: "bold",
-                  color: "white",
+                  backgroundColor: "black",
+                  width: "70px",
+                  height: "70px",
                 }}
               >
-                OWN
-              </Typography>
-            </Avatar>
-          }
-          label={owner.username}
-          sx={{
-            height: "44px",
-            px: 1,
-            "& .MuiChip-avatar": {
-              width: 38,
-              height: 38,
-              borderRadius: "16px",
-            },
-          }}
-          variant="outlined"
-        ></Chip>
-      )}
-
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignContent: "center",
-          gap: 3,
-        }}
-      >
-        <GroupMembersList
-          group={group}
-          isOwner={isOwner}
-          deleteGroupMember={actions.deleteGroupMember}
-          updateToGroupOwner={actions.updateToGroupOwner}
-        />
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          {isOwner && (
-            <Fab sx={{
-              zIndex: 1,
+                <Typography
+                  sx={{
+                    fontSize: "x-small",
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                >
+                  OWN
+                </Typography>
+              </Avatar>
+            }
+            label={owner.username}
+            sx={{
+              height: "44px",
+              px: 1,
+              "& .MuiChip-avatar": {
+                width: 38,
+                height: 38,
+                borderRadius: "16px",
+              },
             }}
-              onClick={() => setDialogType("addUser")}
-              aria-label="Add group member"
-              disabled={loadingAddMember}
-            >
-              <GroupAddIcon />
-            </Fab>
-          )}
-        </Box>
-        <Box ref={groupExpensesRef} >
-          <ExpensesList />
-        </Box>
-        <Box ref={groupOptimizedExpensesRef}>
-          <OptimizedExpensesList />
-        </Box>
-      </Box>
+            variant="outlined"
+          ></Chip>
+        )}
 
-      <FormDialog
-        open={dialogType === "addUser"}
-        handleCloseDialog={handleCloseDialog}
-      >
-        <AddGroupMemberForm
-          onSubmit={async (id) => {
-            await actions.addGroupMember(id);
-            setDialogType(null);
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignContent: "center",
+            gap: 3,
           }}
-        />
-      </FormDialog>
-      <FormDialog
-        open={dialogType === "updateGroup"}
-        handleCloseDialog={handleCloseDialog}
-      >
-        <UpdateGroupForm
-          onSubmit={async (data) => {
-            await actions.updateGroupDetails(data);
-            setDialogType(null);
-          }}
-        />
-      </FormDialog>
-</Box>
+        >
+          <GroupMembersList
+            group={group}
+            isOwner={isOwner}
+            deleteGroupMember={actions.deleteGroupMember}
+            updateToGroupOwner={actions.updateToGroupOwner}
+          />
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            {isOwner && (
+              <Fab sx={{
+                zIndex: 1,
+              }}
+                onClick={() => setDialogType("addUser")}
+                aria-label="Add group member"
+                disabled={loadingAddMember}
+              >
+                <GroupAddIcon />
+              </Fab>
+            )}
+          </Box>
+          <Box ref={groupExpensesRef} >
+            <ExpensesList />
+          </Box>
+          <Box ref={groupOptimizedExpensesRef}>
+            <OptimizedExpensesList />
+          </Box>
+        </Box>
+
+        <FormDialog
+          open={dialogType === "addUser"}
+          handleCloseDialog={handleCloseDialog}
+        >
+          <AddGroupMemberForm
+            onSubmit={async (id) => {
+              await actions.addGroupMember(id);
+              setDialogType(null);
+            }}
+          />
+        </FormDialog>
+        <FormDialog
+          open={dialogType === "updateGroup"}
+          handleCloseDialog={handleCloseDialog}
+        >
+          <UpdateGroupForm
+            onSubmit={async (data) => {
+              await actions.updateGroupDetails(data);
+              setDialogType(null);
+            }}
+          />
+        </FormDialog>
+      </Box>
       <Snackbar
         open={snackbar.open}
         autoHideDuration={2500}

@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import type { ExpenseInGroup, UpdateExpenseData } from "../types/expense.type";
 import Box from "@mui/material/Box";
-import { UpdateExpenseSchema } from "../schemas/expense-schema";
+import { UpdateExpenseSchema } from "../schemas/expense.schema";
 import { MemberSelect } from "./member-select";
 import { InputLabel } from "@mui/material";
 

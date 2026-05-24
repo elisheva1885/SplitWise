@@ -8,7 +8,7 @@ import {
   updateGroup,
   updateGroupOwner,
 } from "../api/group.api";
-import type { UpdateGroupData } from "../schemas/group-schemas";
+import type { UpdateGroupData } from "../schemas/group.schemas";
 import { useUserContext } from "../store/use-user.context";
 import { useGroupContext } from "../store/use-group.context";
 import { useNavigate } from "react-router-dom";

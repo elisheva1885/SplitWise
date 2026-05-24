@@ -1,4 +1,4 @@
-import type { UpdateGroupData } from "../schemas/group-schemas";
+import type { UpdateGroupData } from "../schemas/group.schemas";
 import type { CreateGroupDto, GroupData } from "../types/group.types";
 import api from "./client.api";
 

@@ -7,7 +7,7 @@ import {
     updateExpense,
 } from "../api/expense.api";
 import { handleApiError } from "../helpers/handle-api-error.helper";
-import type { AddExpenseData } from "../schemas/expense-schema";
+import type { AddExpenseData } from "../schemas/expense.schema";
 import { useUserContext } from "../store/use-user.context";
 import type { ExpenseInGroup, UpdateExpenseData } from "../types/expense.type";
 import { useSnackbar } from "./use-snackbar";
@@ -27,22 +27,19 @@ export const useExpenses = () => {
         handleCloseSnackbar,
     } = useSnackbar();
     const isExpenseChanged = (
-  expense: ExpenseInGroup,
-  data: UpdateExpenseData,
-) => {
-  return (
-    data.cause !== expense.cause ||
-    data.value !== expense.value ||
-    data.paidBy !== expense.paidBy.id ||
-    data.paidOn !== expense.paidOn.id
-  );
-};
+        expense: ExpenseInGroup,
+        data: UpdateExpenseData,
+    ) => {
+
+        return (
+            data.cause !== expense.cause ||
+            data.value !== expense.value ||
+            data.paidBy !== expense.paidBy.id ||
+            data.paidOn !== expense.paidOn.id
+        );
+    };
     const getGroupOptimizedExpense = useCallback(
         async (id: number) => {
-            if (!group?.id) {
-                showError("Group not loaded");
-                return;
-            }
             try {
                 setLoadingOptimizedExpenses(true);
                 const data = await getOptimizedExpenses(id);
@@ -53,7 +50,7 @@ export const useExpenses = () => {
                 setLoadingOptimizedExpenses(false);
             }
         },
-        [setOptimizedExpenses, group?.id, showError],
+        [setOptimizedExpenses, showError],
     );
 
     const addExpenseToGroup = async (expenseData: AddExpenseData) => {
@@ -85,7 +82,7 @@ export const useExpenses = () => {
         } catch (err) {
             showError(handleApiError(err));
         }
-        finally{
+        finally {
             setLoadingAddExpenses(false)
         }
     };
@@ -110,10 +107,10 @@ export const useExpenses = () => {
             });
 
             showSuccess("Expense deleted successfully");
-        } catch (err) {            
+        } catch (err) {
             showError(handleApiError(err));
         }
-        finally{
+        finally {
             setLoadingDeleteExpenses(false)
         }
     };
@@ -126,9 +123,13 @@ export const useExpenses = () => {
             showError("Group not loaded");
             return;
         }
+        if (!expense) {
+            showError("expense not loaded");
+            return;
+        }
 
         if (
-            !isExpenseChanged(expense,expenseData)
+            !isExpenseChanged(expense, expenseData)
         ) {
             showError("you need to change one of the inputs before saving!");
             return;
@@ -149,7 +150,7 @@ export const useExpenses = () => {
         } catch (err) {
             showError(handleApiError(err));
         }
-        finally{
+        finally {
             setLoadingUpdateExpenses(false)
         }
     };

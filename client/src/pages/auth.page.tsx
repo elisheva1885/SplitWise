@@ -4,7 +4,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Snackbar from "@mui/material/Snackbar";
 import { RegisterForm } from "../components/register-form";
 import { useUserContext } from "../store/use-user.context";
-import type { LoginData, RegisterData } from "../schemas/auth-schemas";
+import type { LoginData, RegisterData } from "../schemas/auth.schemas";
 import type { AuthPagemMode } from "../types/auth.types";
 import { handleApiError } from "../helpers/handle-api-error.helper";
 import { LoginForm } from "../components/login-form";

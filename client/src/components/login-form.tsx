@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginSchema, type LoginData } from "../schemas/auth-schemas";
+import { LoginSchema, type LoginData } from "../schemas/auth.schemas";
 import type { LoginFormData } from "../types/auth.types";
 import Box from "@mui/material/Box";
 
