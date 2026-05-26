@@ -44,7 +44,7 @@ export const OptimizedExpensesList = () => {
         <Box>No optimized expenses</Box>
       ) : (
         <TableContainer component={Paper}>
-           <Typography sx={{marginTop:'5px'}}>Minimize Expenses</Typography>
+           <Typography sx={{marginTop:'5px'}}>Minimized Expenses</Typography>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>

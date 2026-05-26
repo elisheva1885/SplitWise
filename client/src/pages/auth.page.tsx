@@ -35,13 +35,13 @@ export const AuthPage = ({
     try {
       if (mode === "Login") {
         const userData = await loginUser(data as LoginData);
-
         setUser(userData);
         showSuccess("Logged in successfully!")
 
       } else {
         const userData = await registerUser(data as RegisterData);
-
+        console.log(userData);
+        
         setUser(userData);
         showSuccess("Register successfully!")
       }
