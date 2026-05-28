@@ -7,6 +7,7 @@ import {
 } from "react-hook-form";
 import { useGroupContext } from "../store/use-group.context";
 import MenuItem from "@mui/material/MenuItem";
+import { FormControl, InputLabel } from "@mui/material";
 type MemberSelectProps<T extends FieldValues> = {
   name: Path<T>;
   control: Control<T>;
@@ -20,24 +21,27 @@ export const MemberSelect = <T extends FieldValues>({
   const { group } = useGroupContext();
   const groupMembers = group?.members;
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field }) => (
-        <Select {...field} label={label} sx={{ width: "100%" }}>
-          {groupMembers?.map((member) => {
-            return (
-              <MenuItem
-                value={member.id}
-                key={member.id}
-                sx={{ color: "black" }}
-              >
-                {member.username}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      )}
-    />
+    <FormControl fullWidth >
+      <InputLabel sx={{ color: "white" }}>{label}</InputLabel>
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <Select {...field} sx={{ width: "100%" }}>
+            {groupMembers?.map((member) => {
+              return (
+                <MenuItem
+                  value={member.id}
+                  key={member.id}
+                  sx={{ color: "black" }}
+                >
+                  {member.username}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        )}
+      />
+    </FormControl>
   );
 };

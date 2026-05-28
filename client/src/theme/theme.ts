@@ -43,20 +43,24 @@ export const theme = createTheme({
         root: {
           backgroundColor: "transparent",
           color: "white",
-        },
-      },
-    },
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          maxWidth: "247px",
-          "& .MuiInputLabel-root.Mui-focused": {
+          "&.Mui-focused": {
             color: "white",
           },
-          "& input:-webkit-autofill": {
-            WebkitBoxShadow: "0 0 0 1000px transparent inset",
-            WebkitTextFillColor: "inherit ",
-            transition: "background-color 9999s ease-in-out 0s",
+
+      },
+    },
+  },
+  MuiTextField: {
+    styleOverrides: {
+      root: {
+        maxWidth: "247px",
+        "& .MuiInputLabel-root.Mui-focused": {
+          color: "white",
+        },
+        "& input:-webkit-autofill": {
+          WebkitBoxShadow: "0 0 0 1000px transparent inset",
+          WebkitTextFillColor: "inherit ",
+          transition: "background-color 9999s ease-in-out 0s",
         },
       },
     },

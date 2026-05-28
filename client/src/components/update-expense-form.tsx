@@ -7,7 +7,6 @@ import type { ExpenseInGroup, UpdateExpenseData } from "../types/expense.type";
 import Box from "@mui/material/Box";
 import { UpdateExpenseSchema } from "../schemas/expense.schema";
 import { MemberSelect } from "./member-select";
-import { InputLabel } from "@mui/material";
 
 type UpdateExpenseFormProps = {
   onSubmit: (expense: ExpenseInGroup, data: UpdateExpenseData) => Promise<void>;
@@ -70,11 +69,9 @@ export const UpdateExpenseForm = ({
           helperText={errors.value?.message}
         />
         <Box sx={{ flex: 1, color: "black" }}>
-          <InputLabel>Paid By</InputLabel>
           <MemberSelect name="paidBy" control={control} label="Paid By" />
         </Box>
         <Box sx={{ flex: 1, color: "black" }}>
-          <InputLabel>Paid On</InputLabel>
           <MemberSelect name="paidOn" control={control} label="Paid On" />
         </Box>
         <Button type="submit">Save Changes</Button>

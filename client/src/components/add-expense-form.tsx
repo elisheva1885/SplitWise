@@ -9,7 +9,6 @@ import {
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
 import { MemberSelect } from "./member-select";
 import FormHelperText from "@mui/material/FormHelperText";
 type AddExpensesFormProps = {
@@ -41,7 +40,7 @@ export const AddExpensesForm = ({ onSubmit, loadingAddExpense }: AddExpensesForm
       <Paper
         sx={{
           display: "flex",
-
+          backgroundColor: "#7fb49b",
           flexDirection: {
             xs: "column",
             md: "row",
@@ -55,7 +54,7 @@ export const AddExpensesForm = ({ onSubmit, loadingAddExpense }: AddExpensesForm
 
         }}
       >
-        <Box sx={{ flex: 1.7 }}>
+        <Box sx={{ flex: 1.2 }}>
           <TextField
             type="text"
             size="small"
@@ -76,16 +75,9 @@ export const AddExpensesForm = ({ onSubmit, loadingAddExpense }: AddExpensesForm
             sx={inputStyles}
           />
         </Box>
-        <Box sx={{ flex: 1, color: "black" }}>
-          <FormControl fullWidth size="small" error={!!errors.paidOn} >
-            <InputLabel
-              sx={{
-                color: "black",
-                "&.Mui-focused": { color: "black" },
-              }}
-            >
-              Paid On
-            </InputLabel>
+        <Box sx={{ flex: 1, color: "white" }}>
+          <FormControl fullWidth size="small" error={!!errors.paidOn}
+>
             <MemberSelect name="paidOn" control={control} label="Paid By" />
             <FormHelperText>{errors.paidOn?.message}</FormHelperText>
           </FormControl>
@@ -101,12 +93,20 @@ export const AddExpensesForm = ({ onSubmit, loadingAddExpense }: AddExpensesForm
 const inputStyles = {
   width: "100%",
   "& .MuiInputBase-input": {
-    height: "25px",
+    height: "100%",
+
   },
+
+  "& .MuiOutlinedInput-root": {
+    height: 40, 
+    alignItems: "center",
+  },
+
   "& .MuiInputLabel-root": {
-    color: "black",
+    height: "100%",
+    color: "white",
   },
   "& .MuiInputLabel-root.Mui-focused": {
-    color: "black",
+    color: "white",
   },
 };

@@ -133,7 +133,6 @@ export const GroupDetails = () => {
           onChange={handleChange}
           key={id}
           sx={{
-            backgroundColor: "background.paper",
             borderRadius: "18px",
             padding: "6px",
             boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
