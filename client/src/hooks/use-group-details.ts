@@ -20,13 +20,10 @@ export const useGroupDetails = () => {
   const [loadingUpdateGroup, setLoadingUpdateGroup] = useState<boolean>(false);
   const [loadingDeleteGroup, setLoadingDeleteGroup] = useState<boolean>(false);
   const [loadingUpdateOwner, setLoadingUpdateOwner] = useState<boolean>(false);
-  const [loadingDeleteMember, setLoadingDeleteMember] = useState<boolean>(false);
-  const {
-    snackbar,
-    showError,
-    showSuccess,
-    handleCloseSnackbar,
-  } = useSnackbar();
+  const [loadingDeleteMember, setLoadingDeleteMember] =
+    useState<boolean>(false);
+  const { snackbar, showError, showSuccess, handleCloseSnackbar } =
+    useSnackbar();
 
   const { groups, setGroups, group, setGroup, updateGroups } =
     useGroupContext();
@@ -53,7 +50,7 @@ export const useGroupDetails = () => {
 
   const addGroupMember = async (userId: number) => {
     if (!group?.id) {
-      showError("Group not loaded")
+      showError("Group not loaded");
       return;
     }
     try {
@@ -61,7 +58,7 @@ export const useGroupDetails = () => {
       const data = await addUserToGroup(group.id, userId);
       setGroup(data);
       updateGroups(data);
-      showSuccess("User added successfully!")
+      showSuccess("User added successfully!");
     } catch (err) {
       showError(handleApiError(err));
     } finally {
@@ -71,13 +68,13 @@ export const useGroupDetails = () => {
 
   const deleteGroupData = async () => {
     if (!group?.id) {
-      showError("Group not loaded")
+      showError("Group not loaded");
       return;
     }
     try {
       setLoadingDeleteGroup(true);
       const data = await deleteGroup(group.id);
-      showError("Group deleted successfully!")
+      showError("Group deleted successfully!");
       const filteredGroups = groups.filter((group) => group.id !== data);
       setGroups(filteredGroups);
       navigate("/groups");
@@ -97,7 +94,7 @@ export const useGroupDetails = () => {
       return;
     }
     if (!group?.id) {
-      showError("Group not loaded")
+      showError("Group not loaded");
       return;
     }
 
@@ -105,18 +102,17 @@ export const useGroupDetails = () => {
       setLoadingUpdateGroup(true);
       const data = await updateGroup(group.id, groupData);
       updateGroups(data);
-      showSuccess("Group updated successfully!")
+      showSuccess("Group updated successfully!");
     } catch (err) {
       showError(handleApiError(err));
-    }
-    finally {
+    } finally {
       setLoadingUpdateGroup(false);
     }
   };
 
   const updateToGroupOwner = async (userId: number) => {
     if (!group?.id) {
-      showError("Group not loaded")
+      showError("Group not loaded");
       return;
     }
     try {
@@ -124,7 +120,7 @@ export const useGroupDetails = () => {
       const data = await updateGroupOwner(group.id, userId);
       setGroup(data);
       updateGroups(data);
-      showSuccess("Group admin updated successfully!")
+      showSuccess("Group admin updated successfully!");
     } catch (err) {
       showError(handleApiError(err));
     } finally {
@@ -134,7 +130,7 @@ export const useGroupDetails = () => {
 
   const deleteGroupMember = async (userId: number) => {
     if (!group?.id) {
-      showError("Group not loaded")
+      showError("Group not loaded");
       return;
     }
     try {
@@ -142,15 +138,13 @@ export const useGroupDetails = () => {
       const data = await deleteUserFromGroup(group.id, userId);
       setGroup(data);
       updateGroups(data);
-      showSuccess("User removed successfully!")
+      showSuccess("User removed successfully!");
     } catch (err) {
       showError(handleApiError(err));
     } finally {
       setLoadingDeleteMember(false);
     }
   };
-
-
 
   return {
     snackbar,

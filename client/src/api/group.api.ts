@@ -18,7 +18,7 @@ export async function updateGroup(
   groupId: number,
   groupData: UpdateGroupData,
 ): Promise<GroupData> {
-  const { data } = await api.patch(`/group/${groupId}`, groupData);  
+  const { data } = await api.patch(`/group/${groupId}`, groupData);
   return data;
 }
 

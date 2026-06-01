@@ -20,11 +20,7 @@ export const AddGroupMemberForm = ({ onSubmit }: AddGroupMemberFormProps) => {
   const [options, setOptions] = useState<{ label: string; id: number }[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState("");
-  const {
-    snackbar,
-    showError,
-    handleCloseSnackbar,
-  } = useSnackbar();
+  const { snackbar, showError, handleCloseSnackbar } = useSnackbar();
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -51,7 +47,7 @@ export const AddGroupMemberForm = ({ onSubmit }: AddGroupMemberFormProps) => {
       setLoading(false);
     }
   }, [inputValue, showError]);
-  
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       getUsers();

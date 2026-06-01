@@ -33,7 +33,7 @@ export const GroupMembersList = ({
         width: "100%",
       }}
     >
-       <Typography sx={{marginTop:'5px'}}>Users group</Typography>
+      <Typography sx={{ marginTop: "5px" }}>Users group</Typography>
 
       <Table
         sx={{

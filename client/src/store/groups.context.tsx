@@ -30,7 +30,7 @@ export const GroupProvider = ({ children }: { children: ReactNode }) => {
         optimizedExpenses,
         setOptimizedExpenses,
         alignment,
-        setAlignment
+        setAlignment,
       }}
     >
       {children}

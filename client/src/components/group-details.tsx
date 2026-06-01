@@ -86,9 +86,6 @@ export const GroupDetails = () => {
     fetchGroup();
   }, [id, getGroupDetailsById]);
 
-
-
-
   if (loadingGroup) {
     return (
       <Box
@@ -115,7 +112,7 @@ export const GroupDetails = () => {
           position: "sticky",
           top: 60,
           zIndex: 1000,
-          width: '380px',
+          width: "380px",
           display: {
             xs: "none",
             md: "flex",
@@ -148,8 +145,7 @@ export const GroupDetails = () => {
               fontWeight: 600,
 
               "&.Mui-selected": {
-                background:
-                  '#6b9783',
+                background: "#6b9783",
                 color: "white",
               },
             },
@@ -194,18 +190,22 @@ export const GroupDetails = () => {
             alignItems: "center",
             gap: 0.5,
             textAlign: "center",
-            marginTop: '30px',
+            marginTop: "30px",
           }}
           ref={groupMembersRef}
         >
-          <Typography sx={{
-            fontSize: "xx-large", padding: "8px", wordBreak: 'break-word',
-            '& .MuiTypography-root': {
-              display: 'block',
-              whiteSpace: 'normal',
-              wordBreak: 'break-word',
-            }
-          }}>
+          <Typography
+            sx={{
+              fontSize: "xx-large",
+              padding: "8px",
+              wordBreak: "break-word",
+              "& .MuiTypography-root": {
+                display: "block",
+                whiteSpace: "normal",
+                wordBreak: "break-word",
+              },
+            }}
+          >
             {group?.name}
           </Typography>
           {isOwner && (
@@ -276,9 +276,10 @@ export const GroupDetails = () => {
           />
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             {isOwner && (
-              <Fab sx={{
-                zIndex: 1,
-              }}
+              <Fab
+                sx={{
+                  zIndex: 1,
+                }}
                 onClick={() => setDialogType("addUser")}
                 aria-label="Add group member"
                 disabled={loadingAddMember}
@@ -287,7 +288,7 @@ export const GroupDetails = () => {
               </Fab>
             )}
           </Box>
-          <Box ref={groupExpensesRef} >
+          <Box ref={groupExpensesRef}>
             <ExpensesList />
           </Box>
           <Box ref={groupOptimizedExpensesRef}>

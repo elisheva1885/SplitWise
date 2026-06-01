@@ -23,16 +23,12 @@ export const ForgetPasswordForm = ({
   toLoginMode,
   setDialogOpen,
 }: ForgetPasswordProps) => {
-  const {
-    snackbar,
-    showSuccess,
-    handleCloseSnackbar,
-  } = useSnackbar();
+  const { snackbar, showSuccess, handleCloseSnackbar } = useSnackbar();
   const onSubmit = async (data: ForgetPasswordData) => {
-      showSuccess(`send message to your email ${data.email}`)
-      setTimeout(() => {
-        setDialogOpen(false);
-      }, 450);
+    showSuccess(`send message to your email ${data.email}`);
+    setTimeout(() => {
+      setDialogOpen(false);
+    }, 450);
   };
 
   const {

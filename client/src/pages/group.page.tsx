@@ -18,27 +18,23 @@ import { useSnackbar } from "../hooks/use-snackbar";
 export const GroupPage = () => {
   const { groups, setGroups } = useGroupContext();
   const navigate = useNavigate();
-  const {id} = useParams();
+  const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [addLoading, setAddLoading] = useState<boolean>(false);
   const [getLoading, setGetLoading] = useState<boolean>(false);
 
-  const {
-    snackbar,
-    showError,
-    showSuccess,
-    handleCloseSnackbar,
-  } = useSnackbar();
+  const { snackbar, showError, showSuccess, handleCloseSnackbar } =
+    useSnackbar();
 
   const addGroup = async (groupData: AddGroupData) => {
     try {
       setAddLoading(true);
       const data = await createGroup(groupData);
       setGroups([...groups, data]);
-      showSuccess("Group created successfully!")
+      showSuccess("Group created successfully!");
     } catch (err) {
-        showError(handleApiError(err));
-      } finally {
+      showError(handleApiError(err));
+    } finally {
       setAddLoading(false);
       setOpen(false);
     }
@@ -54,7 +50,7 @@ export const GroupPage = () => {
         setGetLoading(true);
         const data = await getUserDetails();
         setGroups(data.groups);
-      }catch (err) {
+      } catch (err) {
         showError(handleApiError(err));
       } finally {
         setGetLoading(false);
@@ -62,15 +58,15 @@ export const GroupPage = () => {
     };
     getGroups();
   }, [setGroups, showError]);
-useEffect(() => {
-  if (!groups.length) return;
+  useEffect(() => {
+    if (!groups.length) return;
 
-  const currentId = Number(id);
+    const currentId = Number(id);
 
-  if (!currentId) {
-    navigate(`/groups/${groups[0].id}`);
-  }
-}, [groups, id, navigate]);
+    if (!currentId) {
+      navigate(`/groups/${groups[0].id}`);
+    }
+  }, [groups, id, navigate]);
   return (
     <Box>
       {getLoading ? (
@@ -90,8 +86,16 @@ useEffect(() => {
           <GroupDrawerList setOpen={setOpen} addLoading={addLoading} />
         </Drawer>
       )}
-      <Box sx={{ marginLeft: {
-        xs:'160px', md: '260px'}, padding: '16px', maxWidth: '100%' }}>
+      <Box
+        sx={{
+          marginLeft: {
+            xs: "160px",
+            md: "260px",
+          },
+          padding: "16px",
+          maxWidth: "100%",
+        }}
+      >
         <Outlet />
       </Box>
       <FormDialog open={open} handleCloseDialog={handleCloseDialog}>

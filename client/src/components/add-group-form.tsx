@@ -15,7 +15,7 @@ export const AddGroupForm = ({ onSubmit }: AddGroupFormProps) => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isValid },
+    formState: { errors},
   } = useForm<AddGroupData>({
     resolver: zodResolver(AddGroupSchema),
     mode: "onChange",
@@ -53,9 +53,12 @@ export const AddGroupForm = ({ onSubmit }: AddGroupFormProps) => {
         error={!!errors.description}
         helperText={errors.description?.message}
       />
-      <Button type="submit" disabled={!isValid} sx={{ color: "white" }}>
-        Add
-      </Button>
+
+      <Box sx={{ height: "100%" }}>
+        <Button type="submit" sx={{ backgroundColor: "black" }}>
+          Add
+        </Button>
+      </Box>
     </Box>
   );
 };

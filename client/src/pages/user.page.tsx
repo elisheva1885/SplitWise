@@ -15,22 +15,18 @@ export const UserPage = () => {
   const { setUser, logout, user } = useUserContext();
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
-  const {
-    snackbar,
-    showError,
-    showSuccess,
-    handleCloseSnackbar,
-  } = useSnackbar();
+  const { snackbar, showError, showSuccess, handleCloseSnackbar } =
+    useSnackbar();
   const handleSubmit = async (data: UpdateUserDto) => {
     setLoading(true);
     if (data.username === user?.username && data.email === user?.email) {
-      showError("you need to change one of the inputs before saving!")
-      setLoading(false)
+      showError("you need to change one of the inputs before saving!");
+      setLoading(false);
       return;
     }
     try {
       const userData = await updateUser(data);
-      showSuccess("Updated successfully!")
+      showSuccess("Updated successfully!");
       setUser(userData);
     } catch (err) {
       showError(handleApiError(err));
@@ -44,17 +40,17 @@ export const UserPage = () => {
 
     try {
       await deleteUser();
-      showSuccess("Deleted successfully!")
+      showSuccess("Deleted successfully!");
       logout();
       navigate("/");
-    } catch(err) {
+    } catch (err) {
       showError(handleApiError(err));
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
   return (
-    <Box sx={{marginTop: '50px'}}>
+    <Box sx={{ marginTop: "50px" }}>
       <UpdateUserForm
         onSubmit={handleSubmit}
         onDelete={onDelete}

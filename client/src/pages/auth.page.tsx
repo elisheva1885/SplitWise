@@ -25,35 +25,27 @@ export const AuthPage = ({
   toLoginMode,
 }: AuthPageProps) => {
   const { setUser } = useUserContext();
-  const {
-    snackbar,
-    showError,
-    showSuccess,
-    handleCloseSnackbar,
-  } = useSnackbar();
+  const { snackbar, showError, showSuccess, handleCloseSnackbar } =
+    useSnackbar();
   const handleSubmit = async (data: LoginData | RegisterData) => {
     try {
       if (mode === "Login") {
         const userData = await loginUser(data as LoginData);
         setUser(userData);
-        showSuccess("Logged in successfully!")
-
+        showSuccess("Logged in successfully!");
       } else {
         const userData = await registerUser(data as RegisterData);
-        console.log(userData);
-        
         setUser(userData);
-        showSuccess("Register successfully!")
+        showSuccess("Register successfully!");
       }
 
       setTimeout(() => {
         setDialogOpen(false);
       }, 450);
-    }catch (err) {
-            showError(handleApiError(err));
-        }
+    } catch (err) {
+      showError(handleApiError(err));
+    }
   };
-
 
   return (
     <>

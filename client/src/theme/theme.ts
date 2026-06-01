@@ -46,32 +46,31 @@ export const theme = createTheme({
           "&.Mui-focused": {
             color: "white",
           },
-
-      },
-    },
-  },
-  MuiTextField: {
-    styleOverrides: {
-      root: {
-        maxWidth: "247px",
-        "& .MuiInputLabel-root.Mui-focused": {
-          color: "white",
-        },
-        "& input:-webkit-autofill": {
-          WebkitBoxShadow: "0 0 0 1000px transparent inset",
-          WebkitTextFillColor: "inherit ",
-          transition: "background-color 9999s ease-in-out 0s",
         },
       },
     },
-  },
-  MuiFormHelperText: {
-    styleOverrides: {
-      root: {
-        maxWidth: "247px",
-        width: "auto",
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          maxWidth: "247px",
+          "& .MuiInputLabel-root.Mui-focused": {
+            color: "white",
+          },
+          "& input:-webkit-autofill": {
+            WebkitBoxShadow: "0 0 0 1000px transparent inset",
+            WebkitTextFillColor: "inherit ",
+            transition: "background-color 9999s ease-in-out 0s",
+          },
+        },
+      },
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          maxWidth: "247px",
+          width: "auto",
+        },
       },
     },
   },
-},
 });

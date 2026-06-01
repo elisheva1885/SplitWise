@@ -29,8 +29,7 @@ export const OptimizedExpensesList = () => {
     getGroupOptimizedExpense(group.id);
   }, [group?.id, getGroupOptimizedExpense, group?.expenses]);
 
-
-  if (loadingOptimizedExpenses) {    
+  if (loadingOptimizedExpenses) {
     return <CircularProgress />;
   }
   if (!optimizedExpenses.length) {
@@ -44,7 +43,7 @@ export const OptimizedExpensesList = () => {
         <Box>No optimized expenses</Box>
       ) : (
         <TableContainer component={Paper}>
-           <Typography sx={{marginTop:'5px'}}>Minimized Expenses</Typography>
+          <Typography sx={{ marginTop: "5px" }}>Minimized Expenses</Typography>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>

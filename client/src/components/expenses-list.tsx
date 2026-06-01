@@ -29,7 +29,14 @@ export const ExpensesList = () => {
   const [updateExpenseDialog, setUpdateExpenseDialog] = useState(false);
   const [expenseForUpdate, setExpenseForUpdate] = useState<ExpenseInGroup>();
 
-  const { snackbar, handleCloseSnackbar, loadingAddExpenses, loadingDeleteExpenses, loadingUpdateExpenses, actions } = useExpenses();
+  const {
+    snackbar,
+    handleCloseSnackbar,
+    loadingAddExpenses,
+    loadingDeleteExpenses,
+    loadingUpdateExpenses,
+    actions,
+  } = useExpenses();
   const openUpdateDialog = (expense: ExpenseInGroup) => {
     setExpenseForUpdate(expense);
     setUpdateExpenseDialog(true);
@@ -39,16 +46,17 @@ export const ExpensesList = () => {
     setExpenseForUpdate(undefined);
   };
 
-
   return (
     <>
       <TableContainer component={Paper}>
-        <Typography sx={{marginTop:'5px'}}>Total expenses</Typography>
-        <AddExpensesForm onSubmit={actions.addExpenseToGroup} loadingAddExpense={loadingAddExpenses} />
+        <Typography sx={{ marginTop: "5px" }}>Total expenses</Typography>
+        <AddExpensesForm
+          onSubmit={actions.addExpenseToGroup}
+          loadingAddExpense={loadingAddExpenses}
+        />
         {!group?.expenses?.length ? (
           <Box>No expenses in this group</Box>
         ) : (
-
           <Table sx={{ minWidth: 650 }}>
             <TableHead>
               <TableRow>
@@ -68,9 +76,14 @@ export const ExpensesList = () => {
                   expense?.paidOn.id === user?.id;
                 return (
                   <TableRow key={expense?.id}>
-                    <TableCell align="center" sx={{
-                      wordBreak: 'break-word',
-                    }}>{expense.cause}</TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      {expense.cause}
+                    </TableCell>
                     <TableCell align="center">{expense.value}</TableCell>
                     <TableCell align="center">
                       {expense.paidBy.username}
@@ -81,7 +94,10 @@ export const ExpensesList = () => {
                     <TableCell align="center">
                       {canEdit && (
                         <Tooltip title="Edit Expense">
-                          <IconButton onClick={() => openUpdateDialog(expense)} disabled={loadingUpdateExpenses}>
+                          <IconButton
+                            onClick={() => openUpdateDialog(expense)}
+                            disabled={loadingUpdateExpenses}
+                          >
                             <EditIcon />
                           </IconButton>
                         </Tooltip>
@@ -91,7 +107,8 @@ export const ExpensesList = () => {
                     <TableCell align="center">
                       {canEdit && (
                         <Tooltip title="Delete Expense">
-                          <IconButton disabled={loadingDeleteExpenses}
+                          <IconButton
+                            disabled={loadingDeleteExpenses}
                             onClick={() =>
                               actions.deleteExpenseFromGroup(expense.id)
                             }

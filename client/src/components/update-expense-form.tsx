@@ -68,10 +68,20 @@ export const UpdateExpenseForm = ({
           helperText={errors.value?.message}
         />
         <Box sx={{ flex: 1, color: "black" }}>
-          <MemberSelect name="paidBy" control={control} label="Paid By" background='#405a4e'/>
+          <MemberSelect
+            name="paidBy"
+            control={control}
+            label="Paid By"
+            background="#405a4e"
+          />
         </Box>
         <Box sx={{ flex: 1, color: "black" }}>
-          <MemberSelect name="paidOn" control={control} label="Paid On" background='#405a4e' />
+          <MemberSelect
+            name="paidOn"
+            control={control}
+            label="Paid On"
+            background="#405a4e"
+          />
         </Box>
         <Button type="submit">Save Changes</Button>
       </Box>

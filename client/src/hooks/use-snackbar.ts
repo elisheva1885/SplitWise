@@ -21,7 +21,7 @@ export const useSnackbar = () => {
 
   const showError = useCallback((message: string) => {
     showSnackbar("error", message);
-  },[]);
+  }, []);
 
   const showSuccess = (message: string) => {
     showSnackbar("success", message);
