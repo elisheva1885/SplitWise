@@ -8,38 +8,27 @@ import { handleApiError } from "../helpers/handle-api-error.helper";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import type { SnackbarState } from "../types/snackbar.types";
 import Box from "@mui/material/Box";
+import { useSnackbar } from "../hooks/use-snackbar";
 
 type AddGroupMemberFormProps = {
   onSubmit: (userId: number) => void;
 };
 
-export const AddGroupMemberForm = ({
-  onSubmit,
-}: AddGroupMemberFormProps) => {
+export const AddGroupMemberForm = ({ onSubmit }: AddGroupMemberFormProps) => {
   const [userId, setUserId] = useState<number>(0);
   const [options, setOptions] = useState<{ label: string; id: number }[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState("");
+  const { snackbar, showError, handleCloseSnackbar } = useSnackbar();
 
-  const [snackbar, setSnackbar] = useState<SnackbarState>({
-    open: false,
-    severity: "success",
-    message: "",
-  });
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!userId) return;
     try {
-       onSubmit(userId);
+      onSubmit(userId);
     } catch (err) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: handleApiError(err),
-      });
-
+      showError(handleApiError(err));
     }
   };
 
@@ -53,21 +42,12 @@ export const AddGroupMemberForm = ({
         }),
       );
     } catch (err) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: handleApiError(err),
-      });
+      showError(handleApiError(err));
     } finally {
       setLoading(false);
     }
-  }, [inputValue]);
-  const handleClose = () => {
-    setSnackbar((prev) => ({
-      ...prev,
-      open: false,
-    }));
-  };
+  }, [inputValue, showError]);
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       getUsers();
@@ -76,11 +56,17 @@ export const AddGroupMemberForm = ({
     return () => clearTimeout(timeout);
   }, [inputValue, getUsers]);
   return (
-    <Box component='form' onSubmit={handleSubmit} sx={{
-      backgroundColor: "#4f7362",display: 'flex', flexDirection: 'column',
-      gap: 2
-    }}>
-      <Typography sx={{ color: "white" , marginTop: 2}}>Add User</Typography>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        backgroundColor: "#4f7362",
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+      }}
+    >
+      <Typography sx={{ color: "white", marginTop: 2 }}>Add User</Typography>
       <Autocomplete
         options={options}
         sx={{ width: 300, alignItems: "center" }}
@@ -96,7 +82,7 @@ export const AddGroupMemberForm = ({
       <Snackbar
         open={snackbar.open}
         autoHideDuration={2500}
-        onClose={handleClose}
+        onClose={handleCloseSnackbar}
       >
         <Alert severity={snackbar.severity}>
           <AlertTitle>

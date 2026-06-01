@@ -13,7 +13,7 @@ import { Box } from "@mui/material";
 import type { UpdateUserDto } from "../types/user.types";
 
 type UpdateUserFormProps = {
-  onSubmit:  (data: UpdateUserDto) => Promise<void>;
+  onSubmit: (data: UpdateUserDto) => Promise<void>;
   onDelete: () => Promise<void>;
   loading: boolean;
 };

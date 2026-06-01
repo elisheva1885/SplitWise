@@ -7,7 +7,7 @@ export type GroupData = {
   description: string;
   owner: UserInGroup;
   members: UserInGroup[];
-  expense: ExpenseInGroup[];
+  expenses: ExpenseInGroup[];
 };
 
 export type CreateGroupDto = {

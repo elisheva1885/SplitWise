@@ -8,11 +8,11 @@ import {
   updateGroup,
   updateGroupOwner,
 } from "../api/group.api";
-import type { UpdateGroupData } from "../schemas/group-schemas";
+import type { UpdateGroupData } from "../schemas/group.schemas";
 import { useUserContext } from "../store/use-user.context";
 import { useGroupContext } from "../store/use-group.context";
 import { useNavigate } from "react-router-dom";
-import type { SnackbarState } from "../types/snackbar.types";
+import { useSnackbar } from "./use-snackbar";
 
 export const useGroupDetails = () => {
   const [loadingGroup, setLoadingGroup] = useState<boolean>(false);
@@ -20,15 +20,13 @@ export const useGroupDetails = () => {
   const [loadingUpdateGroup, setLoadingUpdateGroup] = useState<boolean>(false);
   const [loadingDeleteGroup, setLoadingDeleteGroup] = useState<boolean>(false);
   const [loadingUpdateOwner, setLoadingUpdateOwner] = useState<boolean>(false);
-  const [loadingDeleteMember, setLoadingDeleteMember] = useState<boolean>(false);
-  const { updateGroups } = useGroupContext();
-  const [snackbar, setSnackbar] = useState<SnackbarState>({
-    open: false,
-    severity: "success",
-    message: "",
-  });
+  const [loadingDeleteMember, setLoadingDeleteMember] =
+    useState<boolean>(false);
+  const { snackbar, showError, showSuccess, handleCloseSnackbar } =
+    useSnackbar();
 
-  const { groups, setGroups, group, setGroup } = useGroupContext();
+  const { groups, setGroups, group, setGroup, updateGroups } =
+    useGroupContext();
   const { user } = useUserContext();
 
   const isOwner = user?.id === group?.owner?.id;
@@ -39,52 +37,30 @@ export const useGroupDetails = () => {
     async (id: number) => {
       try {
         setLoadingGroup(true);
-
         const data = await getGroupDetails(id);
-
         setGroup(data);
       } catch (err) {
-        setSnackbar({
-          open: true,
-          severity: "error",
-          message: handleApiError(err),
-        });
+        showError(handleApiError(err));
       } finally {
         setLoadingGroup(false);
       }
     },
-    [setGroup],
+    [setGroup, showError],
   );
 
   const addGroupMember = async (userId: number) => {
     if (!group?.id) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: "Group not loaded",
-      });
-
+      showError("Group not loaded");
       return;
     }
-
     try {
       setLoadingAddMember(true);
-
       const data = await addUserToGroup(group.id, userId);
-
       setGroup(data);
       updateGroups(data);
-      setSnackbar({
-        open: true,
-        severity: "success",
-        message: "User added successfully!",
-      });
+      showSuccess("User added successfully!");
     } catch (err) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: handleApiError(err),
-      });
+      showError(handleApiError(err));
     } finally {
       setLoadingAddMember(false);
     }
@@ -92,53 +68,33 @@ export const useGroupDetails = () => {
 
   const deleteGroupData = async () => {
     if (!group?.id) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: "Group not loaded",
-      });
-
+      showError("Group not loaded");
       return;
     }
-
     try {
       setLoadingDeleteGroup(true);
       const data = await deleteGroup(group.id);
-      setSnackbar({
-        open: true,
-        severity: "success",
-        message: "Group deleted successfully!",
-      });
+      showError("Group deleted successfully!");
       const filteredGroups = groups.filter((group) => group.id !== data);
       setGroups(filteredGroups);
       navigate("/groups");
     } catch (err) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: handleApiError(err),
-      });
+      showError(handleApiError(err));
     } finally {
       setLoadingDeleteGroup(false);
     }
   };
 
   const updateGroupDetails = async (groupData: UpdateGroupData) => {
-    if (groupData.name === group?.name && groupData.description === group.description) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: "you need to change one of the inputs before saving!",
-      });
+    if (
+      groupData.name === group?.name &&
+      groupData.description === group.description
+    ) {
+      showError("you need to change one of the inputs before saving!");
       return;
     }
     if (!group?.id) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: "Group not loaded",
-      });
-
+      showError("Group not loaded");
       return;
     }
 
@@ -146,17 +102,9 @@ export const useGroupDetails = () => {
       setLoadingUpdateGroup(true);
       const data = await updateGroup(group.id, groupData);
       updateGroups(data);
-      setSnackbar({
-        open: true,
-        severity: "success",
-        message: "Group updated successfully!",
-      });
+      showSuccess("Group updated successfully!");
     } catch (err) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: handleApiError(err),
-      });
+      showError(handleApiError(err));
     } finally {
       setLoadingUpdateGroup(false);
     }
@@ -164,31 +112,17 @@ export const useGroupDetails = () => {
 
   const updateToGroupOwner = async (userId: number) => {
     if (!group?.id) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: "Group not loaded",
-      });
-
+      showError("Group not loaded");
       return;
     }
-
     try {
       setLoadingUpdateOwner(true);
       const data = await updateGroupOwner(group.id, userId);
       setGroup(data);
       updateGroups(data);
-      setSnackbar({
-        open: true,
-        severity: "success",
-        message: "Group admin updated successfully!",
-      });
+      showSuccess("Group admin updated successfully!");
     } catch (err) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: handleApiError(err),
-      });
+      showError(handleApiError(err));
     } finally {
       setLoadingUpdateOwner(false);
     }
@@ -196,11 +130,7 @@ export const useGroupDetails = () => {
 
   const deleteGroupMember = async (userId: number) => {
     if (!group?.id) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: "Group not loaded",
-      });
+      showError("Group not loaded");
       return;
     }
     try {
@@ -208,27 +138,12 @@ export const useGroupDetails = () => {
       const data = await deleteUserFromGroup(group.id, userId);
       setGroup(data);
       updateGroups(data);
-      setSnackbar({
-        open: true,
-        severity: "success",
-        message: "User removed successfully!",
-      });
+      showSuccess("User removed successfully!");
     } catch (err) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: handleApiError(err),
-      });
+      showError(handleApiError(err));
     } finally {
       setLoadingDeleteMember(false);
     }
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar((prev) => ({
-      ...prev,
-      open: false,
-    }));
   };
 
   return {

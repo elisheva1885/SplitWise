@@ -16,10 +16,12 @@ export const FormDialog = ({
 }: FormDialogProps) => {
   return (
     <Dialog open={open} onClose={handleCloseDialog}>
-      <Box sx={{
-        backgroundColor: "#2e3136",
-        position: "relative",
-      }}>
+      <Box
+        sx={{
+          backgroundColor: "#2e3136",
+          position: "relative",
+        }}
+      >
         <IconButton
           onClick={handleCloseDialog}
           sx={{
@@ -31,9 +33,7 @@ export const FormDialog = ({
         >
           <CloseIcon />
         </IconButton>
-        <Box sx={{ textAlign: "center", padding: "8px" }}>
-          {children}
-        </Box>
+        <Box sx={{ textAlign: "center", padding: "8px" }}>{children}</Box>
       </Box>
     </Dialog>
   );

@@ -22,7 +22,12 @@ export type UserDetails = {
   groups: GroupData[];
 };
 
-export type UserToAdd = {
+export type UserIdAndName = {
+  id: number;
+  username: string;
+};
+
+export type UserInExpense = {
   id: number;
   username: string;
 };

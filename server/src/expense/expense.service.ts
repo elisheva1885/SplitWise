@@ -25,6 +25,7 @@ export class ExpenseService {
     private readonly expenseRepository: Repository<Expense>,
     @Inject(forwardRef(() => GroupService))
     private readonly groupService: GroupService,
+    @Inject(forwardRef(() => ExpenseValidator))
     private readonly expenseValidator: ExpenseValidator,
     @Inject(forwardRef(() => UserService))
     public readonly userService: UserService,
@@ -35,9 +36,8 @@ export class ExpenseService {
       id: expense.uuid,
       value: expense.value,
       cause: expense.cause,
-      paidBy: expense.paidBy.uuid,
-      paidOn: expense.paidOn.uuid,
-      groupId: expense.group.uuid,
+      paidBy: { id: expense.paidBy.uuid, username: expense.paidBy.username },
+      paidOn: { id: expense.paidOn.uuid, username: expense.paidOn.username },
     };
   }
 
@@ -224,8 +224,8 @@ export class ExpenseService {
       for (let j = 0; j < debtMatrix[i].length; j++) {
         if (!debtMatrix[i][j]) continue;
 
-        const paidBy = indexToUserMap.get(j);
-        const paidOn = indexToUserMap.get(i);
+        const paidBy = indexToUserMap.get(i);
+        const paidOn = indexToUserMap.get(j);
 
         if (paidBy === undefined || paidOn === undefined) continue;
 
@@ -240,11 +240,11 @@ export class ExpenseService {
 
         simplifiedExpenses.push({
           paidByUser: {
-            uuid: paidByUser.uuid,
+            id: paidByUser.uuid,
             username: paidByUser.username,
           },
           paidOnUser: {
-            uuid: paidOnUser.uuid,
+            id: paidOnUser.uuid,
             username: paidOnUser.username,
           },
           value: debtMatrix[i][j],

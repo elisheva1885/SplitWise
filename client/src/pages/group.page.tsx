@@ -9,42 +9,31 @@ import { createGroup } from "../api/group.api";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import type { AddGroupData } from "../schemas/group-schemas";
-import type { SnackbarState } from "../types/snackbar.types";
+import type { AddGroupData } from "../schemas/group.schemas";
 import { handleApiError } from "../helpers/handle-api-error.helper";
 import CircularProgress from "@mui/material/CircularProgress";
 import { GroupDrawerList } from "../components/group-drawer";
 import { FormDialog } from "../components/form-dialog";
+import { useSnackbar } from "../hooks/use-snackbar";
 export const GroupPage = () => {
   const { groups, setGroups } = useGroupContext();
   const navigate = useNavigate();
-  const {id} = useParams();
+  const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [addLoading, setAddLoading] = useState<boolean>(false);
   const [getLoading, setGetLoading] = useState<boolean>(false);
 
-  const [snackbar, setSnackbar] = useState<SnackbarState>({
-    open: false,
-    severity: "success",
-    message: "",
-  });
+  const { snackbar, showError, showSuccess, handleCloseSnackbar } =
+    useSnackbar();
 
   const addGroup = async (groupData: AddGroupData) => {
     try {
       setAddLoading(true);
       const data = await createGroup(groupData);
       setGroups([...groups, data]);
-      setSnackbar({
-        open: true,
-        severity: "success",
-        message: "Group created successfully!",
-      });
+      showSuccess("Group created successfully!");
     } catch (err) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: handleApiError(err),
-      });
+      showError(handleApiError(err));
     } finally {
       setAddLoading(false);
       setOpen(false);
@@ -55,12 +44,6 @@ export const GroupPage = () => {
     setOpen(false);
   };
 
-  const handleClose = () => {
-    setSnackbar((prev) => ({
-      ...prev,
-      open: false,
-    }));
-  };
   useEffect(() => {
     const getGroups = async () => {
       try {
@@ -68,26 +51,22 @@ export const GroupPage = () => {
         const data = await getUserDetails();
         setGroups(data.groups);
       } catch (err) {
-        setSnackbar({
-          open: true,
-          severity: "error",
-          message: handleApiError(err),
-        });
+        showError(handleApiError(err));
       } finally {
         setGetLoading(false);
       }
     };
     getGroups();
-  }, [setGroups]);
-useEffect(() => {
-  if (!groups.length) return;
+  }, [setGroups, showError]);
+  useEffect(() => {
+    if (!groups.length) return;
 
-  const currentId = Number(id);
+    const currentId = Number(id);
 
-  if (!currentId) {
-    navigate(`/groups/${groups[0].id}`);
-  }
-}, [groups, id, navigate]);
+    if (!currentId) {
+      navigate(`/groups/${groups[0].id}`);
+    }
+  }, [groups, id, navigate]);
   return (
     <Box>
       {getLoading ? (
@@ -99,18 +78,24 @@ useEffect(() => {
             flexShrink: 0,
             [`& .MuiDrawer-paper`]: {
               boxSizing: "border-box",
-              marginTop: "64px",
+              marginTop: "60px",
             },
           }}
           ModalProps={{ disablePortal: true }}
         >
-          <GroupDrawerList
-            setOpen={setOpen}
-            addLoading={addLoading}
-          />
+          <GroupDrawerList setOpen={setOpen} addLoading={addLoading} />
         </Drawer>
       )}
-      <Box style={{ marginLeft: 260, padding: 16 }}>
+      <Box
+        sx={{
+          marginLeft: {
+            xs: "160px",
+            md: "260px",
+          },
+          padding: "16px",
+          maxWidth: "100%",
+        }}
+      >
         <Outlet />
       </Box>
       <FormDialog open={open} handleCloseDialog={handleCloseDialog}>
@@ -119,7 +104,7 @@ useEffect(() => {
       <Snackbar
         open={snackbar.open}
         autoHideDuration={2500}
-        onClose={handleClose}
+        onClose={handleCloseSnackbar}
       >
         <Alert severity={snackbar.severity}>
           <AlertTitle>

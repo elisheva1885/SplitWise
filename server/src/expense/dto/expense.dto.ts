@@ -5,15 +5,15 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  MaxLength,
   Min,
-  MinLength,
 } from 'class-validator';
 
 export class CreateExpenseDto {
   @ApiProperty({ example: 'Developers Team', required: false })
   @IsString()
   @Optional()
-  @MinLength(3)
+  @MaxLength(100)
   cause?: string;
 
   @ApiProperty({
@@ -48,7 +48,6 @@ export class UpdateExpenseDto {
   @ApiProperty({ example: 'Developers Team', required: false })
   @IsString()
   @IsOptional()
-  @MinLength(3)
   cause?: string;
 
   @ApiProperty({

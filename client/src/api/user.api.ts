@@ -3,7 +3,7 @@ import api from "./client.api";
 import type {
   UpdateUserDto,
   UserDetails,
-  UserToAdd,
+  UserIdAndName,
 } from "../types/user.types";
 
 export async function updateUser(userData: UpdateUserDto): Promise<UserData> {
@@ -21,7 +21,9 @@ export async function getUserDetails(): Promise<UserDetails> {
   return data;
 }
 
-export async function getAllUsers(startUsername: string): Promise<UserToAdd[]> {
+export async function getAllUsers(
+  startUsername: string,
+): Promise<UserIdAndName[]> {
   const { data } = await api.get(`/user/all?query=${startUsername}`);
   return data;
 }

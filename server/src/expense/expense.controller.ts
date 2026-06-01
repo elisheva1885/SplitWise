@@ -52,7 +52,7 @@ export class ExpenseController {
 
   @ApiParam({ name: 'gid', type: 'number', example: 1 })
   @Get(':gid')
-  async getGroupdetails(
+  async getGroupExpense(
     @CurrentUser() user: JwtPayload,
     @Param('gid', ParseIntPipe) gid: number,
   ): Promise<BalanceExpenseResponse[]> {

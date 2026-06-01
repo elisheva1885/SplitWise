@@ -8,77 +8,49 @@ import { deleteUser, updateUser } from "../api/user.api";
 import type { UpdateUserDto } from "../types/user.types";
 import { useNavigate } from "react-router";
 import { handleApiError } from "../helpers/handle-api-error.helper";
-import type { SnackbarState } from "../types/snackbar.types";
 import { Box } from "@mui/material";
+import { useSnackbar } from "../hooks/use-snackbar";
 
 export const UserPage = () => {
   const { setUser, logout, user } = useUserContext();
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
-  const [snackbar, setSnackbar] = useState<SnackbarState>({
-    open: false,
-    severity: "success",
-    message: "",
-  });
+  const { snackbar, showError, showSuccess, handleCloseSnackbar } =
+    useSnackbar();
   const handleSubmit = async (data: UpdateUserDto) => {
     setLoading(true);
     if (data.username === user?.username && data.email === user?.email) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: "you need to change one of the inputs before saving!",
-      });
-      setLoading(false)
+      showError("you need to change one of the inputs before saving!");
+      setLoading(false);
       return;
     }
     try {
       const userData = await updateUser(data);
-      setSnackbar({
-        open: true,
-        severity: "success",
-        message: "Updated successfully!",
-      });
+      showSuccess("Updated successfully!");
       setUser(userData);
-    } catch (err: unknown) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: handleApiError(err),
-      });
+    } catch (err) {
+      showError(handleApiError(err));
     } finally {
       setLoading(false);
     }
   };
-  const handleClose = () => {
-    setSnackbar((prev) => ({
-      ...prev,
-      open: false,
-    }));
-  };
+
   const onDelete = async () => {
     setLoading(true);
 
     try {
       await deleteUser();
-      setSnackbar({
-        open: true,
-        severity: "success",
-        message: "Deleted successfully!",
-      });
+      showSuccess("Deleted successfully!");
       logout();
       navigate("/");
-    } catch (err: unknown) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: handleApiError(err),
-      });
+    } catch (err) {
+      showError(handleApiError(err));
     } finally {
       setLoading(false);
     }
   };
   return (
-    <Box>
+    <Box sx={{ marginTop: "50px" }}>
       <UpdateUserForm
         onSubmit={handleSubmit}
         onDelete={onDelete}
@@ -87,7 +59,7 @@ export const UserPage = () => {
       <Snackbar
         open={snackbar.open}
         autoHideDuration={5000}
-        onClose={handleClose}
+        onClose={handleCloseSnackbar}
       >
         <Alert severity={snackbar.severity}>
           <AlertTitle>

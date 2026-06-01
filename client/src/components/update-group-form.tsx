@@ -6,18 +6,16 @@ import Button from "@mui/material/Button";
 import {
   UpdateGroupSchema,
   type UpdateGroupData,
-} from "../schemas/group-schemas";
+} from "../schemas/group.schemas";
 import { useEffect } from "react";
 import Box from "@mui/material/Box";
 import { useGroupContext } from "../store/use-group.context";
 
-type AddGroupMemberFormProps = {
+type UpdateGroupFormProps = {
   onSubmit: (data: UpdateGroupData) => void;
 };
 
-export const UpdateGroupForm = ({
-  onSubmit,
-}: AddGroupMemberFormProps) => {
+export const UpdateGroupForm = ({ onSubmit }: UpdateGroupFormProps) => {
   const {
     register,
     handleSubmit,
@@ -27,19 +25,26 @@ export const UpdateGroupForm = ({
     resolver: zodResolver(UpdateGroupSchema),
     mode: "onChange",
   });
-  const {group} = useGroupContext();
+  const { group } = useGroupContext();
   useEffect(() => {
     if (group) {
       reset({
         name: group.name,
-        description: group.description ,
+        description: group.description,
       });
     }
   }, [group, reset]);
   return (
-    <Box component='form'
+    <Box
+      component="form"
       onSubmit={handleSubmit(onSubmit)}
-      sx={{ backgroundColor: "#405a4e" ,display: "flex", flexDirection: 'column', gap:3, padding: 2 }}
+      sx={{
+        backgroundColor: "#405a4e",
+        display: "flex",
+        flexDirection: "column",
+        gap: 3,
+        padding: 2,
+      }}
     >
       <Typography sx={{ color: "white" }}>Update Group</Typography>
       <TextField
@@ -55,7 +60,7 @@ export const UpdateGroupForm = ({
         type="text"
         size="medium"
         {...register("description")}
-        label='Description'
+        label="Description"
         error={!!errors.description}
         helperText={errors.description?.message}
       />

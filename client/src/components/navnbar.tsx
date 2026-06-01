@@ -9,11 +9,10 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
 import { useUserContext } from "../store/use-user.context";
 import { useNavigate } from "react-router";
 import { AuthForms } from "./auth-forms";
-import CloseIcon from "@mui/icons-material/Close";
+import { FormDialog } from "./form-dialog";
 
 export const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -50,16 +49,18 @@ export const Navbar = () => {
   return (
     <>
       <AppBar
-        position="static"
-        style={{ backgroundColor: "#182720", marginBottom: "15px" }}
+        position="sticky"
+        sx={{ backgroundColor: "#182720", height: "60px" }}
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Box onClick={()=> navigate('/')}
-              component={"img"}
-              src="splitwise2.png"
-              sx={{ maxHeight: 40 }}
-            ></Box>
+            <IconButton onClick={() => navigate("/")}>
+              <Box
+                component={"img"}
+                src="/splitwise2.png"
+                sx={{ maxHeight: 40 }}
+              ></Box>
+            </IconButton>
             {user ? (
               <Button
                 sx={{
@@ -120,43 +121,9 @@ export const Navbar = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      <Dialog open={open} onClose={handleCloseDialog}>
-        <Box
-          style={{
-            backgroundColor: "#2e3136",
-            paddingBottom: "10px",
-            paddingLeft: "15px",
-            paddingRight: "15px",
-          }}
-        >
-          <Box
-            sx={{ display: "flex", justifyContent: "end", marginTop: "8px" }}
-          >
-            <IconButton>
-              <CloseIcon
-                onClick={handleCloseDialog}
-                sx={{
-                  backgroundColor: "#2e3136",
-                  color: "white",
-                  insetInlineEnd: 3,
-                }}
-              />
-            </IconButton>
-          </Box>
-          <Box
-            sx={{
-              textAlign: "center",
-              padding: "8px",
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              justifyContent: "space-between",
-            }}
-          >
-            <AuthForms setDialogOpen={setOpen} />
-          </Box>
-        </Box>
-      </Dialog>
+      <FormDialog open={open} handleCloseDialog={handleCloseDialog}>
+        <AuthForms setDialogOpen={setOpen} />
+      </FormDialog>
     </>
   );
 };

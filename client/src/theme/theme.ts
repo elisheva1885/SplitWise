@@ -13,9 +13,9 @@ export const theme = createTheme({
           backgroundColor: "transparent",
           WebkitBorderBeforeColor: "#ffffff",
           borderColor: "#ffffff",
-          color: "white",
+          color: "black",
           "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#ffffff",
+            borderColor: "#000000",
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
             borderColor: "#12300a",
@@ -43,6 +43,9 @@ export const theme = createTheme({
         root: {
           backgroundColor: "transparent",
           color: "white",
+          "&.Mui-focused": {
+            color: "white",
+          },
         },
       },
     },
@@ -50,6 +53,14 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           maxWidth: "247px",
+          "& .MuiInputLabel-root.Mui-focused": {
+            color: "white",
+          },
+          "& input:-webkit-autofill": {
+            WebkitBoxShadow: "0 0 0 1000px transparent inset",
+            WebkitTextFillColor: "inherit ",
+            transition: "background-color 9999s ease-in-out 0s",
+          },
         },
       },
     },

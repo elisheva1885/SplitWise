@@ -85,15 +85,8 @@ export class GroupService {
       where: {
         uuid: groupId,
       },
-      relations: [
-        'expenses',
-        'owner',
-        'members',
-        'expenses.paidBy',
-        'expenses.paidOn',
-      ],
+      relations: ['owner', 'members', 'expenses.paidBy', 'expenses.paidOn'],
     });
-
     if (!group) {
       throw new NotFoundException('group not found');
     }
@@ -112,7 +105,7 @@ export class GroupService {
   ): Promise<FullGroupResponseDto> {
     const group = await this.groupRepository.findOne({
       where: { uuid: groupId, owner: { uuid: userId } },
-      relations: ['owner', 'members', 'expenses'],
+      relations: ['owner', 'members', 'expenses.paidBy', 'expenses.paidOn'],
     });
     if (!group) {
       throw new NotFoundException('group not found');
@@ -169,7 +162,7 @@ export class GroupService {
   ): Promise<FullGroupResponseDto> {
     const group = await this.groupRepository.findOne({
       where: { uuid: groupId },
-      relations: ['owner', 'members'],
+      relations: ['owner', 'members', 'expenses.paidBy', 'expenses.paidOn'],
     });
     if (!group) {
       throw new NotFoundException('group not found');
@@ -198,8 +191,8 @@ export class GroupService {
     );
     const hasOpenDebts = userExpenses.some(
       (expense) =>
-        expense.paidByUser.uuid === user.uuid ||
-        expense.paidOnUser.uuid === user.uuid,
+        expense.paidByUser.id === user.uuid ||
+        expense.paidOnUser.id === user.uuid,
     );
     if (hasOpenDebts) {
       throw new BadRequestException('user still has open expenses');
@@ -219,7 +212,7 @@ export class GroupService {
   ): Promise<FullGroupResponseDto> {
     const group = await this.groupRepository.findOne({
       where: { uuid: groupId },
-      relations: ['owner', 'members'],
+      relations: ['owner', 'members', 'expenses.paidBy', 'expenses.paidOn'],
     });
     if (!group) {
       throw new NotFoundException('group not found');
