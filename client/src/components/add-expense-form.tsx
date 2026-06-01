@@ -34,7 +34,7 @@ export const AddExpensesForm = ({ onSubmit, loadingAddExpense }: AddExpensesForm
         display: "flex",
         justifyContent: "center",
         gap: 3,
-        padding: 2,
+        padding: 2.5,
       }}
     >
       <Paper
@@ -46,45 +46,46 @@ export const AddExpensesForm = ({ onSubmit, loadingAddExpense }: AddExpensesForm
             md: "row",
           },
           gap: 2,
-          p: 1,
+          p: 1.5,
           alignItems: {
             xs: "stretch",
             md: "center",
           },
-
+          justifyContent: 'center'
         }}
       >
-        <Box sx={{ flex: 1.2 }}>
+        <Box sx={{ flex: 1.2 , minHeight: '40px',height:'100%' }}>
           <TextField
             type="text"
             size="small"
             label="cause"
             {...register("cause")}
             error={!!errors.cause}
-            helperText={errors.cause?.message}
+            helperText={errors.cause?.message || ' '}
             sx={inputStyles}
           />
         </Box>
-        <Box sx={{ flex: 0.8 }}>
+        <Box sx={{ flex: 0.8 , minHeight: '40px' }}>
           <TextField
             size="small"
             label="value"
             {...register("value", { valueAsNumber: true })}
             error={!!errors.value}
-            helperText={errors.value?.message}
+           helperText={errors.value?.message || ' '}
             sx={inputStyles}
           />
         </Box>
-        <Box sx={{ flex: 1, color: "white" }}>
-          <FormControl fullWidth size="small" error={!!errors.paidOn}
->
-            <MemberSelect name="paidOn" control={control} label="Paid By" />
+        <Box sx={{ flex: 1, color: "white",height:'100%'}}>
+          <FormControl fullWidth size="small" error={!!errors.paidOn} sx={{ maxHeight: '20px' }}>
+            <MemberSelect name="paidOn" control={control} label="Paid By" background="#7fb49b"/>
             <FormHelperText>{errors.paidOn?.message}</FormHelperText>
           </FormControl>
         </Box>
-        <Button type="submit" sx={{ backgroundColor: "black" }} disabled={loadingAddExpense}>
+        <Box sx={{height:'100%'}}>
+        <Button type="submit" sx={{ backgroundColor: "black" ,mt:'13px'}} disabled={loadingAddExpense}>
           Add Expense
         </Button>
+        </Box>
       </Paper>
     </Box>
   );

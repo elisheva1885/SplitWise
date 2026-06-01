@@ -12,17 +12,21 @@ type MemberSelectProps<T extends FieldValues> = {
   name: Path<T>;
   control: Control<T>;
   label: string;
+  background: string
 };
 export const MemberSelect = <T extends FieldValues>({
   name,
   control,
   label,
+  background
 }: MemberSelectProps<T>) => {
   const { group } = useGroupContext();
   const groupMembers = group?.members;
   return (
-    <FormControl fullWidth >
-      <InputLabel sx={{ color: "white" }}>{label}</InputLabel>
+    <FormControl fullWidth size="small" >
+      <InputLabel sx={{
+        color: "white", backgroundColor: background, px: 0.7, 
+      }}>{label}</InputLabel>
       <Controller
         name={name}
         control={control}

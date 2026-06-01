@@ -18,9 +18,9 @@ export const GroupDrawerList = ({
 }: GroupDrawerListProps) => {
   const navigate = useNavigate();
   const { id } = useParams();
-const activeGroupId = Number(id);
+  const activeGroupId = Number(id);
   const { groups, setAlignment } = useGroupContext()
- 
+
 
   const goToGroup = (id: number) => {
     setAlignment(null)
@@ -46,12 +46,27 @@ const activeGroupId = Number(id);
         '& ul': { padding: 0 },
         flex: 3,
       }}>
-        <Typography>My Groups</Typography>
+        <Box sx={{
+          flex: 0.5, mb: '5px'
+        }}>
+          <Typography sx={{ margin: '10px' }}>My Groups</Typography>
+          <Button
+            sx={{
+              background: "black",
+              margin: '5px',
+            }}
+            onClick={() => setOpen(true)}
+            disabled={addLoading}
+          >
+            + New Group
+          </Button>
+        </Box>
+        <Divider sx={{my:2}}/>
         {groups.map((group) => (
-          <ListItem key={group.id}>
+          <ListItem key={group.id} sx={{ padding: '1px' }}>
             <ListItemButton
-            selected={group.id===activeGroupId}
-              onClick={() => {goToGroup(group.id)}}
+              selected={group.id === activeGroupId}
+              onClick={() => { goToGroup(group.id) }}
               sx={{ display: "flex", justifyContent: "center" }}
             >
               <Chip label={group.name} sx={{
@@ -66,19 +81,6 @@ const activeGroupId = Number(id);
           </ListItem>
         ))}
       </List>
-      <Divider />
-      <br />
-      <Box sx={{ flex: 0.5 }}>
-        <Button
-          sx={{
-            background: "black",
-          }}
-          onClick={() => setOpen(true)}
-          disabled={addLoading}
-        >
-          + New Group
-        </Button>
-      </Box>
     </Box>
   );
 };

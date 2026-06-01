@@ -46,7 +46,7 @@ export const UpdateExpenseForm = ({
           display: "flex",
           flexDirection: "column",
           alignContent: "center",
-          gap: 2,
+          gap: 2.7,
           padding: 2,
         }}
       >
@@ -61,18 +61,17 @@ export const UpdateExpenseForm = ({
           helperText={errors.cause?.message}
         />
         <TextField
-          type="number"
-          size="medium"
+          size="small"
           label="Value"
           {...register("value", { valueAsNumber: true })}
           error={!!errors.value}
           helperText={errors.value?.message}
         />
         <Box sx={{ flex: 1, color: "black" }}>
-          <MemberSelect name="paidBy" control={control} label="Paid By" />
+          <MemberSelect name="paidBy" control={control} label="Paid By" background='#405a4e'/>
         </Box>
         <Box sx={{ flex: 1, color: "black" }}>
-          <MemberSelect name="paidOn" control={control} label="Paid On" />
+          <MemberSelect name="paidOn" control={control} label="Paid On" background='#405a4e' />
         </Box>
         <Button type="submit">Save Changes</Button>
       </Box>
